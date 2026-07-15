@@ -317,11 +317,11 @@ def _write_note(
     residual_mae_fold = float(residual_mae["median"]) / shift_mae
 
     lines = [
-        "# Study Noise Versus Ortholog-Regularized Label Shift",
+        "# Study Noise Versus Ortholog-Informed Target Shift",
         "",
         "## Purpose",
         "",
-        "比较 `lambda=0.10` ortholog-regularized target 相对原 human no-Gejman PC1 的微小改变量，",
+        "比较 `lambda=0.10` ortholog-informed shrinkage target 相对原 human no-Gejman PC1 的微小改变量，",
         "与 human compendium 中不同 study 之间的实验差异是否处在同一量级。",
         "",
         "## Key Results",
@@ -353,7 +353,7 @@ def _write_note(
         "- 可以说：`lambda=0.10` 是轻度 target regularization，而不是重写 human 标签。",
         "- 更准确的写法不是“完全可以忽略”，而是“其幅度远小于 normal study-to-study variability，"
         "因此不太可能改变 human 标签的主要排序结构”。",
-        "- 这组结果可作为补充材料防守：ortholog regularization 的收益来自对 noisy consensus target 的轻度跨物种收缩，"
+        "- 这组结果可作为补充材料防守：ortholog-informed target shrinkage 的收益来自对 noisy consensus target 的轻度跨物种收缩，"
         "而不是把 human target 换成 mouse target。",
         "",
     ]
@@ -397,7 +397,7 @@ def _plot_summary(summary: pd.DataFrame, lambda_shift: pd.Series, path: Path) ->
     ax.set_xticks(x)
     ax.set_xticklabels(plot_df["comparison"], rotation=20, ha="right")
     ax.set_ylabel("z-scored label units")
-    ax.set_title("Ortholog-Regularized Shift Versus Study-Level Noise")
+    ax.set_title("Ortholog-Informed Target Shift Versus Study-Level Noise")
     ax.legend(frameon=False)
     fig.tight_layout()
     fig.savefig(path, dpi=240)

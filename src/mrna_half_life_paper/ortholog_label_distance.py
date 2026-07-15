@@ -64,7 +64,7 @@ def _write_note(summary: pd.DataFrame, note_path: Path) -> Path:
         "",
         "## Purpose",
         "",
-        "量化 ortholog regularization 之前 human no-Gejman PC1 与 mouse reconstructed prior 的距离，",
+        "量化 ortholog-informed target shrinkage 之前 human no-Gejman PC1 与 mouse reconstructed prior 的距离，",
         "并检查 `lambda=0.10` 正则化后人鼠标签距离缩小多少。",
         "",
         "## Key Results",
@@ -79,14 +79,14 @@ def _write_note(summary: pd.DataFrame, note_path: Path) -> Path:
         f"MAE 下降 {mae_reduction:.1%}。",
         f"- `lambda=0.10` 标签相对 human no-Gejman PC1 的改变量较小："
         f"Pearson={shift['pearson']:.4f}，RMSE={shift['rmse']:.4f}，MAE={shift['mae']:.4f}。",
-        f"- 作为参考，Saluki human PC1 vs Saluki mouse prior："
+        f"- 作为参考，Saluki human PC1 vs Saluki mouse PC1："
         f"Pearson={saluki['pearson']:.4f}，RMSE={saluki['rmse']:.4f}，MAE={saluki['mae']:.4f}。",
         "",
         "## Interpretation",
         "",
         "- 所有距离指标都在 z-scored PC1 单位下计算，因此 MSE/MAE/RMSE 可直接解释为标准化标签尺度上的差异。",
         "- `lambda=0.10` 没有把 human 标签大幅改成 mouse 标签，而是让 human 标签向 mouse ortholog 信号轻度移动。",
-        "- 该结果适合作为 ortholog-regularized target 的补充防守：正则化前人鼠标签存在明显但非随机的差距，轻度正则化提高相关性并降低距离，同时仍保持接近 human 标签。",
+        "- 该结果适合作为 ortholog-informed shrinkage target 的补充防守：正则化前人鼠标签存在明显但非随机的差距，轻度正则化提高相关性并降低距离，同时仍保持接近 human 标签。",
         "",
     ]
     note_path.parent.mkdir(parents=True, exist_ok=True)

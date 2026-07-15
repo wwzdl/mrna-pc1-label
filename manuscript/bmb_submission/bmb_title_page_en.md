@@ -2,7 +2,7 @@
 
 ## Manuscript Information
 
-**Title:** Study-aware label auditing, weak ortholog regularization, and cross-species transfer for mammalian mRNA half-life prediction  
+**Title:** Study-aware label auditing, cross-species transfer, and ortholog-informed target shrinkage for mammalian mRNA half-life prediction  
 **Running title:** Study-aware mRNA half-life prediction  
 **Article type:** Original research article  
 **Target journal:** *Bulletin of Mathematical Biology*
@@ -32,9 +32,13 @@ Dinglin Zhang: 0000-0002-9674-0577
 
 This work was supported by the National Natural Science Foundation of China (22373101, 22203089, and 22573043).
 
+## Author Contributions
+
+Xu Jin performed data curation, computational analysis, reproducibility checks, figure preparation, and manuscript drafting. Dinglin Zhang and Yingchen Mao contributed to study conception, method design, result interpretation, project supervision, and manuscript revision. Wenzhuo Wang, Anhui Wang, and Yuebin Zhang contributed to result discussion and manuscript review. All authors reviewed and approved the final manuscript.
+
 ## Keywords
 
-mRNA half-life; study heterogeneity; label audit; ortholog regularization; cross-species transfer; XGBoost
+mRNA half-life; study heterogeneity; label audit; target shrinkage; cross-species transfer; XGBoost
 
 ## Data and Code Availability
 

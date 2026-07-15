@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Plot the BMB main-text figure for weak ortholog-target regularization.
+"""Plot the BMB main-text figure for ortholog-informed target shrinkage.
 
 The four panels establish target geometry, the scale of the perturbation, and
 cross-target preservation under human-only model inputs.
@@ -7,6 +7,7 @@ cross-target preservation under human-only model inputs.
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 import matplotlib
@@ -20,7 +21,7 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[1]
 RESULTS = ROOT / "results"
 OUT_DIR = ROOT / "manuscript" / "bmb_submission" / "figures" / "main"
-OUT_BASENAME = "Fig06_ortholog_regularized_target_cn"
+OUT_BASENAME = "Fig08_ortholog_regularized_target_cn"
 
 PALETTE = {
     "human": "#0F4D92",
@@ -186,9 +187,9 @@ def build_figure(
         values["human_no_gejman_pc1_z"],
         values["orthoreg_lambda0p10_z"],
         color=PALETTE["human"],
-        title="Ortholog-regularized target vs\nhuman no-Gejman PC1",
+        title="Ortholog-informed shrinkage target vs\nhuman no-Gejman PC1",
         xlabel="Human no-Gejman PC1 (z-score)",
-        ylabel="0.10 regularized target (z-score)",
+        ylabel="0.10 shrinkage target (z-score)",
         annotation_lines=[
             f"N = {int(human_row['n']):,}",
             f"Pearson = {human_row['pearson']:.3f}",
@@ -204,9 +205,9 @@ def build_figure(
         values["reconstructed_mouse_pc1_z"],
         values["orthoreg_lambda0p10_z"],
         color=PALETTE["mouse"],
-        title="Ortholog-regularized target vs\nmouse PC1",
+        title="Ortholog-informed shrinkage target vs\nmouse PC1",
         xlabel="Mouse PC1 (z-score)",
-        ylabel="0.10 regularized target (z-score)",
+        ylabel="0.10 shrinkage target (z-score)",
         annotation_lines=[
             f"N = {int(mouse_row['n']):,}",
             f"Pearson = {mouse_row['pearson']:.3f}",
@@ -218,7 +219,7 @@ def build_figure(
     add_panel_label(ax_b, "b")
 
     categories = [
-        "Regularized-human\nlabel shift",
+        "Shrinkage-human\nlabel shift",
         "Between-study\npairs",
         "Study vs human\nno-Gejman PC1",
     ]
@@ -329,7 +330,7 @@ def build_figure(
         0.03,
         0.78,
         f"Train human target: r = {human_row['pearson_mean']:.4f} ± {human_row['pearson_sd']:.4f}\n"
-        f"Train regularized target: r = {regularized_row['pearson_mean']:.4f} ± {regularized_row['pearson_sd']:.4f}",
+        f"Train shrinkage target: r = {regularized_row['pearson_mean']:.4f} ± {regularized_row['pearson_sd']:.4f}",
         transform=ax_d.transAxes,
         ha="left",
         va="top",
@@ -362,7 +363,8 @@ def save_outputs(fig: plt.Figure, out_base: Path) -> None:
         bbox_inches="tight",
         pil_kwargs={"compression": "tiff_lzw"},
     )
-    fig.savefig(out_base.with_suffix(".pdf"), bbox_inches="tight")
+    if os.environ.get("BMB_SKIP_PDF") != "1":
+        fig.savefig(out_base.with_suffix(".pdf"), bbox_inches="tight")
     fig.savefig(out_base.with_suffix(".svg"), bbox_inches="tight")
     plt.close(fig)
 

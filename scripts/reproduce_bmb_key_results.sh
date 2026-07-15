@@ -9,8 +9,9 @@ usage() {
 Usage: bash scripts/reproduce_bmb_key_results.sh <labels|models|figures|all>
 
   labels   Download MOESM2/MOESM3 and reproduce PC1, study-influence,
-           ortholog-concordance, label-distance, and study-noise results.
-  models   Reproduce fixed-target and ortholog-regularized OOF benchmarks.
+           sample-count sensitivity, ortholog concordance, label distance,
+           and study-noise results.
+  models   Reproduce fixed-target and target-shrinkage OOF benchmarks.
            This stage requires the Saluki datapack and a CUDA-capable XGBoost setup.
   figures  Rebuild all active BMB figures, DOCX/PDF files, and run preflight checks.
   all      Run labels, models, and figures in that order.
@@ -42,6 +43,9 @@ run_labels() {
   bash scripts/prepare_real_data.sh
   bash scripts/run_real_data_workflow.sh
   bash scripts/run_study_influence_analysis.sh --run-pruned-human
+  python -m mrna_half_life_paper.study_influence_sensitivity \
+    --n-replicates "${MRNA_STUDY_NULL_REPLICATES:-500}" \
+    --n-jobs "${MRNA_STUDY_NULL_JOBS:-1}"
   bash scripts/run_ortholog_analysis.sh
   python -m mrna_half_life_paper.ortholog_label_distance
   python -m mrna_half_life_paper.study_noise_vs_orthoreg_shift
@@ -83,7 +87,7 @@ run_models() {
     --device "${DEVICE}" \
     --results-root results/prior_residual_analysis
 
-  echo "[reproduce] 0.10 ortholog-regularized target"
+  echo "[reproduce] 0.10 ortholog-informed shrinkage target"
   python -m mrna_half_life_paper.ortholog_regularized_label \
     --sources reconstructed_mouse_pc1 \
     --lambdas 0.1 \

@@ -51,13 +51,13 @@ def main() -> None:
         12_916,
     )
     _audit_group(
-        "ortholog-regularized cross-target",
+        "target-shrinkage cross-target",
         "results/ortholog_regularized_cross_target/oof_predictions",
         "*.tsv.gz",
         12_307,
     )
     _audit_group(
-        "ortholog-regularized benchmark",
+        "target-shrinkage benchmark",
         "results/ortholog_regularized_label_10fold_main/oof_predictions",
         "*.tsv",
         12_307,

@@ -1,0 +1,41 @@
+{
+  "n_replicates": 500,
+  "random_state": 20260715,
+  "n_jobs": 8,
+  "null_sampling_pool": "39 non-Gejman human samples",
+  "samples_removed_per_replicate": 15,
+  "primary_min_observed_per_gene": 3,
+  "primary_pca_imputation_rank": 5,
+  "parameter_sensitivity": [
+    {
+      "min_observed_per_gene": 3,
+      "pca_imputation_rank": 5,
+      "imputation_method": "iterative_pca"
+    },
+    {
+      "min_observed_per_gene": 5,
+      "pca_imputation_rank": 5,
+      "imputation_method": "iterative_pca"
+    },
+    {
+      "min_observed_per_gene": 10,
+      "pca_imputation_rank": 5,
+      "imputation_method": "iterative_pca"
+    },
+    {
+      "min_observed_per_gene": 3,
+      "pca_imputation_rank": 3,
+      "imputation_method": "iterative_pca"
+    },
+    {
+      "min_observed_per_gene": 3,
+      "pca_imputation_rank": 10,
+      "imputation_method": "iterative_pca"
+    },
+    {
+      "min_observed_per_gene": 3,
+      "pca_imputation_rank": 5,
+      "imputation_method": "sample_median"
+    }
+  ]
+}

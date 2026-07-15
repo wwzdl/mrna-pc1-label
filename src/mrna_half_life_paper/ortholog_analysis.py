@@ -374,7 +374,7 @@ def write_cn_report(outpath: Path | None = None) -> Path:
 
 也就是说，在同一批 ortholog 对上，去除异常 study 后 human-mouse 一致性继续上升，Pearson 增加了 {pruned_pearson - full_pearson:.3f}，Spearman 增加了 {pruned_spearman - full_spearman:.3f}。
 
-作为参照，Saluki human `PC1` 与 Saluki mouse prior 在 ortholog 对上的 Pearson 为 {saluki_pearson:.3f}，Spearman 为 {saluki_spearman:.3f}。因此，我们的异常 study 识别方向与原文“提高跨物种一致性”的总体目标是一致的。
+作为参照，Saluki human `PC1` 与 Saluki mouse PC1 在 ortholog 对上的 Pearson 为 {saluki_pearson:.3f}，Spearman 为 {saluki_spearman:.3f}。因此，我们的异常 study 识别方向与原文“提高跨物种一致性”的总体目标是一致的。
 
 ## 这个结果为什么重要
 
@@ -384,7 +384,7 @@ def write_cn_report(outpath: Path | None = None) -> Path:
 
 ## 建议放入正文的位置
 
-建议放在 Results 的后半部分，作为“Cross-species validation of outlier-study pruning”小节。
+建议放在 Results 的后半部分，作为“Cross-species concordance after influential-study removal”小节。
 
 可直接写成：
 

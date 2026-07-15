@@ -456,7 +456,10 @@ def check_metadata_and_reference_files() -> list[Check]:
         else:
             checks.append(Check("PASS", f"formal affiliation wording matches in {path.name}"))
 
-    expected_title = "Study-aware label auditing, weak ortholog regularization, and cross-species transfer for mammalian mRNA half-life prediction"
+    expected_title = (
+        "Study-aware label auditing, cross-species transfer, and ortholog-informed "
+        "target shrinkage for mammalian mRNA half-life prediction"
+    )
     for path in (MAIN_EN, SUPP_EN, TITLE_EN, COVER_EN):
         if expected_title in read_text(path):
             checks.append(Check("PASS", f"manuscript title matches in {path.name}"))
@@ -611,6 +614,58 @@ def check_quantitative_claims() -> list[Check]:
             f"{100.0 * float(final['remaining_variance_explained']):.1f}%",
         ],
     )
+
+    influence_null = read_tsv(
+        ROOT / "results" / "study_influence_sensitivity" / "size_matched_null_summary.tsv"
+    )
+    for metric in (
+        "pc1_stability_pearson",
+        "delta_saluki_pearson",
+        "delta_ortholog_pearson",
+    ):
+        row = select_row(influence_null, metric=metric)
+        display_precision = 3 if metric == "pc1_stability_pearson" else 4
+        require_tokens(
+            f"size-matched study-influence null: {metric}",
+            [
+                f"{float(row['observed_gejman']):.{display_precision}f}",
+                f"{float(row['null_median']):.{display_precision}f}",
+                f"{float(row['empirical_p_one_sided']):.3f}",
+            ],
+        )
+
+    sensitivity = read_tsv(
+        ROOT / "results" / "study_influence_sensitivity" / "pipeline_sensitivity_summary.tsv"
+    )
+    if len(sensitivity) == 12 and all(row["worst_left_out"] == "Gejman" for row in sensitivity):
+        checks.append(
+            Check(
+                "PASS",
+                "study-influence sensitivity covers 12 prespecified settings and ranks Gejman first in each",
+            )
+        )
+    else:
+        checks.append(
+            Check(
+                "FAIL",
+                "study-influence sensitivity table is incomplete or does not support the stated 12-setting result",
+            )
+        )
+
+    weighted = read_tsv(
+        ROOT / "results" / "study_influence_sensitivity" / "study_weighted_summary.tsv"
+    )
+    for estimator in ("equal_study_weighted", "study_mean_collapsed"):
+        row = select_row(weighted, estimator=estimator)
+        if row["gejman_rank"] == "3":
+            checks.append(Check("PASS", f"{estimator} Gejman rank matches manuscript: 3"))
+        else:
+            checks.append(
+                Check(
+                    "FAIL",
+                    f"{estimator} Gejman rank is {row['gejman_rank']}, expected 3",
+                )
+            )
     return checks
 
 

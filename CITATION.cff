@@ -2,7 +2,7 @@ cff-version: 1.2.0
 message: "If you use this software or its derived labels, please cite the accompanying manuscript."
 title: "mrna-pc1-label: study-aware mammalian mRNA half-life label auditing and prediction"
 type: software
-version: 1.0.0
+version: 1.1.0
 date-released: 2026-07-15
 authors:
   - family-names: Jin
@@ -25,10 +25,10 @@ repository-code: "https://github.com/wwzdl/mrna-pc1-label"
 abstract: >-
   Reproducible code, compact result tables, figure scripts, and manuscript
   sources for study-aware mRNA half-life label auditing, fixed-target
-  human prediction, cross-species transfer, and weak ortholog regularization.
+  human prediction, cross-species transfer, and ortholog-informed target shrinkage.
 keywords:
   - mRNA half-life
   - label audit
-  - ortholog regularization
+  - target shrinkage
   - cross-species transfer
   - XGBoost

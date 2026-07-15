@@ -201,8 +201,8 @@ def panel_c(ax: plt.Axes) -> None:
         [
             ("MOESM3 control\ngenes", 13532, "Gene universe"),
             ("Global prior\ncommon genes", 12916, "Gene universe"),
-            ("Ortholog validation\npairs", 12592, "Ortholog pairs"),
-            ("0.10 regularized target\ngenes", 12307, "Gene universe"),
+            ("Ortholog concordance\npairs", 12592, "Ortholog pairs"),
+            ("0.10 shrinkage target\ngenes", 12307, "Gene universe"),
             ("0.10 target ortholog\npairs", 10768, "Ortholog pairs"),
         ],
         columns=["Universe", "Count", "Type"],
@@ -283,7 +283,7 @@ def panel_d(ax: plt.Axes) -> None:
             "source_title": "1:1 orthologs",
             "source_body": "Ensembl pairs",
             "role_title": "Ortholog checks",
-            "role_body": "concordance +\nregularization",
+            "role_body": "concordance +\ntarget shrinkage",
         },
     ]
 

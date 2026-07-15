@@ -244,14 +244,14 @@ def write_cn_report(
 
 ## 一句话结论
 
-基于 Saluki 公开补充数据，reference-free leave-one-study-out PC1 stability 将 human 中的 `{human['top_influential_study']}` 排为对共识标签几何影响最大的 study。随后使用 Saluki human PC1 进行 reference-informed validation；移除该 study 后，重建标签与 Saluki human PC1 的 Pearson 从 {human['full_saluki_corr']['pearson']:.3f} 提升到 {human_top['saluki_reference_pc1_pearson']:.3f}。该排序不使用下游模型分数；它重现并量化 Saluki 数据说明中记录的 study influence。Mouse 数据没有出现同等级的多证据一致性。
+基于 Saluki 公开补充数据，Saluki-label-independent leave-one-study-out PC1 stability 将 human 中的 `{human['top_influential_study']}` 排为对共识标签几何影响最大的 study。随后使用 Saluki human PC1 进行 reference-informed validation；移除该 study 后，重建标签与 Saluki human PC1 的 Pearson 从 {human['full_saluki_corr']['pearson']:.3f} 提升到 {human_top['saluki_reference_pc1_pearson']:.3f}。该排序不使用下游模型分数；它重现并量化 Saluki 数据说明中记录的 study influence。Mouse 数据没有出现同等级的多证据一致性。
 
 ## 目前已完成的真实结果
 
 - human：54 个样本，19 个 study，5 种方法。
 - mouse：27 个样本，17 个 study，3 种方法。
 - human 全量数据的重建 PC1 与 Saluki human PC1 的 Pearson 为 {human['full_saluki_corr']['pearson']:.3f}。
-- mouse 全量数据的重建 PC1 与 Saluki mouse prior 的 Pearson 为 {mouse['full_saluki_corr']['pearson']:.3f}。
+- mouse 全量数据的重建 PC1 与 Saluki mouse PC1 的 Pearson 为 {mouse['full_saluki_corr']['pearson']:.3f}。
 - human 中影响最大的 study 是 `{human['top_influential_study']}`，它被剔除后与 Saluki human PC1 的对齐增益为 {human_top['delta_saluki_reference_pc1_pearson']:.3f}。
 - mouse 中最强的 study 影响者是 `{mouse['top_influential_study']}`，但其增益只有 {mouse_top['delta_saluki_reference_pc1_pearson']:.3f}，远小于 human。
 

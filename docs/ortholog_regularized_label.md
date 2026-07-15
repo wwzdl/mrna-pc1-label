@@ -1,8 +1,8 @@
-# Ortholog-Regularized Label Benchmark
+# Ortholog-Informed Target-Shrinkage Benchmark
 
 ## Purpose
 
-测试在 human no-Gejman PC1 标签中加入轻度 mouse ortholog regularization 后，
+测试在 human no-Gejman PC1 标签中加入轻度 mouse ortholog-informed target shrinkage 后，
 是否能在 prior-enhanced 预测设定下超过直接训练 Saluki human PC1。
 
 ## Key Results
@@ -13,8 +13,8 @@
 
 ## Interpretation
 
-- 这些标签明确超过了 Saluki human PC1 的 prior-enhanced target prediction，但标签本身包含 mouse ortholog regularization。
-- 因此它们适合被描述为 cross-species regularized targets，而不是 pure human sequence-only targets。
+- 这些标签明确超过了 Saluki human PC1 的 prior-enhanced target prediction，但标签本身包含 mouse ortholog-informed target shrinkage。
+- 因此它们适合被描述为 cross-species shrinkage targets，而不是 pure human sequence-only targets。
 
 ## Controls
 

@@ -240,7 +240,7 @@ def _write_note(summary: pd.DataFrame, note_path: Path) -> Path:
         "",
         "## Algorithm",
         "",
-        "1. 仅保留同时具有重建 mouse prior 和 Saluki mouse prior 的 `both_priors_available` genes。",
+        "1. 仅保留同时具有重建 mouse prior 和 Saluki mouse PC1 的 `both_priors_available` genes。",
         "2. 在每个 outer fold 中，用两列 mouse priors 训练 RidgeCV，并对 held-out fold 得到 `prior_only_prediction`。",
         "3. 在训练折内计算 `Saluki human PC1 - prior_prediction`，作为 residual target。",
         "4. 用 human `compact_all` features 训练 XGBoost/CUDA 去预测 residual target。",

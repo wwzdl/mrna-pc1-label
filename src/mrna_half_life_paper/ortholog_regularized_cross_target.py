@@ -236,7 +236,7 @@ def run_cross_target_analysis(
     pd.DataFrame(bootstrap_rows).to_csv(bootstrap_path, sep="\t", index=False)
 
     metadata = {
-        "analysis": "human-only cross-target evaluation of weak ortholog regularization",
+        "analysis": "human-only cross-target evaluation of weak ortholog-informed target shrinkage",
         "human_target": HUMAN_TARGET,
         "ortholog_regularized_target": ORTHOREG_TARGET,
         "lambda": 0.10,
@@ -262,7 +262,7 @@ def run_cross_target_analysis(
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Cross-target OOF evaluation for the lambda=0.10 ortholog-regularized label."
+        description="Cross-target OOF evaluation for the lambda=0.10 ortholog-informed shrinkage target."
     )
     parser.add_argument(
         "--feature-path",

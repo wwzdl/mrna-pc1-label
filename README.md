@@ -4,15 +4,15 @@ Reproducible code and manuscript sources for a study-aware mammalian mRNA half-l
 
 1. consensus-label auditing across studies;
 2. human-only prediction versus cross-species transfer under a fixed Saluki human PC1 target;
-3. a human-dominant target with weak ortholog regularization at `lambda = 0.10`.
+3. a human-dominant target defined by weak ortholog-informed shrinkage at `lambda = 0.10`.
 
 The active manuscript targets *Bulletin of Mathematical Biology*. English files are submission sources; Chinese files are retained for author-side checking.
 
 ## Main Results
 
-- A reference-free leave-one-study-out stability screen identifies `Gejman` as the dominant influence on the human consensus-label geometry. Saluki agreement and human-mouse ortholog concordance are subsequent validation axes, not selection criteria.
+- A Saluki-label-independent leave-one-study-out screen ranks `Gejman` first in the primary sample-weighted analysis. Its geometric displacement is compatible with a 15-sample random-removal null and its rank falls to third under study balancing, but its positive Saluki-agreement and ortholog-concordance gains are not reproduced by 500 size-matched removals (`p = 0.002` for each).
 - On 12,916 human genes, the repeated 10-fold by 3-seed human-only model reaches Pearson `0.748 +/- 0.001`; cross-species transfer with two mouse ortholog priors reaches `0.830 +/- 0.001`; fold-wise prior permutation returns to `0.748 +/- 0.001`.
-- The `0.10 ortholog-regularized target` remains nearly identical to human no-Gejman PC1 (`r = 0.9982`, `RMSE = 0.065`) and shows no detectable loss of original-human-label predictability in cross-target evaluation.
+- The `0.10 ortholog-informed shrinkage target` remains nearly identical to human no-Gejman PC1 (`r = 0.9982`, `RMSE = 0.065`) and shows no detectable loss of original-human-label predictability in cross-target evaluation.
 
 See `docs/status_report.md` for the current claim boundaries and complete key values.
 
@@ -22,9 +22,9 @@ See `docs/status_report.md` for the current claim boundaries and complete key va
 |:--|--:|:--|
 | Global fixed-target training/evaluation | 12,916 human genes | Main human-only and cross-species-transfer benchmark |
 | Both-priors subset | 11,107 human genes | Prior coverage and residual decomposition only |
-| Ortholog-regularized target | 12,307 human genes | Regularized-target training/evaluation |
+| Ortholog-informed shrinkage target | 12,307 human genes | Shrinkage-target training/evaluation |
 | One-to-one label geometry | 10,768 ortholog pairs | Human/mouse target-distance analysis |
-| Ortholog validation | 12,592 ortholog pairs | Cross-species label validation |
+| Ortholog concordance | 12,592 ortholog pairs | Cross-species label comparison |
 
 The 11,107-gene both-priors subset is not the global training universe.
 
@@ -49,7 +49,7 @@ source scripts/activate_env.sh
 bash scripts/smoke_test.sh
 ```
 
-`environment.yml` provides a Python 3.11 Conda alternative. `requirements-validated.txt` records the direct package versions that passed the 2026-07-14 pre-submission audit; `requirements.txt` remains the portable installation entry point. The published tree-model benchmarks use XGBoost/CUDA; label reconstruction, auditing, document generation, and most figure generation do not require a GPU.
+`environment.yml` provides a Python 3.11 Conda alternative. `requirements-validated.txt` records the direct package versions that passed the 2026-07-15 pre-submission audit; `requirements.txt` remains the portable installation entry point. The published tree-model benchmarks use XGBoost/CUDA; label reconstruction, auditing, document generation, and most figure generation do not require a GPU.
 
 ## Public Inputs
 
@@ -90,7 +90,7 @@ Run all stages only after the large Saluki datapack files and a CUDA-capable XGB
 bash scripts/reproduce_bmb_key_results.sh all
 ```
 
-The `models` stage builds the human sequence feature table from Ensembl release 115 when it is absent, then reproduces the global prior benchmark, 10-fold robustness, missing-prior analysis, two-stage residual decomposition, `lambda = 0.10` target benchmark, lambda sensitivity, prior ablation, cross-target evaluation, and paired-bootstrap summaries. It writes to the result paths used by the manuscripts.
+The `labels` stage also reproduces the dynamic/fixed-universe leave-one-study-out analyses, the 500-replicate size-matched null, preprocessing sensitivity, and two study-balanced estimators. The `models` stage builds the human sequence feature table from Ensembl release 115 when it is absent, then reproduces the global prior benchmark, 10-fold robustness, missing-prior analysis, two-stage residual decomposition, `lambda = 0.10` target benchmark, lambda sensitivity, prior ablation, cross-target evaluation, and paired-bootstrap summaries. Both stages write to the result paths used by the manuscripts.
 
 After model reproduction, `scripts/audit_oof_integrity.py` verifies the expected evaluation-universe size, unique gene coverage, shared gene order across settings/seeds, fold coverage, and absence of missing predictions.
 
@@ -108,7 +108,7 @@ Run only the release preflight when result tables and figures are already curren
 bash scripts/preflight_bmb_release.sh
 ```
 
-The preflight checks manuscript/SI consistency, quantitative claims against result tables, figure numbering and resolution, references, BibTeX/RIS identity, DOCX line/page fields, SI metadata, and upload-candidate assembly.
+The preflight runs unit tests and OOF-integrity checks, then checks manuscript/SI consistency, quantitative claims against result tables, figure numbering and resolution, references, BibTeX/RIS identity, DOCX line/page fields, SI metadata, and upload-candidate assembly.
 
 During editing, rebuild and audit DOCX files without regenerating PDF or assembling a mixed-version upload candidate:
 
@@ -120,7 +120,7 @@ BMB_SKIP_PDF=1 bash scripts/preflight_bmb_release.sh
 
 - Mouse priors are external mouse-side covariates fixed before human cross-validation; they are not part of the Saluki human PC1 target.
 - Prior-enhanced results are cross-species transfer, not performance available from human sequence alone.
-- Ortholog regularization changes the target definition; its scores are not ranked against fixed-target results as if the estimands were identical.
+- Ortholog-informed shrinkage changes the target definition; its scores are not ranked against fixed-target results as if the estimands were identical.
 - The base-sequence model can accept a newly partitioned 5'UTR/CDS/3'UTR sequence. `compact_all` requires precomputed regulatory blocks, and the transfer model additionally requires mappable mouse ortholog priors.
 
 ## Manuscript Sources
@@ -134,6 +134,6 @@ All active main figures (Fig. 1-8) and supplementary figures (S1-S4) are generat
 
 ## Release
 
-The public source repository is [wwzdl/mrna-pc1-label](https://github.com/wwzdl/mrna-pc1-label). The manuscript-reviewed state is tagged as `mRNA-PC1-label-v1.0`; run the release preflight before deriving any later submission package from a newer commit.
+The public source repository is [wwzdl/mrna-pc1-label](https://github.com/wwzdl/mrna-pc1-label). The manuscript-reviewed state is tagged as `mRNA-PC1-label-v1.1`; run the release preflight before deriving any later submission package from a newer commit.
 
 中文说明：本 README 采用英文以便审稿人与读者直接复现；中文定稿状态和术语说明见 `docs/status_report.md`。

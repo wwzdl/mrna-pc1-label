@@ -394,7 +394,7 @@ def write_cn_note(
 ## 一句话结论
 
 在共同基因宇宙和固定 Saluki human PC1 目标下，把 reconstructed mouse PC1 与
-Saluki mouse prior 作为外部 mouse-side covariates 加入 `compact_all`，可提高 gene-level
+Saluki mouse PC1 作为外部 mouse-side covariates 加入 `compact_all`，可提高 gene-level
 OOF prediction；打乱 gene-prior identity 后该增益消失。
 
 ## 固定目标结果
@@ -406,7 +406,7 @@ OOF prediction；打乱 gene-prior identity 后该增益消失。
 
 - 该设定改变输入信息，属于 cross-species transfer，不是 human-only 或 sequence-only prediction。
 - 评估不是只挑 high-confidence ortholog 子集，而是在完整 common gene universe 上完成。
-- 在 N={int(best_direct['n'])} 个共同基因里，{int(best_direct['n_with_mouse_pc1'])} 个基因有重建 mouse prior，{int(best_direct['n_with_saluki_mouse_prior'])} 个基因有 Saluki mouse prior。
+- 在 N={int(best_direct['n'])} 个共同基因里，{int(best_direct['n_with_mouse_pc1'])} 个基因有重建 mouse prior，{int(best_direct['n_with_saluki_mouse_prior'])} 个基因有 Saluki mouse PC1。
 - 对没有 mouse prior 的基因，模型使用缺失指示特征和 0 填充值；部署时应按 prior coverage 使用 coverage-aware fallback。
 - 该结果不能与 Saluki 文中不同切分和不同输入条件下的 r=0.77 作同口径胜负比较。
 {control_text}

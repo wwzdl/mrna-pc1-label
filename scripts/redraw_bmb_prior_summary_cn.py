@@ -6,11 +6,12 @@ conditional plots in the Chinese manuscript with a 2x2 panel:
 A) global prior benchmark
 B) repeated 10-fold controls
 C) prior availability
-D) ortholog-conditioned prior gains
+D) ortholog-subset performance
 """
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 import matplotlib as mpl
@@ -61,7 +62,8 @@ def save_all(fig: plt.Figure, out_no_ext: Path) -> None:
         bbox_inches="tight",
         pil_kwargs={"compression": "tiff_lzw"},
     )
-    fig.savefig(out_no_ext.with_suffix(".pdf"), bbox_inches="tight")
+    if os.environ.get("BMB_SKIP_PDF") != "1":
+        fig.savefig(out_no_ext.with_suffix(".pdf"), bbox_inches="tight")
     fig.savefig(out_no_ext.with_suffix(".svg"), bbox_inches="tight")
     plt.close(fig)
 
@@ -125,7 +127,7 @@ def draw_panel_a(ax: plt.Axes) -> None:
     label_map = {
         "compact_all_global": "Human-only",
         "compact_all_plus_mouse_pc1_global": "+ mouse PC1",
-        "compact_all_plus_saluki_mouse_prior_global": "+ Saluki prior",
+        "compact_all_plus_saluki_mouse_prior_global": "+ Saluki mouse PC1",
         "compact_all_plus_both_mouse_priors_global": "+ both priors",
     }
     keep = df.loc[df["setting"].isin(order)].copy()
@@ -134,14 +136,19 @@ def draw_panel_a(ax: plt.Axes) -> None:
     keep["label"] = keep["setting"].map(label_map)
     palette = [COLOR["gray"], COLOR["teal"], COLOR["green"], COLOR["blue"]]
 
-    sns.barplot(data=keep, x="label", y="pearson", palette=palette, hue="label", legend=False, ax=ax)
+    x = np.arange(len(keep))
+    values = keep["pearson"].astype(float).to_numpy()
+    ax.scatter(x, values, s=54, c=palette, edgecolor="white", linewidth=0.8, zorder=3)
+    ax.set_xticks(x, keep["label"].astype(str).tolist())
+    ax.axhline(values[0], color=COLOR["gray"], linewidth=0.8, linestyle="--", alpha=0.65)
     ax.set_title("Global prior benchmark", fontsize=10.5, color=COLOR["ink"], pad=6)
     ax.set_xlabel("")
     ax.set_ylabel("Pearson r")
     ax.set_ylim(0.72, 0.845)
     ax.tick_params(axis="x", rotation=18, labelsize=7.6)
     ax.tick_params(axis="y", labelsize=8)
-    annotate_vertical_bars(ax)
+    for xpos, value in zip(x, values):
+        ax.text(xpos, value + 0.0027, f"{value:.3f}", ha="center", va="bottom", fontsize=7.1)
 
 
 def draw_panel_b(ax: plt.Axes) -> None:
@@ -178,7 +185,22 @@ def draw_panel_b(ax: plt.Axes) -> None:
     colors = [COLOR["gray"], COLOR["orange"], COLOR["blue"], COLOR["purple"]]
     x = range(len(plot))
 
-    ax.bar(x, plot["pearson_mean"], yerr=plot["pearson_sd"], color=colors, capsize=3, width=0.72)
+    for xpos, (_, row), color in zip(x, plot.iterrows(), colors):
+        ax.errorbar(
+            xpos,
+            row["pearson_mean"],
+            yerr=row["pearson_sd"],
+            fmt="o",
+            markersize=6.5,
+            markerfacecolor=color,
+            markeredgecolor="white",
+            markeredgewidth=0.8,
+            ecolor=color,
+            elinewidth=1.3,
+            capsize=3,
+            zorder=3,
+        )
+    ax.axhline(float(plot.iloc[0]["pearson_mean"]), color=COLOR["gray"], linewidth=0.8, linestyle="--", alpha=0.65)
     ax.set_xticks(list(x), plot["label"])
     ax.set_title("Repeated 10-fold controls", fontsize=10.5, color=COLOR["ink"], pad=6)
     ax.set_xlabel("")
@@ -189,7 +211,7 @@ def draw_panel_b(ax: plt.Axes) -> None:
     for i, row in plot.iterrows():
         ax.text(
             i,
-            row["pearson_mean"] + 0.0023,
+            row["pearson_mean"] + 0.0030,
             f"{row['pearson_mean']:.3f}",
             ha="center",
             va="bottom",
@@ -263,10 +285,10 @@ def draw_panel_d(ax: plt.Axes) -> None:
     model_map = {
         "compact_all__ortholog_all": "Human-only",
         "compact_all_plus_mouse_pc1__ortholog_all": "+ mouse PC1",
-        "compact_all_plus_saluki_mouse_prior__ortholog_all": "+ Saluki prior",
+        "compact_all_plus_saluki_mouse_prior__ortholog_all": "+ Saluki mouse PC1",
         "compact_all__ortholog_highconf": "Human-only",
         "compact_all_plus_mouse_pc1__ortholog_highconf": "+ mouse PC1",
-        "compact_all_plus_saluki_mouse_prior__ortholog_highconf": "+ Saluki prior",
+        "compact_all_plus_saluki_mouse_prior__ortholog_highconf": "+ Saluki mouse PC1",
     }
     keep = df.loc[df["setting"].isin(order)].copy()
     keep["setting"] = pd.Categorical(keep["setting"], categories=order, ordered=True)
@@ -275,8 +297,27 @@ def draw_panel_d(ax: plt.Axes) -> None:
     keep["Model"] = keep["setting"].map(model_map)
     palette = [COLOR["gray"], COLOR["blue"], COLOR["green"]]
 
-    sns.barplot(data=keep, x="Subset", y="pearson", hue="Model", palette=palette, ax=ax)
-    ax.set_title("Ortholog-conditioned gains", fontsize=10.5, color=COLOR["ink"], pad=6)
+    subset_order = ["All orthologs", "High-conf orthologs"]
+    model_order = ["Human-only", "+ mouse PC1", "+ Saluki mouse PC1"]
+    offsets = [-0.13, 0.0, 0.13]
+    for model, offset, color in zip(model_order, offsets, palette):
+        model_rows = keep.loc[keep["Model"] == model].set_index("Subset")
+        xvals = np.arange(len(subset_order), dtype=float) + offset
+        yvals = [float(model_rows.loc[subset, "pearson"]) for subset in subset_order]
+        ax.scatter(
+            xvals,
+            yvals,
+            s=48,
+            color=color,
+            edgecolor="white",
+            linewidth=0.8,
+            label=model,
+            zorder=3,
+        )
+        for xpos, value in zip(xvals, yvals):
+            ax.text(xpos, value + 0.0023, f"{value:.3f}", ha="center", va="bottom", fontsize=6.8)
+    ax.set_xticks(np.arange(len(subset_order)), subset_order)
+    ax.set_title("Ortholog-subset performance", fontsize=10.5, color=COLOR["ink"], pad=6)
     ax.set_xlabel("")
     ax.set_ylabel("Pearson r")
     ax.set_ylim(0.72, 0.845)
@@ -290,8 +331,6 @@ def draw_panel_d(ax: plt.Axes) -> None:
         ncol=3,
         frameon=False,
     )
-    for container in ax.containers:
-        ax.bar_label(container, fmt="%.3f", padding=2, fontsize=6.8, color=COLOR["ink"])
 
 
 def main() -> None:
@@ -308,7 +347,7 @@ def main() -> None:
         add_panel_label(ax, label)
 
     fig.tight_layout(w_pad=1.2, h_pad=1.45)
-    out = FIG_MAIN / "Fig08_prior_summary_cn"
+    out = FIG_MAIN / "Fig07_prior_summary_cn"
     save_all(fig, out)
     print(f"Wrote {out}")
 

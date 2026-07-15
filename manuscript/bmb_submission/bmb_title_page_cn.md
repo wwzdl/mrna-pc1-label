@@ -2,8 +2,8 @@
 
 ## 1. 稿件基本信息
 
-- **中文标题：** 面向哺乳动物 mRNA 半衰期预测的 study-aware 标签审计、弱同源正则化与跨物种迁移
-- **英文标题：** Study-aware label auditing, weak ortholog regularization, and cross-species transfer for mammalian mRNA half-life prediction
+- **中文标题：** 面向哺乳动物 mRNA 半衰期预测的 study-aware 标签审计、跨物种迁移与同源基因目标收缩
+- **英文标题：** Study-aware label auditing, cross-species transfer, and ortholog-informed target shrinkage for mammalian mRNA half-life prediction
 - **Running title：** Study-aware mRNA half-life prediction
 - **稿件类型：** Original research article
 - **目标期刊：** *Bulletin of Mathematical Biology*
@@ -26,7 +26,11 @@ Xu Jin<sup>1,2</sup>，Wenzhuo Wang<sup>3</sup>，Anhui Wang<sup>1,4</sup>，Yue
 
 国家自然科学基金（22373101、22203089、22573043）
 
-## 5. ORCID 状态
+## 5. 作者贡献
+
+Xu Jin 负责数据整理、计算分析、可重复性检查、图件制备和稿件起草。Dinglin Zhang 与 Yingchen Mao 参与研究构思、方法设计、结果解释、项目监督和稿件修改。Wenzhuo Wang、Anhui Wang 与 Yuebin Zhang 参与结果讨论和稿件审阅。所有作者均审阅并同意最终稿。
+
+## 6. ORCID 状态
 
 **已公开确认**
 
@@ -40,17 +44,17 @@ Xu Jin<sup>1,2</sup>，Wenzhuo Wang<sup>3</sup>，Anhui Wang<sup>1,4</sup>，Yue
 - Wenzhuo Wang
 - Yuebin Zhang
 
-## 6. 关键词
+## 7. 关键词
 
-mRNA half-life；study heterogeneity；label audit；ortholog regularization；cross-species transfer；XGBoost
+mRNA half-life；study heterogeneity；label audit；target shrinkage；cross-species transfer；XGBoost
 
-## 7. 数据与代码链接
+## 8. 数据与代码链接
 
 当前主文口径为：
 
 > 本文使用的 half-life 矩阵来自 Saluki 论文公开补充材料；预计算 feature datapack 可从 Zenodo 获取（DOI：[10.5281/zenodo.6326409](https://doi.org/10.5281/zenodo.6326409)）；ortholog 映射来自 Ensembl comparative genomics 资源。代码、结果表、图件生成脚本和复现说明已通过版本化仓库 [wwzdl/mrna-pc1-label](https://github.com/wwzdl/mrna-pc1-label) 公开。
 
-## 8. 使用提醒
+## 9. 使用提醒
 
 - 本文件用于后续英文 `title page` 重建。
 - 正式英文版生成前，需再次核对作者单位英文写法、ORCID 和 funding 口径。

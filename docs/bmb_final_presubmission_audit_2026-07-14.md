@@ -1,6 +1,6 @@
 # BMB Final Pre-submission Audit
 
-Date: 2026-07-14; release status updated 2026-07-15  
+Date: 2026-07-15  
 Target: *Bulletin of Mathematical Biology*  
 Scope: Chinese/English main manuscripts, Supplementary Information, figures, tables, references, submission materials, code, public inputs, and reproducibility
 
@@ -8,22 +8,22 @@ Scope: Chinese/English main manuscripts, Supplementary Information, figures, tab
 
 The scientific manuscript is ready for author approval and journal submission. No blocking inconsistency was found in the three-estimand logic, canonical analysis universes, quantitative claims, figures, tables, citations, or OOF implementation. The package is **conditionally upload-ready**, because three actions remain external to the scientific source: author metadata/contribution confirmation, software-license selection, and final generation plus visual inspection of the English Supplementary PDF and upload ZIP. The public GitHub release gate was completed on 2026-07-15.
 
-The 0.10 ortholog-regularized target remains a core contribution. It is not demoted to an incidental supplement, but it is consistently separated from the fixed Saluki-human-PC1 ranking. This framing preserves the result's novelty while avoiding the claim that changing a target improves prediction of an unchanged ground truth.
+The 0.10 ortholog-informed shrinkage target remains a core contribution. It is not demoted to an incidental supplement, but it is consistently separated from the fixed Saluki-human-PC1 ranking. This framing preserves the result's novelty while avoiding the claim that changing a target improves prediction of an unchanged ground truth.
 
 ## Reviewer 1: scientific logic and positioning
 
 ### Strengths
 
-- The paper has one coherent question: how study heterogeneity, external ortholog information, and weak target regularization change the interpretation of mammalian mRNA half-life benchmarks.
-- The three claims are separable and independently testable: reference-free label influence screening; fixed-target human-only versus cross-species transfer; and a human-dominant ortholog-regularized target.
-- `Gejman` is ranked by PC1 stability without Saluki labels or downstream model scores. Saluki agreement and ortholog concordance are validation axes rather than selection criteria.
+- The paper has one coherent question: how study heterogeneity, external ortholog information, and weak target shrinkage change the interpretation of mammalian mRNA half-life benchmarks.
+- The three claims are separable and independently testable: Saluki-label-independent label influence screening; fixed-target human-only versus cross-species transfer; and a human-dominant ortholog-informed shrinkage target.
+- `Gejman` is ranked by PC1 stability without Saluki labels or downstream model scores. Saluki agreement then quantifies recovery of the published processing choice, whereas ortholog concordance supplies a cross-species comparison axis with a different evidential role; neither enters selection.
 - The 0.10 target is located quantitatively relative to human, mouse, and ordinary study-level variability, then checked against the original human target by cross-target evaluation.
 - The Discussion and Limitations avoid claiming a new experimental ground truth, sequence-only superiority over Saluki, or mechanistic causality from predictive priors.
 
 ### Residual scientific risks already disclosed
 
 - Label auditing uses one public compendium and lacks an independent second half-life resource.
-- Leave-one-study-out influence combines sample count and profile direction; without a size-matched null, `Gejman` is a dominant influence rather than a sample-count-adjusted statistical outlier.
+- The 500-replicate size-matched null and two study-balanced estimators show that `Gejman` is not a sample-count-adjusted geometric outlier. Its positive Saluki-agreement and ortholog-concordance gains remain directional evidence that was not reproduced by the null.
 - `lambda = 0.10` is a conservative empirical choice whose portability requires external validation.
 - The benchmark uses gene-level random OOF splits and does not recreate Saluki's fixed test split; cross-paper score comparisons therefore remain descriptive.
 
@@ -36,7 +36,7 @@ The 0.10 ortholog-regularized target remains a core contribution. It is not demo
 - Mouse priors are constructed from mouse measurements and Ensembl mapping before human cross-validation. They are correctly framed as external covariates in a cross-species transfer setting.
 - Prior permutation is fold-aware and shuffles values only among genes with an available prior while preserving availability/high-confidence indicators. The control therefore disrupts gene-prior identity without changing column count or missingness structure.
 - Residual decomposition is outer-fold safe: held-out human labels do not enter either stage. Its 12.8% quantity is appropriately presented as descriptive remaining-variance decomposition, not a new sequence-only benchmark.
-- OOF integrity checks passed for 9 global fixed-target files at 12,916 genes, 3 cross-target files at 12,307 genes, 18 ortholog-regularized files at 12,307 genes, and the 11,107-gene residual subset. IDs are unique, universes are shared within each comparison, folds are complete, and predictions contain no missing values.
+- OOF integrity checks passed for 9 global fixed-target files at 12,916 genes, 3 cross-target files at 12,307 genes, 18 target-shrinkage files at 12,307 genes, and the 11,107-gene residual subset. IDs are unique, universes are shared within each comparison, folds are complete, and predictions contain no missing values.
 - Main-text bootstrap values, cross-target values, target-distance metrics, and residual metrics match their result tables.
 
 ### Interpretation boundary
@@ -47,20 +47,20 @@ The prior-enhanced result is not information leakage under the declared estimand
 
 ### Passed checks
 
-- English abstract: 238 words; keywords: 6.
+- English abstract: 242 words; keywords: 6.
 - Author-year citations and unnumbered alphabetized reference lists match BMB style.
 - Main manuscript: 8 contiguous figures and 3 captioned tables.
-- Supplement: 4 contiguous figures and 15 captioned tables, with journal/title/authors/affiliations/corresponding-author metadata.
+- Supplement: 4 contiguous figures and 16 captioned tables, with journal/title/authors/affiliations/corresponding-author metadata.
 - All 12 referenced PNGs report 600 dpi; all corresponding TIFFs report 600 dpi and lossless LZW compression. No duplicate main/SI image is referenced.
 - Current visual review found no cropping, omitted panel label, obvious overlap, unreadable annotation, or caption-image mismatch.
 - The English main DOCX contains continuous line numbering and page fields; the English Supplementary DOCX contains page fields. All Chinese/English DOCX files are newer than their Markdown and figure sources.
 - Main reference list: 44 entries; Supplementary reference list: 10 entries; unique union: 45. The BibTeX and RIS libraries contain exactly these 45 records. All 43 DOI records resolved and matched basic bibliographic metadata; the two no-DOI records were checked against official proceedings/journal pages.
-- Automated package audit: 136 checks, 0 failures, 0 warnings in `BMB_SKIP_PDF=1` mode.
+- Automated package audit: 142 checks, 0 failures, 0 warnings in `BMB_SKIP_PDF=1` mode.
 
 ## Reproducibility and GitHub audit
 
 - `requirements.txt` now includes the document-rendering dependencies actually imported by the code; `requirements-validated.txt` records the tested direct versions.
-- Python compile, shell syntax, dependency consistency (`pip check`), and project smoke tests passed.
+- Python compile, shell syntax, two focused unit tests, OOF integrity, dependency consistency (`pip check`), and project smoke tests passed.
 - MOESM2 and MOESM3 downloads are SHA-256 verified. The Ensembl homology URL is pinned to release 115 and its 106-MB source file is SHA-256 verified.
 - The `models` stage now rebuilds the ignored human sequence-feature table when absent and checks all required Saluki regulatory blocks before training.
 - Generated manifests and summaries use repository-relative paths; no local absolute path, private key, or GitHub/API token pattern was found in the release candidate.

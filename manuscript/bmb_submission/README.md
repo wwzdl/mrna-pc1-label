@@ -86,10 +86,10 @@
 - `scripts/audit_bmb_submission_package.py` 已加入 preflight，可检查英文摘要词数、关键词数、声明、补充材料 metadata、DOCX 行号/页码、引用残留、退役术语、Online Resource 口径、参考文献引用一致性和 600 dpi 图件。
 - `scripts/assemble_bmb_upload_candidate.sh` 只重建 `upload_candidate/`，避免每次预检都重复生成 zip；压缩包只在最终发布时生成一次。
 - `BMB_SKIP_PDF=1 bash scripts/preflight_bmb_release.sh` 可在编辑阶段重建全部 DOCX 并完成审计，同时跳过 PDF 与上传候选目录，避免混合新旧版本。
-- `scripts/audit_oof_integrity.py` 检查关键 OOF 文件的规范基因数、唯一 ID、共同 universe、fold 覆盖和预测缺失。
+- `scripts/audit_oof_integrity.py` 检查关键 OOF 文件的规范基因数、唯一 ID、共同 universe、fold 覆盖和预测缺失；当前 preflight 会先自动运行单元测试和该 OOF 审计。
 - 已补齐中文内部外围材料：标题页、附信、投稿要点摘要、作者贡献草案和声明汇总，供后续英文 `title page`、`cover letter` 和系统表单统一转换。
-- 主文已纳入 10-fold global prior robustness、ortholog-regularized target 的 label geometry、cross-target evaluation、prior ablation 与 no-direct-prior 解释边界。
-- 补充材料保留 ortholog-regularized target 的相关补充表与必要控制结果。
+- 主文已纳入 10-fold global prior robustness、ortholog-informed shrinkage target 的 label geometry、cross-target evaluation、prior ablation 与 no-direct-prior 解释边界。
+- 补充材料保留 target shrinkage 的相关补充表与必要控制结果。
 - 旧 TCBB 打包脚本和历史备份目录不再属于当前活跃 BMB 投稿链路；当前项目目录已作为公开 `mrna-pc1-label` 仓库根目录。
 
 ## 已对齐的关键官方要求
@@ -147,4 +147,4 @@ bash scripts/assemble_bmb_upload_candidate.sh
 
 ## 当前判断
 
-按期刊 scope 和现有证据链，`paper1` 以 `Original research article` 口径更稳。它的主线不是单独推出一个算法组件，而是把 study-aware label diagnosis、ortholog validation 和 cross-species prior-enhanced prediction 组织成一个可审计的生物学 benchmark。
+按期刊 scope 和现有证据链，`paper1` 以 `Original research article` 口径更稳。它的主线不是单独推出一个算法组件，而是把 study-aware label diagnosis、ortholog concordance analysis 和 cross-species transfer 组织成一个可审计的生物学 benchmark。

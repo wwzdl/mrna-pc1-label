@@ -115,8 +115,8 @@ def main() -> None:
     study_markers = {study: marker_values[i % len(marker_values)] for i, study in enumerate(studies)}
     line_art_markers = {"+", "x", "1", "2", "3", "4"}
 
-    legend_rows = math.ceil(len(studies) / 4)
-    fig_height = 5.45 + 0.34 * max(0, legend_rows - 3)
+    legend_rows = math.ceil(len(studies) / 6)
+    fig_height = 5.30 + 0.30 * max(0, legend_rows - 3)
     fig, axes = plt.subplots(1, 2, figsize=(7.8, fig_height), sharex=False, sharey=False)
 
     for ax, df, title in zip(axes, [raw, processed], ["Human Raw matrix", "Human Processed matrix"]):
@@ -179,11 +179,11 @@ def main() -> None:
         handles=method_handles,
         title="Method (color)",
         loc="lower center",
-        bbox_to_anchor=(0.5, 0.19),
+        bbox_to_anchor=(0.5, 0.155),
         ncol=min(len(method_handles), 6),
         frameon=False,
-        fontsize=8.8,
-        title_fontsize=9.2,
+        fontsize=9.4,
+        title_fontsize=9.8,
         handletextpad=0.55,
         columnspacing=1.15,
     )
@@ -191,16 +191,16 @@ def main() -> None:
         handles=study_handles,
         title="Study (marker)",
         loc="lower center",
-        bbox_to_anchor=(0.5, 0.015),
-        ncol=4,
+        bbox_to_anchor=(0.5, 0.005),
+        ncol=6,
         frameon=False,
-        fontsize=8.1,
-        title_fontsize=8.8,
-        handletextpad=0.45,
-        columnspacing=1.0,
+        fontsize=9.0,
+        title_fontsize=9.5,
+        handletextpad=0.35,
+        columnspacing=0.72,
     )
 
-    fig.tight_layout(rect=[0, 0.38, 1, 1], w_pad=2.0)
+    fig.tight_layout(rect=[0, 0.31, 1, 1], w_pad=2.0)
     out = FIG_MAIN / "Fig03_human_pca_panel"
     save_all(fig, out)
     print(f"Wrote {out}")

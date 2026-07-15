@@ -210,11 +210,11 @@ def _plot_ablation(aggregate: pd.DataFrame, figures_dir: Path) -> list[Path]:
 
 def _write_note(aggregate: pd.DataFrame, note_path: Path, figure_paths: list[Path]) -> Path:
     lines = [
-        "# Ortholog-Regularized Prior Ablation",
+        "# Ortholog-Informed Target-Shrinkage Prior Ablation",
         "",
         "## Purpose",
         "",
-        "测试 ortholog-regularized 标签的预测优势是否只来自模型直接读取同源 mouse prior 值。",
+        "测试 ortholog-informed shrinkage 标签的预测优势是否只来自模型直接读取同源 mouse prior 值。",
         "",
         "## Results",
         "",
@@ -239,7 +239,7 @@ def _write_note(aggregate: pd.DataFrame, note_path: Path, figure_paths: list[Pat
             no_direct = label_df.loc["no_direct_reconstructed_mouse_pc1"]
             both = label_df.loc["both_mouse_priors"]
             lines.append(
-                f"- no-direct setting 保留替代 Saluki mouse prior 后，target Pearson="
+                f"- no-direct setting 保留替代 Saluki mouse PC1 后，target Pearson="
                 f"{_mean_sd_text(no_direct, 'pearson_vs_target_mean', 'pearson_vs_target_sd')}；"
                 f"完整 both-prior setting 为 "
                 f"{_mean_sd_text(both, 'pearson_vs_target_mean', 'pearson_vs_target_sd')}。"
@@ -264,7 +264,7 @@ def _write_note(aggregate: pd.DataFrame, note_path: Path, figure_paths: list[Pat
             "",
             "- 如果 mask-only 接近 human-only，说明 missingness/confidence 指示本身不能解释提升。",
             "- 如果 no-direct setting 低于 both-prior setting，说明同源 mouse prior 值确实贡献了标签可预测性。",
-            "- 该结果用于限定论文主张：ortholog-regularized target 的优势属于 cross-species prior-enhanced setting，而不是 pure human-only sequence setting。",
+            "- 该结果用于限定论文主张：ortholog-informed shrinkage target 的优势属于 cross-species prior-enhanced setting，而不是 pure human-only sequence setting。",
             "",
             "## Figures",
             "",
@@ -398,7 +398,7 @@ def run_prior_ablation(
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Run prior ablations for ortholog-regularized labels.")
+    parser = argparse.ArgumentParser(description="Run prior ablations for ortholog-informed shrinkage targets.")
     parser.add_argument("--lambdas", nargs="+", type=float, default=[0.1])
     parser.add_argument("--source", default="reconstructed_mouse_pc1")
     parser.add_argument("--random-states", nargs="+", type=int, default=[13, 42, 101])

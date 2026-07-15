@@ -69,7 +69,7 @@ def _display_source_name(name: str) -> str:
     return {
         SALUKI_HUMAN_PC1: "Saluki human PC1",
         "reconstructed_mouse_pc1": "Reconstructed mouse PC1",
-        "saluki_mouse_prior": "Saluki mouse prior",
+        "saluki_mouse_prior": "Saluki mouse PC1",
     }.get(name, name)
 
 
@@ -373,7 +373,7 @@ def _plot_summary(summary: pd.DataFrame, figures_dir: Path) -> list[Path]:
                 label=_display_source_name(source),
             )
         ax.set_title(title, fontsize=10)
-        ax.set_xlabel("Ortholog regularization lambda")
+        ax.set_xlabel("Ortholog shrinkage lambda")
         ax.set_ylabel("Pearson")
         ax.grid(alpha=0.25, linewidth=0.6)
     axes[-1].axhline(0.836801, color="black", linestyle="--", linewidth=1.1, label="Saluki human PC1 prior")
@@ -438,11 +438,11 @@ def _write_note(summary: pd.DataFrame, note_path: Path, figure_paths: list[Path]
         ascending=False,
     ).iloc[0]
     lines = [
-        "# Ortholog-Regularized Label Benchmark",
+        "# Ortholog-Informed Target-Shrinkage Benchmark",
         "",
         "## Purpose",
         "",
-        "测试在 human no-Gejman PC1 标签中加入轻度 mouse ortholog regularization 后，",
+        "测试在 human no-Gejman PC1 标签中加入轻度 mouse ortholog-informed target shrinkage 后，",
         "目标几何、human dominance 与不同输入条件下的可预测性如何变化。",
         "",
         "## Key Results",
@@ -452,12 +452,12 @@ def _write_note(summary: pd.DataFrame, note_path: Path, figure_paths: list[Path]
         f"- 最保守、仍高度接近 Saluki human PC1 的候选：`{_display_label_name(conservative['label'])}`，"
         f"target-vs-Saluki Pearson={_mean_sd_text(conservative, 'target_vs_saluki_pearson_mean', 'target_vs_saluki_pearson_sd')}，"
         f"ortholog Pearson={_mean_sd_text(conservative, 'ortholog_pearson_mean', 'ortholog_pearson_sd')}。",
-        "- 固定 Saluki human PC1 目标下的 transfer benchmark 仅作为不同 estimand 的参照，不与 regularized target 共用排行榜。",
+        "- 固定 Saluki human PC1 目标下的 transfer benchmark 仅作为不同 estimand 的参照，不与 shrinkage target 共用排行榜。",
         "",
         "## Interpretation",
         "",
-        "- 较高的 target-specific score 表明 ortholog regularization 增强了显式 prior 可捕获的保守成分，不能解释为固定 human target 上的性能跃迁。",
-        "- 这些标签应描述为 human-dominant ortholog-regularized targets，而不是 pure human ground truth 或 sequence-only targets。",
+        "- 较高的 target-specific score 表明 ortholog-informed target shrinkage 增强了显式 prior 可捕获的保守成分，不能解释为固定 human target 上的性能跃迁。",
+        "- 这些标签应描述为 human-dominant ortholog-informed shrinkage targets，而不是 pure human ground truth 或 sequence-only targets。",
         "",
     ]
     if "real_minus_shuffled_pearson_vs_target_mean" in aggregate.columns:
@@ -666,7 +666,7 @@ def run_ortholog_regularized_benchmark(
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Benchmark ortholog-regularized human PC1 labels.")
+    parser = argparse.ArgumentParser(description="Benchmark ortholog-informed shrinkage human PC1 labels.")
     parser.add_argument("--lambdas", nargs="+", type=float, default=[0.05, 0.1, 0.15, 0.2, 0.3])
     parser.add_argument("--sources", nargs="+", default=["saluki_mouse_prior", "reconstructed_mouse_pc1"])
     parser.add_argument(

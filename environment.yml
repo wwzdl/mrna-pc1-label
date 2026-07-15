@@ -15,6 +15,7 @@ dependencies:
   - ipykernel
   - openpyxl
   - xgboost
+  - pytest
   - pip:
       - python-docx
       - pillow

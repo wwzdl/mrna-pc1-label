@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Draw the four-panel ortholog validation figure used in the BMB manuscript."""
+"""Draw the four-panel ortholog concordance figure used in the BMB manuscript."""
 
 from __future__ import annotations
 

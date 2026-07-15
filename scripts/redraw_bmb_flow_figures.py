@@ -217,12 +217,12 @@ def draw_main_workflow() -> None:
         0.695,
         0.145,
         0.18,
-        "Audit evidence",
-        "Gejman effect\ncommon-gene r: +0.031\northolog r: +0.015",
+        "Directional evidence",
+        "Saluki delta r: +0.031\northolog delta r: +0.015\ngeometry-null p = 0.964",
         edge=ORANGE,
         face=ORANGE_LIGHT,
-        title_size=6.8,
-        body_size=5.4,
+        title_size=6.4,
+        body_size=4.9,
     )
     last_step_x, last_step_width, _, _ = steps[-1]
     _arrow(ax, (last_step_x + last_step_width, 0.785), (0.8225, 0.785), color=ORANGE)
@@ -230,20 +230,20 @@ def draw_main_workflow() -> None:
     _band(ax, 0.325, 0.275, "b", "Fixed-target prediction: Saluki human PC1", edge=TEAL, face=TEAL_LIGHT)
     _box(ax, 0.065, 0.455, 0.25, 0.075, "Human compact features", "sequence + regulatory", edge=TEAL, title_size=7.2, body_size=6.0)
     _box(ax, 0.39, 0.455, 0.22, 0.075, "Human-only model", "N = 12,916 genes", edge=TEAL, title_size=7.2, body_size=6.0)
-    _box(ax, 0.70, 0.455, 0.23, 0.075, "OOF baseline", "Pearson 0.745", edge=TEAL, title_size=7.2, body_size=6.0)
+    _box(ax, 0.70, 0.455, 0.23, 0.075, "Repeated 10-fold", "human-only r = 0.748", edge=TEAL, title_size=7.2, body_size=6.0)
     _arrow(ax, (0.315, 0.493), (0.39, 0.493), color=TEAL)
     _arrow(ax, (0.61, 0.493), (0.70, 0.493), color=TEAL)
 
     _box(ax, 0.065, 0.35, 0.25, 0.075, "Human features\n+ mouse priors", "same fixed human target", edge=ORANGE, face=ORANGE_LIGHT, title_size=6.8, body_size=5.8)
     _box(ax, 0.39, 0.35, 0.22, 0.075, "Cross-species transfer", "external ortholog covariates", edge=ORANGE, face=ORANGE_LIGHT, title_size=7.2, body_size=6.0)
-    _box(ax, 0.70, 0.35, 0.23, 0.075, "OOF control", "real 0.830; shuffled 0.748", edge=ORANGE, face=ORANGE_LIGHT, title_size=7.2, body_size=6.0)
+    _box(ax, 0.70, 0.35, 0.23, 0.075, "Repeated 10-fold", "real 0.830; shuffled 0.748", edge=ORANGE, face=ORANGE_LIGHT, title_size=7.2, body_size=6.0)
     _arrow(ax, (0.315, 0.388), (0.39, 0.388), color=ORANGE)
     _arrow(ax, (0.61, 0.388), (0.70, 0.388), color=ORANGE)
 
-    _band(ax, 0.035, 0.255, "c", "Weak ortholog regularization of the target", edge=PURPLE, face=PURPLE_LIGHT)
+    _band(ax, 0.035, 0.255, "c", "Weak ortholog-informed target shrinkage", edge=PURPLE, face=PURPLE_LIGHT)
     _box(ax, 0.055, 0.140, 0.19, 0.065, "Human no-Gejman PC1", "90% human label", edge=PURPLE, title_size=6.8, body_size=5.7)
     _box(ax, 0.055, 0.050, 0.19, 0.065, "Reconstructed mouse PC1", "10% mapped label", edge=PURPLE, title_size=6.2, body_size=5.7)
-    _box(ax, 0.335, 0.0575, 0.205, 0.14, "Ortholog-regularized\ntarget", "human-dominant mammalian\nstability score", edge=PURPLE, title_size=6.7, body_size=5.7)
+    _box(ax, 0.335, 0.0575, 0.205, 0.14, "Ortholog-informed\nshrinkage target", "human-dominant mammalian\nstability score", edge=PURPLE, title_size=6.7, body_size=5.7)
     _arrow(ax, (0.245, 0.1725), (0.335, 0.1725), color=PURPLE)
     _arrow(ax, (0.245, 0.0825), (0.335, 0.0825), color=PURPLE)
     _box(

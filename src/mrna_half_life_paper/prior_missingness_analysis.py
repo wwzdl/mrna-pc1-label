@@ -48,15 +48,15 @@ def _group_description(group: str) -> str:
     descriptions = {
         "all_genes": "All genes in the global common human gene universe.",
         "has_any_mouse_prior": "Genes with at least one mouse prior value available.",
-        "missing_both_mouse_priors": "Genes with neither reconstructed mouse PC1 nor Saluki mouse prior available.",
-        "has_both_mouse_priors": "Genes with both reconstructed mouse PC1 and Saluki mouse prior available.",
+        "missing_both_mouse_priors": "Genes with neither reconstructed mouse PC1 nor Saluki mouse PC1 available.",
+        "has_both_mouse_priors": "Genes with both reconstructed mouse PC1 and Saluki mouse PC1 available.",
         "missing_at_least_one_mouse_prior": "Genes missing one or both mouse prior values.",
         "has_reconstructed_mouse_pc1": "Genes with reconstructed mouse PC1 available.",
         "missing_reconstructed_mouse_pc1": "Genes without reconstructed mouse PC1.",
-        "has_saluki_mouse_prior": "Genes with Saluki mouse prior available.",
-        "missing_saluki_mouse_prior": "Genes without Saluki mouse prior.",
-        "only_reconstructed_mouse_pc1": "Genes with reconstructed mouse PC1 but no Saluki mouse prior.",
-        "only_saluki_mouse_prior": "Genes with Saluki mouse prior but no reconstructed mouse PC1.",
+        "has_saluki_mouse_prior": "Genes with Saluki mouse PC1 available.",
+        "missing_saluki_mouse_prior": "Genes without Saluki mouse PC1.",
+        "only_reconstructed_mouse_pc1": "Genes with reconstructed mouse PC1 but no Saluki mouse PC1.",
+        "only_saluki_mouse_prior": "Genes with Saluki mouse PC1 but no reconstructed mouse PC1.",
     }
     return descriptions[group]
 

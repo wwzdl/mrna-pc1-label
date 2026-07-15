@@ -16,9 +16,9 @@
 ### BMB pre-submission convergence, reproducibility, and release audit
 
 - 将中英文主文收敛为三项边界清楚的核心贡献：
-  - reference-free study-influence screening + reference/ortholog validation
+  - Saluki-label-independent study-influence screening + reference/ortholog validation
   - fixed Saluki human PC1 target 下的 human-only baseline 和 cross-species transfer
-  - 通过 label geometry、study-noise comparison 与 cross-target evaluation 验证的 `0.10 ortholog-regularized target`
+  - 通过 label geometry、study-noise comparison 与 cross-target evaluation 验证的 `0.10 ortholog-informed shrinkage target`
 - 对审稿高风险点做了定稿处理：
   - `Gejman` 称为 dominant study influence，不称为样本数校正后的 statistical outlier
   - 筛选只用 PC1 stability，Saluki agreement 和 ortholog concordance 仅用于验证，不使用下游模型分数
@@ -461,11 +461,11 @@ PYTHONPATH=paper_pca/src python -m mrna_half_life_paper.label_competition
   - 但它仍未超过 `saluki_human_pc1`
   - 因此下一轮若还要冲“超越 Saluki 标签”，应考虑更强的标签模型，而不是只在线性 PC1 家族里微调
 
-### Ortholog-regularized label benchmark
+### Ortholog-informed shrinkage label benchmark
 
 - 目的：
   - 直接追求“我们的标签作为预测目标优于 `saluki_human_pc1`”。
-  - 不再只在人类 PC1 家族里微调，而是在 human no-Gejman PC1 中加入 mouse ortholog regularization。
+  - 不再只在人类 PC1 家族里微调，而是在 human no-Gejman PC1 中加入 mouse ortholog-informed target shrinkage。
 - 代码：
   - `src/mrna_half_life_paper/ortholog_regularized_label.py`
 - 命令：
@@ -511,17 +511,17 @@ PYTHONPATH=paper_pca/src python -m mrna_half_life_paper.ortholog_regularized_lab
     - prior-enhanced Pearson(target)=`0.896171`
 - 当前解释：
   - 这是目前第一条真正支持“我们的标签带来更好预测结果”的结果线
-  - 但它不是 pure human sequence-only 标签，而是 **cross-species regularized target**
+  - 但它不是 pure human sequence-only 标签，而是 **cross-species shrinkage target**
   - 最适合论文中的定位：
     - `saluki_human_pc1` 是官方 pure benchmark target
-    - `orthoreg_reconstructed_mouse_pc1_0.05/0.10` 是保守 cross-species regularized target
+    - `orthoreg_reconstructed_mouse_pc1_0.05/0.10` 是保守 cross-species shrinkage target
     - `orthoreg_reconstructed_mouse_pc1_0.30` 是 upper-bound prior-enhanced target
   - 后续必须补充：
     - pure-human 对照，证明不是所有提升都来自 mouse prior 直接可见
     - permutation control，证明不是只因为目标里混入了可预测的 mouse feature
     - 多 seed，确认不是单次 OOF 波动
 
-### Ortholog-regularized label controls
+### Ortholog-informed shrinkage label controls
 
 - 目的：
   - 验证 `ortholog_regularized_label` 的胜利是否依赖真实 gene-specific mouse prior。
@@ -557,14 +557,14 @@ PYTHONPATH=paper_pca/src python -m mrna_half_life_paper.ortholog_regularized_lab
     - pure human Pearson(target)=`0.755918`
     - shuffled prior Pearson(target)=`0.754076`
 - 当前解释：
-  - ortholog-regularized 标签的高预测性能主要来自真实 gene-specific mouse prior。
+  - ortholog-informed shrinkage 标签的高预测性能主要来自真实 gene-specific mouse prior。
   - pure-human 特征和 shuffled-prior 都不能复现 real-prior 的大幅提升。
   - 这强化了文章边界：该结果应作为 cross-species regularized / prior-enhanced 标签结果，而不是 pure sequence-only 标签结果。
 
-### Ortholog-regularized label multi-seed controls and figures
+### Ortholog-informed shrinkage label multi-seed controls and figures
 
 - 目的：
-  - 将 ortholog-regularized label 的正结果从单 seed 升级为多 seed 稳健性证据。
+  - 将 ortholog-informed shrinkage target 的正结果从单 seed 升级为多 seed 稳健性证据。
   - 同时输出可直接进入论文或补充材料的 lambda tradeoff 图和 real-vs-control 图。
 - 代码更新：
   - `src/mrna_half_life_paper/ortholog_regularized_label.py`
@@ -619,14 +619,14 @@ PYTHONPATH=paper_pca/src python -m mrna_half_life_paper.ortholog_regularized_lab
     - shuffled prior Pearson(target)=`0.754531±0.000451`
     - real-shuffled delta=`0.141488±0.000598`
 - 当前解释：
-  - 三个 random seed 下，全部 ortholog-regularized targets 的 real-prior Pearson(target) 均稳定超过 `saluki_human_pc1` prior-enhanced baseline `0.836801`。
+  - 三个 random seed 下，全部 ortholog-informed shrinkage targets 的 real-prior Pearson(target) 均稳定超过 `saluki_human_pc1` prior-enhanced baseline `0.836801`。
   - `0.05` 是最保守胜利：与 Saluki human PC1 相关最高，增益较小但稳定。
   - `0.10` 是当前最适合主推的平衡点：仍高度接近 Saluki human PC1，同时 ortholog 一致性和可预测性明显提高。
   - `0.30` 可作为 upper-bound cross-species target：预测性能最高，但与 Saluki human PC1 的距离也更大。
   - pure-human 和 shuffled-prior 控制仍显著低于 real-prior，说明增益依赖真实 gene-specific mouse prior。
   - 仍需在论文中明确边界：这是 cross-species regularized / prior-enhanced label，不是 pure human sequence-only target。
 
-### Ortholog-regularized prior ablation for the main lambda=0.10 label
+### Ortholog-informed shrinkage prior ablation for the main lambda=0.10 label
 
 - 目的：
   - 回答审稿人可能提出的关键质疑：`orthoreg_reconstructed_mouse_pc1_0.10` 的提升是否只是因为模型直接读取了构造标签时使用的同源 `reconstructed_mouse_pc1` prior 值。
@@ -666,10 +666,10 @@ PYTHONPATH=paper_pca/src python -m mrna_half_life_paper.ortholog_prior_ablation 
   - 这显著增强了论文防守：主推标签 `orthoreg_reconstructed_mouse_pc1_0.10` 的可预测性优势主要来自可替代的 cross-species gene-specific signal，而不是单纯把构造标签的同一列 mouse prior 交给模型。
   - 仍需保留边界：它是 cross-species prior-enhanced label，不是 pure human-only 标签。
 
-### BMB manuscript integration of ortholog-regularized labels
+### BMB manuscript integration of ortholog-informed shrinkage targets
 
 - 目的：
-  - 将 ortholog-regularized target 与 prior-ablation 结果从开发记录推进到 BMB 投稿材料。
+  - 将 ortholog-informed shrinkage target 与 prior-ablation 结果从开发记录推进到 BMB 投稿材料。
 - 更新文件：
   - `manuscript/bmb_submission/bmb_main_manuscript.md`
   - `manuscript/bmb_submission/bmb_main_manuscript_en.md`
@@ -704,7 +704,7 @@ python paper_pca/scripts/render_markdown_to_docx.py \
   - 验证 zip 内已包含 `FigS12-FigS14` 和 `Supplementary_Table_S10-S11`。
   - 验证 zip 内不再包含旧的 `_cn` 内部检查稿或 Word 临时文件。
 - 当前解释：
-  - 主文只简短呈现 ortholog-regularized target 的结论，完整 multi-seed、real-vs-shuffled、pure-human 和 prior-ablation 证据放入补充材料。
+  - 主文只简短呈现 ortholog-informed shrinkage target 的结论，完整 multi-seed、real-vs-shuffled、pure-human 和 prior-ablation 证据放入补充材料。
   - 这让“我们的标签更好”进入投稿稿件，同时保留清晰边界：cross-species prior-enhanced target，不是 pure human-only sequence target。
 
 ### Prior-missingness analysis for deployment fallback
@@ -730,13 +730,13 @@ PYTHONPATH=paper_pca/src python -m mrna_half_life_paper.prior_missingness_analys
   - coverage-aware fallback（有 mouse prior 用 prior-enhanced；两种 prior 都缺失时退回 human-only）：Pearson=`0.8318±0.0008`
   - 两种 mouse prior 都缺失的 `1347` 个基因：real both-prior Pearson=`0.7555±0.0013`，human-only Pearson=`0.7695±0.0006`
   - 两种 mouse prior 都可用的 `11107` 个基因：real both-prior Pearson=`0.8433±0.0010`，human-only Pearson=`0.7456±0.0014`
-  - 只有 reconstructed mouse PC1、没有 Saluki mouse prior 的 `462` 个基因：real both-prior Pearson=`0.7100±0.0074`，human-only Pearson=`0.6800±0.0046`
+  - 只有 reconstructed mouse PC1、没有 Saluki mouse PC1 的 `462` 个基因：real both-prior Pearson=`0.7100±0.0074`，human-only Pearson=`0.6800±0.0046`
 - 当前解释：
   - 最高性能主要来自有 mouse prior 的基因；没有任何 mouse prior 时，强行使用 prior-enhanced 模型反而略低于 human-only。
   - 实际部署建议采用 coverage-aware fallback：有 mouse prior 时用 prior-enhanced；两种 prior 都缺失时使用 human-only compact sequence/regulatory model。
   - 这个结果应写入应用范围/局限性：模型不要求每个新基因都有 mouse prior，但没有 prior 时不能宣称达到 `r≈0.83` 的 prior-enhanced 水平。
 
-### Study noise versus lambda=0.10 ortholog-regularized label shift
+### Study noise versus lambda=0.10 ortholog-informed shrinkage target shift
 
 - 目的：
   - 回答 `lambda=0.10` 轻度混合后的标签虽然与原 human no-Gejman PC1 极高相关，但这点变化在 multi-study experimental noise 中到底是否可忽略。
@@ -788,7 +788,7 @@ PYTHONPATH=paper_pca/src python -m mrna_half_life_paper.study_noise_vs_orthoreg_
   - `manuscript/bmb_submission/bmb_main_manuscript_cn.docx`
   - `manuscript/bmb_submission/bmb_supplementary_material_cn.docx`
 - 关键修改：
-  - 主文新增图 4，用 A-D 子图总结 label QC、human-only benchmark、prior-enhanced benchmark 和 ortholog-regularized target extension 的输入、目标与解释边界。
+  - 主文新增图 4，用 A-D 子图总结 label QC、human-only benchmark、prior-enhanced benchmark 和 ortholog-informed shrinkage target extension 的输入、目标与解释边界。
   - 补充材料新增补充图 S1 和 S2，分别说明数据到图件的可复现链条，以及不同输入条件下的预测使用边界。
   - 补充材料图号整理为补充图 S1-S11，表号整理为补充表 S1-S10。
   - Code Availability 保留公开仓库链接：`wwzdl/mrna-pc1-label`。
@@ -871,7 +871,7 @@ PYTHONPATH=paper_pca/src python -m mrna_half_life_paper.study_noise_vs_orthoreg_
   - 主文 `figures/main/Fig06_ortholog_bars.*` 现在只保留 4 组：`Full PC1`、`No-Gejman PC1`、`High-conf full`、`High-conf no-Gejman`。
   - 补充图 `figures/supplement/FigS_ortholog_bars.*` 继续保留包含 Saluki 参考对的完整版本。
   - 主文中文/英文图注同步改为“full, pruned, and high-confidence settings”。
-  - 英文主文 `Table_3.md` 去掉 `Saluki human PC1 vs Saluki mouse prior` 行，避免正文表和正文图传递不同重点。
+  - 英文主文 `Table_3.md` 去掉 `Saluki human PC1 vs Saluki mouse PC1` 行，避免正文表和正文图传递不同重点。
 - 当前写作判断：
   - 主文只需要证明 `no-Gejman > full` 在不同指标和子集中都成立。
   - Saluki 参考对更适合放在补充材料或文字说明中，作为口径参照，而不是正文主图中心元素。
@@ -1224,7 +1224,7 @@ PYTHONPATH=paper_pca/src python -m mrna_half_life_paper.study_noise_vs_orthoreg_
 - 目的：
   - 将外部预审意见中有证据依据的部分落实到中英文主文、补充材料、脚本和发布边界，同时保留 `lambda=0.10` 作为独立核心标签构建贡献。
 - 关键修改：
-  - 主线收敛为三项可独立检验的命题：reference-free study influence audit、固定 Saluki human PC1 下的 human-only/cross-species transfer，以及 `0.10 ortholog-regularized target`。
+  - 主线收敛为三项可独立检验的命题：Saluki-label-independent study influence audit、固定 Saluki human PC1 下的 human-only/cross-species transfer，以及 `0.10 ortholog-informed shrinkage target`。
   - 明确 `Gejman` 由不使用 Saluki label 或下游分数的 PC1-stability 排序恢复；因缺少 size-matched null，正文只称其为 dominant influence，不再称为样本数校正后的 statistical outlier。
   - 明确两类 mouse priors 均为 human CV 之前固定的 mouse-side external covariates；fold-wise permutation 打断 gene-prior identity 后增益消失，结果属于 cross-species transfer 而非 sequence-only prediction。
   - `lambda=0.10` 未降级为附属结果，而是用 label geometry、study-noise comparison 和 human-only cross-target evaluation 建立边界；`0.855` 只用于 regularized-target estimand，不与固定 Saluki human PC1 排名混用。
@@ -1280,7 +1280,7 @@ PYTHONPATH=paper_pca/src python -m mrna_half_life_paper.study_noise_vs_orthoreg_
   - GitHub 模拟发布范围收紧为 277 个文件、24.60 MiB，排除 raw/interim 大数据、大矩阵、逐基因 OOF、DOCX、TIFF、PDF 和 ZIP；未发现绝对路径、密钥或 token 模式。
 - 验证：
   - DOCX-only BMB preflight：`136 checks, 0 failures, 0 warnings`。
-  - OOF 完整性：9 个 global fixed-target、3 个 cross-target、18 个 ortholog-regularized 文件以及 11,107-gene residual 子集全部通过。
+  - OOF 完整性：9 个 global fixed-target、3 个 cross-target、18 个 ortholog-informed shrinkage 文件以及 11,107-gene residual 子集全部通过。
   - Python compileall、全部 shell 语法、`pip check`、项目 smoke test、MOESM2/MOESM3/Ensembl 115 SHA-256 均通过。
   - 本轮未重跑全部耗时 GPU 训练；校验的是已有 OOF 结果、输入、源码、结果表与复现入口。
 - 冻结边界：
@@ -1322,3 +1322,40 @@ PYTHONPATH=paper_pca/src python -m mrna_half_life_paper.study_noise_vs_orthoreg_
 - 验证：
   - 初始公开提交包含 `277` 个文件，范围约 `24.60 MiB`；未发现本机绝对路径、私钥或 GitHub token。
   - 发布后再次执行中英文一致性和 BMB package audit；最终结果记录于本次发布提交。
+
+### Sample-count-aware study audit and reviewer-driven manuscript revision
+
+- 时间：
+  - `2026-07-15 CST`
+- 目的：
+  - 回应预审中最关键的质疑：`Gejman` 有 15/54 个 human samples，其 leave-one-study-out 几何影响是否主要由样本数、动态基因集合或预处理选择造成。
+- 新增分析：
+  - 500 次 size-matched random removal；每次从 39 个非 Gejman 样本中无放回移除 15 个，并完整重跑 coverage、z-score、PCA imputation、quantile normalization 和 PC1 extraction。
+  - Dynamic 与 fixed gene universe 的 leave-one-study-out 对照。
+  - Coverage threshold 3/5/10、PCA rank 3/5/10、iterative-PCA 与 median imputation 的 12 组预处理敏感性分析。
+  - Equal-study PCA weighting 与 study-mean collapse 两种 study-balanced estimators。
+- 结果与解释：
+  - Gejman observed PC1 stability 为 `0.9550`；size-matched 零分布中位数 `0.9438`，95% interval `0.9319-0.9561`，低尾 `p=0.964`。因此不能称为 sample-count-adjusted geometric outlier。
+  - Gejman 的 Saluki agreement gain 为 `+0.0314`，ortholog gain 为 `+0.0147`；两者在 size-matched 零分布中的高尾经验检验均为 `p=0.002`。
+  - 12 个预处理/基因宇宙设定均将 Gejman 排第 1；两种 study-balanced estimators 均将其排第 3。最终主张收紧为“样本数杠杆叠加有方向的外部一致性改善”。
+- 稿件修改：
+  - Results 按 label audit、human-only fixed target、cross-species transfer、ortholog-informed target shrinkage 重排。
+  - 新增 measurement-error shrinkage model、inner-validation early-stopping 说明、扩展 Discussion 与 Limitations。
+  - 将 `Saluki-label-independent` 改为 `Saluki-label-independent`，将读者-facing 的 `ortholog-informed target shrinkage` 改为 `ortholog-informed target shrinkage`；代码和结果字段名保持不变。
+  - 以新的补充图 S4 和补充表 S4 替换信息价值较低的 XGBoost tuning scan。
+
+### ChatGPT 5.6 Sol review adjudication and final evidence-role cleanup
+
+- 时间：
+  - `2026-07-15 CST`
+- 采纳的意见：
+  - 将 `Gejman` 的 15/54 样本量混杂作为正文核心结果处理，而不是只放在 Limitations；正文和摘要同步报告 size-matched null 与两类 study-balanced estimators。
+  - 同时报告 dynamic/fixed gene universe、coverage、PCA rank 和 imputation sensitivity；明确 outer test fold 从未用于 early stopping。
+  - Results 按 label audit、fixed-target human-only、cross-species transfer、target shrinkage 重排；摘要定义 PC1 并只保留不同 estimand 下不会混淆的核心数值。
+  - 将 `lambda=0.10` 写成 measurement-error working model 下的 shrinkage estimator，并显式给出 variance、species-shift bias 与 MSE 的关系。
+  - 将 Saluki agreement 限定为恢复已发布处理选择；将 ortholog concordance 写成作用不同的跨物种比较轴，不再表述为完全独立的外部验证。
+  - Fig. 1 中 fixed-target 数值统一为同一 repeated 10-fold 口径：human-only `0.748`、real priors `0.830`、shuffled priors `0.748`；Fig. 2 与补图统一使用 target-shrinkage 和 concordance 术语。
+- 未机械采纳的意见：
+  - 不把 study-balanced 分析包装成 `Gejman` 仍为第 1；真实结果为第 3，正文据此收紧结论。
+  - 不虚构第二个独立 half-life compendium、模拟结果或理论最优 `lambda`；这些内容保留为明确局限和后续验证方向。
+  - 不将 `lambda=0.10` 降为无关附属分析；它保留为第三项核心贡献，但与固定 Saluki human PC1 的模型排名完全分开。

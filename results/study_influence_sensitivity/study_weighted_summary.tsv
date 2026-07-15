@@ -1,0 +1,4 @@
+estimator	min_observed_per_gene	n_components	n_genes	saluki_pearson	worst_left_out	worst_stability_pearson	gejman_rank	gejman_stability_pearson
+sample_weighted	3	5	16444	0.9480232595871448	Gejman	0.9550487491223754	1	0.9550487491223754
+equal_study_weighted	3	5	16444	0.9706430079573697	Dieterich	0.965343569014361	3	0.9795891228244332
+study_mean_collapsed	3	5	16444	0.9676962450530393	Dieterich	0.9633609565675526	3	0.9776107176245175

@@ -16,6 +16,7 @@ from pathlib import Path
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 import seaborn as sns
 
@@ -111,6 +112,29 @@ def annotate_horizontal_bars(ax: plt.Axes, fmt: str = "{:.3f}", dx: float = 0.00
         )
 
 
+def draw_vertical_points(
+    ax: plt.Axes,
+    labels: list[str],
+    values: list[float],
+    colors: list[str],
+    *,
+    value_offset: float,
+) -> None:
+    x = np.arange(len(labels))
+    ax.scatter(x, values, s=52, c=colors, edgecolor="white", linewidth=0.8, zorder=3)
+    ax.set_xticks(x, labels)
+    for xpos, value in zip(x, values):
+        ax.text(
+            xpos,
+            value + value_offset,
+            f"{value:.3f}",
+            ha="center",
+            va="bottom",
+            fontsize=7.2,
+            color=COLOR["ink"],
+        )
+
+
 def draw_panel_a(ax: plt.Axes) -> None:
     seq = pd.read_csv(RESULTS / "human_sequence_prediction_common_benchmark.tsv", sep="\t")
     compact = pd.read_csv(RESULTS / "human_compact_all_common_targets.tsv", sep="\t")
@@ -123,14 +147,19 @@ def draw_panel_a(ax: plt.Axes) -> None:
     df = pd.DataFrame(rows, columns=["Model", "Pearson"])
     palette = [COLOR["gray"], COLOR["gray"], COLOR["teal"], COLOR["blue"]]
 
-    sns.barplot(data=df, x="Model", y="Pearson", palette=palette, hue="Model", legend=False, ax=ax)
+    draw_vertical_points(
+        ax,
+        df["Model"].tolist(),
+        df["Pearson"].astype(float).tolist(),
+        palette,
+        value_offset=0.0022,
+    )
     ax.set_title("Algorithm and feature comparison", fontsize=10.5, color=COLOR["ink"], pad=6)
     ax.set_xlabel("")
     ax.set_ylabel("Pearson r")
     ax.set_ylim(0.67, 0.75)
     ax.tick_params(axis="x", rotation=18, labelsize=7.8)
     ax.tick_params(axis="y", labelsize=8)
-    annotate_vertical_bars(ax)
 
 
 def draw_panel_b(ax: plt.Axes) -> None:
@@ -149,14 +178,19 @@ def draw_panel_b(ax: plt.Axes) -> None:
     keep["label"] = keep["setting"].map(label_map)
 
     palette = [COLOR["gray"], COLOR["teal"], COLOR["purple"], COLOR["green"], COLOR["blue"]]
-    sns.barplot(data=keep, x="label", y="pearson", palette=palette, hue="label", legend=False, ax=ax)
+    draw_vertical_points(
+        ax,
+        keep["label"].astype(str).tolist(),
+        keep["pearson"].astype(float).tolist(),
+        palette,
+        value_offset=0.0008,
+    )
     ax.set_title("Regulatory-block comparison", fontsize=10.5, color=COLOR["ink"], pad=6)
     ax.set_xlabel("")
     ax.set_ylabel("Pearson r")
     ax.set_ylim(0.705, 0.73)
     ax.tick_params(axis="x", rotation=18, labelsize=7.8)
     ax.tick_params(axis="y", labelsize=8)
-    annotate_vertical_bars(ax, dy=0.0006)
 
 
 def draw_panel_c(ax: plt.Axes) -> None:
@@ -173,14 +207,19 @@ def draw_panel_c(ax: plt.Axes) -> None:
     keep["label"] = keep["target"].map(label_map)
     palette = [COLOR["gray"], COLOR["blue"], COLOR["green"]]
 
-    sns.barplot(data=keep, x="label", y="pearson", palette=palette, hue="label", legend=False, ax=ax)
+    draw_vertical_points(
+        ax,
+        keep["label"].astype(str).tolist(),
+        keep["pearson"].astype(float).tolist(),
+        palette,
+        value_offset=0.0015,
+    )
     ax.set_title("Label-definition sensitivity", fontsize=10.5, color=COLOR["ink"], pad=6)
     ax.set_xlabel("")
     ax.set_ylabel("Pearson r")
     ax.set_ylim(0.70, 0.75)
     ax.tick_params(axis="x", rotation=0, labelsize=7.8)
     ax.tick_params(axis="y", labelsize=8)
-    annotate_vertical_bars(ax)
 
 
 def draw_panel_d(ax: plt.Axes) -> None:
@@ -202,14 +241,26 @@ def draw_panel_d(ax: plt.Axes) -> None:
     keep = keep.sort_values("subset", ascending=False)
     keep["label"] = keep["subset"].map(label_map)
 
-    sns.barplot(data=keep, y="label", x="pearson", color=COLOR["purple"], ax=ax)
+    y = np.arange(len(keep))
+    values = keep["pearson"].astype(float).to_numpy()
+    ax.scatter(values, y, s=52, color=COLOR["purple"], edgecolor="white", linewidth=0.8, zorder=3)
+    ax.set_yticks(y, keep["label"].astype(str).tolist())
     ax.set_title("Gene-subset sensitivity", fontsize=10.5, color=COLOR["ink"], pad=6)
     ax.set_xlabel("Pearson r")
     ax.set_ylabel("")
     ax.set_xlim(0.70, 0.745)
     ax.tick_params(axis="x", labelsize=8)
     ax.tick_params(axis="y", labelsize=7.6)
-    annotate_horizontal_bars(ax)
+    for xpos, ypos in zip(values, y):
+        ax.text(
+            xpos + 0.0013,
+            ypos,
+            f"{xpos:.3f}",
+            ha="left",
+            va="center",
+            fontsize=7.2,
+            color=COLOR["ink"],
+        )
 
 
 def main() -> None:
@@ -226,7 +277,7 @@ def main() -> None:
         add_panel_label(ax, label)
 
     fig.tight_layout(w_pad=1.5, h_pad=2.8)
-    out = FIG_MAIN / "Fig07_sequence_progression_cn"
+    out = FIG_MAIN / "Fig06_sequence_progression_cn"
     save_all(fig, out)
     print(f"Wrote {out}")
 
