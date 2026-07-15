@@ -1,0 +1,10 @@
+species	subset	variant	n_samples	n_genes_labels	n_common_genes	pearson_vs_saluki_human_pc1	spearman_vs_saluki_human_pc1
+human	all_samples	zscore_only_pc1	54	13921	13921	0.9631557283163559	0.9619683964235263
+human	all_samples	rerun_pipeline_pc1	54	13921	13921	0.9631213039552501	0.9619291412620763
+human	all_samples	as_is_pc1	54	13921	13921	0.963045485363426	0.9618460309896723
+human	no_gejman	as_is_pc1	39	13921	13921	1.0	0.9999999999999999
+human	no_gejman	zscore_only_pc1	39	13921	13921	0.9999995080360614	0.9999993706939175
+human	no_gejman	rerun_pipeline_pc1	39	13921	13921	0.9999888473171398	0.9999950759787029
+mouse	all_samples	as_is_pc1	27	14463	14463	1.0	1.0
+mouse	all_samples	zscore_only_pc1	27	14463	14463	0.9999894607218105	0.9999889289741247
+mouse	all_samples	rerun_pipeline_pc1	27	14463	14463	0.9999238785469998	0.9999596709486113

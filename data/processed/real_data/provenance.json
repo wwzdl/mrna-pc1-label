@@ -1,0 +1,13 @@
+{
+  "sources": {
+    "article": "https://genomebiology.biomedcentral.com/articles/10.1186/s13059-022-02811-x",
+    "github_repo_api": "https://api.github.com/repos/vagarwal87/saluki_paper",
+    "zenodo_record_api": "https://zenodo.org/api/records/7158836",
+    "moesm2": "https://static-content.springer.com/esm/art%3A10.1186%2Fs13059-022-02811-x/MediaObjects/13059_2022_2811_MOESM2_ESM.xlsx",
+    "moesm3": "https://static-content.springer.com/esm/art%3A10.1186%2Fs13059-022-02811-x/MediaObjects/13059_2022_2811_MOESM3_ESM.xlsx"
+  },
+  "notes": {
+    "moesm2": "Public sparse matrix of transformed half-life values collected from published studies.",
+    "moesm3": "Public Saluki filtered/transformed/imputed/quantile-normalized matrix with human PC1 consensus."
+  }
+}

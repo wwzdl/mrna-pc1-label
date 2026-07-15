@@ -1,0 +1,16 @@
+[
+  {
+    "species": "human",
+    "full_pc1_pearson_vs_saluki": 0.9480232595871448,
+    "full_pc1_spearman_vs_saluki": 0.9499876908630561,
+    "top_influential_study": "Gejman",
+    "top_influential_delta_saluki_reference_pc1_pearson": 0.03492004229154977
+  },
+  {
+    "species": "mouse",
+    "full_pc1_pearson_vs_saluki": 0.9577413332450868,
+    "full_pc1_spearman_vs_saluki": 0.9574553641377478,
+    "top_influential_study": "Hanna",
+    "top_influential_delta_saluki_reference_pc1_pearson": -0.010727452055999898
+  }
+]

@@ -1,0 +1,18 @@
+{
+  "analysis": "human-only cross-target evaluation of weak ortholog regularization",
+  "human_target": "human_no_gejman_pc1",
+  "ortholog_regularized_target": "orthoreg_reconstructed_mouse_pc1_0.10",
+  "lambda": 0.1,
+  "mouse_label_source": "locally reconstructed mouse PC1 under Saluki-like coverage",
+  "features": "compact_all human sequence/regulatory features only",
+  "n_features": 1802,
+  "n_genes": 12307,
+  "cv_splits": 10,
+  "random_states": [
+    13,
+    42,
+    101
+  ],
+  "bootstrap_iterations": 2000,
+  "prediction_boundary": "No mouse prior values are used as model inputs in this analysis."
+}

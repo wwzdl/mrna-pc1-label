@@ -1,0 +1,2 @@
+comparison_type	cohort	left	right	n	pearson	spearman	mse	rmse	mae	median_abs_error	p90_abs_error	p95_abs_error	mean_signed_diff	sd_signed_diff
+human_no_gejman_pc1_vs_saluki_human_pc1	ortholog_gene_universe	human_no_gejman_pc1	saluki_human_pc1	10768	0.9905692814704377	0.9926131858928192	0.01899578404608427	0.1378251938002783	0.0816162907747209	0.043931574600521654	0.19559845948544302	0.2957734814356281	-0.00018490727327093994	0.13782506976375733

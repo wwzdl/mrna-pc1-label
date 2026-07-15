@@ -1,0 +1,62 @@
+# Python caches
+__pycache__/
+scripts/__pycache__/
+*.pyc
+.venv/
+
+# Office temp files
+~$*.docx
+~$*.pptx
+
+# Reproducible submission exports and local QA artifacts
+manuscript/bmb_submission/*.docx
+manuscript/bmb_submission/bmb_*supplementary_material*.pdf
+manuscript/bmb_submission/upload_candidate/
+manuscript/bmb_submission/qa_*/
+manuscript/bmb_submission/bmb_upload_candidate_*.zip
+manuscript/bmb_submission/bmb_upload_candidate_*.zip.sha256
+manuscript/bmb_submission_*/
+
+# Historical manuscript branches not part of the active BMB source-of-truth chain
+manuscript/bk/
+manuscript/tcbb_submission/
+
+# Large local inputs and caches; keep outside the lightweight GitHub source repo
+backups/
+data/raw/
+data/interim/
+The genetic and biochemical determinantsof mRNA degradation rates in mammals 13059_2022_Article_2811.pdf
+
+# Large reproducible matrices and fold-level predictions; keep compact summaries in Git
+data/processed/real_data/**/*_matrix.tsv
+results/*features*.tsv.gz
+results/**/processed_matrix.tsv
+results/**/raw_low_rank_imputed_matrix.tsv
+results/**/bias_aware_fitted_matrix.tsv
+results/**/bias_aware_residual_matrix.tsv
+results/**/oof_predictions/
+results/**/oof_predictions.tsv
+results/**/oof_three_seed_ensemble.tsv.gz
+results/**/study_residual_values.tsv.gz
+results/**/ortholog_label_values.tsv
+results/**/ortholog_pairs.tsv
+results/**/common_ortholog_pairs*.tsv
+
+# Historical tuning/smoke outputs and per-gene target vectors are not part of
+# the public release. Their compact summaries remain trackable.
+results/*smoketest*/
+results/demo_workflow*/
+results/whatif_saluki_thresholds/
+results/label_competition/
+results/**/targets/
+results/**/*blend*.tsv
+results/**/*.png
+results/**/*.pdf
+results/moesm3_saluki_matrix_check/**/*_pc1.tsv
+
+# Submission-grade TIFF bundles and deferred figure PDFs are kept locally;
+# current PNG/SVG assets remain trackable in the lightweight source release.
+figures/**/*.pdf
+manuscript/bmb_submission/figures/**/*.tiff
+manuscript/bmb_submission/figures/**/*.pdf
+manuscript/bmb_submission/supplementary_figures/tiff_600dpi/

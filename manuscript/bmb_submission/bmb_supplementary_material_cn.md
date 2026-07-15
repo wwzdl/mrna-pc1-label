@@ -1,0 +1,367 @@
+# 补充材料：面向哺乳动物 mRNA 半衰期预测的 study-aware 标签审计、弱同源正则化与跨物种迁移
+
+**期刊：** *Bulletin of Mathematical Biology*  
+**论文题名：** Study-aware label auditing, weak ortholog regularization, and cross-species transfer for mammalian mRNA half-life prediction  
+**作者：** Xu Jin，Wenzhuo Wang，Anhui Wang，Yuebin Zhang，Yingchen Mao，Dinglin Zhang  
+**单位：** 辽宁师范大学生物与化学交叉研究中心，辽宁大连 116029；辽宁师范大学物理与电子技术学院，辽宁大连 116029；大连海事大学理学院，辽宁大连 116026；分子模拟与设计实验室，分子反应动力学国家重点实验室，中国科学院大连化学物理研究所，辽宁大连 116023  
+**通讯作者：** Yingchen Mao，myc@lnnu.edu.cn；Dinglin Zhang，dlzhang@dicp.ac.cn
+
+## S1. 补充说明
+
+本补充材料围绕主文的三项主结论展开。第一，study-aware label audit 用 reference-free PC1 stability 筛查高影响 study，再用 Saluki agreement 与 ortholog concordance 验证其后果。第二，在 Saluki human PC1 固定不变时，human-only baseline 与 cross-species transfer setting 分开评估，并由 permutation、paired bootstrap、residual decomposition 和 multi-seed 检查支撑。第三，0.10 weak ortholog regularization 构建 human-dominant mammalian stability target，并由标签距离、study-noise scale、cross-target evaluation 和 prior ablation 共同界定。该目标是主文的核心标签构建结果，但不参与固定 Saluki human PC1 的排行榜。
+
+与主文相比，补充材料的功能不是重复最高分，而是保留支撑结论所需的方法细节，包括 sample-level PCA 定义、完整 study-influence 结果路径、调参稳健性、prior 置换与 residual controls、ortholog 标签距离、训练集合边界、10-fold split-sensitivity checks 以及实现细节说明(Agarwal and Kelley 2022; Chen and Guestrin 2016; Pedregosa et al. 2011)。
+
+## S2. 数据提取、预处理与 ortholog 定义
+
+本节只补充主文 3.1 未展开的字段、参数和定义口径。源数据仍来自 Saluki 论文公开 supplement 中的 `MOESM2` 与 `MOESM3` 表格(Agarwal and Kelley 2022)。其中，`MOESM2` 是 human 与 mouse 的 transformed mRNA half-life gene × sample 矩阵，前两列为 Ensembl gene ID 和 gene name，后续列为不同 study、实验方法、细胞类型和重复样本的 transformed values；这是本文标签重建与留一研究影响分析的主输入。`MOESM3` 则是 Saluki 原文进一步处理后的矩阵，第三列为 Saluki 发布的 `half-life (PC1)` summary label；在本文叙述中，human 侧记为 Saluki human PC1，mouse 侧记为 Saluki mouse prior；后续列为 processed sample values。对应到 prior 表述时，可简写为：`mouse_pc1` 是我们重建的 mouse prior，另一条小鼠侧先验来自 Saluki 发布标签。`MOESM3` 的 human 工作表说明该 PC1 基于剔除 `Gejman` 后的数据集，mouse 工作表基于全部 mouse 数据集，因此它在本文中主要充当参照与控制，而不是替代主线重建流程的训练标签来源。由于 `MOESM2` 已经是 transformed values，本研究中的再分析不再重复执行 log 变换，而是从 sample-wise z-score 开始，再执行 iterative PCA 缺失值插补和 quantile normalization(Tipping and Bishop 1999; Troyanskaya et al. 2001; Bolstad et al. 2003)。
+
+`compact_all` 使用的预计算 sequence/regulatory feature blocks 来自配套公开 Saluki 数据集（DOI：[10.5281/zenodo.6326409](https://doi.org/10.5281/zenodo.6326409)）。
+
+Ortholog 映射来自 Ensembl Compara release 115 的 mouse-human homology 表(Martin et al. 2023)。我们只保留 `homology_type = ortholog_one2one` 且 `homology_species = homo_sapiens` 的记录；orthology 的解释沿用既有 evolutionary-genomics 定义(Gabaldon and Koonin 2013)。文中出现的 high-confidence ortholog 也不是本文重新设阈值得到的子集，而是直接沿用 Ensembl 提供的二元字段 `is_high_confidence`；当 `is_high_confidence == 1` 时，该对 ortholog 被记为高置信。按照 Ensembl 的 orthology QC 文档，这一标记来自其上游同源质量控制流程，综合考虑序列/树一致性，并在可用时结合 gene-order conservation 或 whole-genome alignment 等外部证据。本文不重新实现该 QC，只把这一现成标记作为更严格的子集定义。
+
+主文已报告本地重建标签与 Saluki 标签的总体一致性；这里仅记录该流程对 baseline consensus label 的复现是可信的：human 全量重建 PC1 与 Saluki human PC1 的 Pearson 为 0.948，mouse 为 0.958。具体参数口径见补充表 S1，模型输入边界见补充表 S2。
+
+### 补充表 S1. 标签重建和留一研究影响分析的复现参数
+
+| 步骤 | 参数/口径 | 输出 | 说明 |
+|:--|:--|:--|:--|
+| 输入矩阵 | `MOESM2` transformed human/mouse half-life matrix | species-specific gene × sample matrix | 不重复 log transform；从 transformed values 开始 |
+| 元信息整理 | `study`、`method`、`cell type`、`replicate`、`species` | standardized sample metadata | 样本名解析后手工核对，用于 study-level leave-one-out |
+| Coverage filter | 主线重建 `min_observed_per_gene=3` | retained genes | 用于可复现的全量标签审计和留一研究影响分析 |
+| Saluki-like coverage | human `min_observed_per_gene=10`；mouse `min_observed_per_gene=5` | 本地重建的、采用 Saluki-like coverage 口径的 human/mouse labels | 用于 0.10 weak ortholog regularization |
+| Sample standardization | sample-wise z-score | standardized matrix | 降低不同实验尺度差异 |
+| Missing-value handling | iterative PCA imputation；最多 30 iterations；tolerance `1e-6` | complete matrix | 避免简单均值填补扭曲 gene-level covariance |
+| Distribution alignment | quantile normalization | processed matrix | 降低样本分布差异对 PC1 的影响 |
+| Consensus extraction | PCA on gene × sample matrix；PC1 sign aligned to gene-wise mean | reconstructed PC1 label | human full vs Saluki human PC1 Pearson=0.948；mouse=0.958 |
+| Study influence | leave-one-study-out 后完整重跑上述流程 | PC1 stability screen 与 Saluki-label agreement validation | reference-free stability 负责筛查；Saluki agreement 负责参照验证；下游模型分数不参与排序 |
+
+### 补充表 S2. 建模输入、适用对象和不可越界的解释
+
+| 模型层级 | 必需输入 | 可用于新序列？ | 主要输出 | 不应越界的表述 |
+|:--|:--|:--|:--|:--|
+| Base sequence model | 5′UTR、CDS、3′UTR 分区序列 | 可以 | base sequence human-only prediction | 不能声称达到 `compact_all` 或 prior-enhanced 最高性能 |
+| Compact human-only model | Ensembl gene_id + base features + CWCS/SeqWeaver/DeepRiPe 预计算 blocks | 仅在重新生成 regulatory blocks 后可以 | pure human sequence/regulatory benchmark | 主文应把它写成透明 human-only 基线，而不是 sequence-only 胜出声明 |
+| Global prior-enhanced model | `compact_all` + 两个 mouse prior 数值 + 可用性/高置信 0/1 指示列 | 需要可映射 mouse ortholog prior | 使用独立于 human target 构建的 mouse-side covariates 进行 cross-species transfer | 不能写成 sequence-only 或 raw-sequence end-to-end |
+| Coverage-aware fallback | prior coverage status + human-only prediction | 适用于部署分层 | 有 prior 时用 prior-enhanced；无 prior 时退回 human-only | 不能对 missing-prior genes 外推 prior-enhanced 结论 |
+| 0.10 weak ortholog regularization | human no-Gejman PC1 + mapped mouse PC1 + `λ` | 不是单独的新序列预测器 | human-dominant mammalian stability target | 不能写成新的直接 human half-life ground truth，也不能与固定目标结果混排 |
+
+![](figures/supplement/FigS01_prediction_boundary_flow.png)
+
+**补充图 S1** 不同输入条件下的预测使用边界。a，仅有 5′UTR/CDS/3′UTR 分区序列时，只能使用 base sequence human-only 模型。b，已有 Ensembl human gene 且能合并预计算 regulatory blocks 时，可使用 compact sequence/regulatory 模型。c，若进一步存在可映射 mouse ortholog prior，可使用 prior-enhanced 模型；这些 mouse-side covariates 独立于 human target 构建，因此该结果属于 cross-species transfer setting。d，实际部署时应按 prior 覆盖情况选择模型层级；没有 mouse prior 的基因应退回 compact human-only 或 base sequence 层级。
+
+## S3. 样本层面 PCA 诊断
+
+样本 PCA 是留一研究影响分析之前最直观的可视化诊断。正文图 3 已保留 human raw/processed PCA 作为主证据，这里不再重复放置相同图件，而是补充算法口径与 mouse 侧结果。human 原始矩阵的 sample PCA 显示，样本主要按 study 与 method 聚类，而不是按 cell type 聚类，这与原始论文的核心观察一致(Agarwal and Kelley 2022)。预处理后，这种结构有所减弱，但并未完全消失。mouse 数据则整体更紧凑，尽管仍保留一定研究来源结构。该结果提示：即使完成统一标准化，compendium 中仍存在需要进一步诊断的 study-level 差异。
+
+这里的 sample-level PCA 只用于可视化诊断，不用于构建监督标签，也不参与下游模型训练。Raw view 与 processed view 的差别在于：raw view 尽量保留 `MOESM2` transformed matrix 的原始尺度，只为了解决 PCA 不能处理缺失值的问题而填补 missing entries；processed view 则使用与标签重建相同的预处理流程，用于观察标准化和分布对齐之后 study/method structure 是否仍然存在。低秩 PCA 插补不是利用 Saluki human PC1 或任何下游预测标签监督完成的，而是只在 gene × sample 矩阵内部利用低秩结构重建缺失位置。
+
+具体插补算法如下。设输入矩阵为 `X`，行为 genes，列为 samples；先保留至少有 3 个 observed samples 的基因，并记录原始缺失掩码 `M`。第一步，用每个 sample 列的均值初始化该列缺失值；如果某一列全缺失，则初始化为 0（实际数据中未出现这种情况）。第二步，在当前填补矩阵上执行 `sklearn.decomposition.PCA(svd_solver="full", random_state=0)`，得到 rank-`k` 低秩表示并用 `inverse_transform` 重构矩阵。第三步，只把原始缺失位置 `M` 上的值替换为低秩重构值，原始 observed entries 在整个迭代过程中保持不变。第四步，计算本轮填补矩阵 `X_t` 与上一轮填补矩阵 `X_{t-1}` 的最大绝对差，即 `delta = max(abs(X_t - X_{t-1}))`；若 `delta < tol`，说明相邻两轮对缺失值的估计已经几乎不再改变，算法提前停止；若未达到该条件，则继续迭代直到最大迭代次数。Raw view 使用 `k=5`、`max_iter=10`、`tol=1e-5`；processed view 使用标签重建流程的默认设置，即 `k=min(5, min(n_genes, n_samples)-1)`、`max_iter=30`、`tol=1e-6`。完成插补后，将 gene × sample 矩阵转置为 sample × gene 矩阵，再计算前两个 sample PCs。
+
+复现脚本如下：
+
+```bash
+bash scripts/run_sample_pca_imputation_reproducibility.sh --species both
+```
+
+默认输出目录为 `results/sample_pca_imputation_reproducibility/`。其中每个 species 子目录包含 `raw_low_rank_imputed_matrix.tsv`、`processed_matrix.tsv`、`sample_pca_raw.tsv`、`sample_pca_processed.tsv`、`sample_pca_raw_vs_processed.png` 和 `imputation_and_pca_parameters.json`。参数 JSON 记录输入矩阵、coverage filter、raw/processed 插补参数、sample PCA 方向和“未使用任何标签或模型信息”的边界说明。
+
+### 补充表 S3. Sample-level PCA 诊断中的 raw 与 processed 矩阵口径
+
+| PCA 视图 | 输入矩阵 | 缺失值处理 | 额外预处理 | PCA 计算方式 | 用途与边界 |
+|:--|:--|:--|:--|:--|:--|
+| Raw transformed view | `MOESM2` transformed gene × sample matrix after `min_observed_per_gene=3` coverage filter | 仅为可视化填补缺失值；iterative low-rank PCA imputation，`n_components=5`、`max_iter=10`、`tol=1e-5` | 不执行 sample-wise z-score，不执行 quantile normalization，不提取 PC1 标签 | 将填补后的矩阵转置为 sample × gene 后计算前两个 PCs | 展示 transformed matrix 中的 study/method 结构；不作为监督标签或模型输入 |
+| Processed view | 同一 coverage-filtered `MOESM2` matrix | 使用标签重建流程中的 iterative PCA imputation；默认 `max_iter=30`、`tol=1e-6` | `apply_log=False`；sample-wise z-score 与 quantile normalization | 将 processed gene × sample matrix 转置为 sample × gene 后计算前两个 PCs | 评估标准化、插补和分布对齐后是否仍保留 study/method 结构；用于决定是否需要 leave-one-study-out 审计 |
+
+![](figures/supplement/FigS_mouse_pca_panel.png)
+
+**补充图 S2** Mouse raw 与 processed sample-level PCA。a，raw transformed matrix，仅为可视化对缺失值插补。b，经过 sample-wise standardization、iterative PCA imputation 和 quantile normalization 的 processed matrix。每个点代表一个 mouse half-life 样本；颜色表示实验方法，点形表示 study。与正文图 3 的 human PCA 相比，mouse 样本整体更紧凑，但仍保留研究来源结构。
+
+## S4. 留一研究影响的补充排序与结果路径
+
+正文图 4 已展示 human leave-one-study-out 的主结果，因此补充材料不重复该图，只保留 mouse 全排序。完整 human 与 mouse 数值分别保存在 `results/study_influence/human/study_influence.tsv` 和 `results/study_influence/mouse/study_influence.tsv`。Human audit 分两阶段解释：`PC1 stability` 不使用 Saluki PC1，并在全部候选 studies 中将 `Gejman` 排为影响最大者；`Saluki-PC1 agreement gain` 随后用于 reference-informed validation，ortholog concordance 再提供正交的跨物种验证。这个判断不使用下游 human-only、prior-enhanced 或 ortholog-regularized 模型分数。Mouse 中，`Hanna` 的移除虽会显著改变 full-label geometry，却不会提高与 Saluki mouse prior 的一致性，因此不作与 human 相同的删除解释。
+
+这种 human/mouse 非对称性表明，高 influence 不自动等于应删除。本文对 `Gejman` 的结论是“重现并量化其对当前 consensus geometry 的主导影响”，而不是声称该 study 在所有生物学分析中都无效。Mouse 侧缺少多证据一致性，因此保留原始 compendium 结构。
+
+![](figures/supplement/FigS_mouse_study_influence.png)
+
+**补充图 S3** Mouse leave-one-study-out full ranking。a，每个 leave-one-study-out PC1 与 full mouse PC1 的相关；数值越低，说明该 study 对共识标签几何影响越大。b，移除每个 study 后与 Saluki mouse prior 的一致性变化。`Hanna` 的 stability 最低，但 agreement change 为负，因此 mouse 未出现正文图 4 中 human `Gejman` 的多证据一致性。
+
+## S5. Tuning scan 与补充稳健性说明
+
+本节只保留一个最必要的工程性补充：在当前统一 XGBoost 设定下，human-only `compact_all` 的表现对小范围参数调整并不敏感，因此正文中的 human baseline 不是依赖某个偶然“最佳参数”才成立。与此同时，prior-enhanced 结果的稳定性主要由正文与后续补充中的 shuffled control、10-fold robustness 和 residual analysis 支撑，而不再依赖额外的线性加权图或子集重复展示。
+
+![](figures/supplement/FigS_tuning_scan.png)
+
+**补充图 S4** Compact all tuning scan。横向柱状图按 Pearson 对 10 组 XGBoost 参数配置排序；橙色柱为正文使用的固定主配置。柱长使用未舍入的 Pearson，柱端标签显示五位小数。不同设置的 Pearson 仅在 0.735-0.741 范围内变化，说明 human-only compact baseline 不依赖某一个被窄范围优化出的参数点。
+
+## S6. 置换对照的补充解释
+
+主文报告了最核心的 permutation 结果：真实双 prior global 模型的 Pearson 为 0.829，而 prior 被打乱后回到 0.745。这里最关键的不是“分数掉了多少”，而是**到底什么被打乱了**。第一，这个打乱是 fold-aware 的，因此不会把训练折的 prior 顺序错误地泄露回测试折。第二，打乱只发生在原本有 prior 数值的基因之间；哪些基因没有 prior、对应的可用性 0/1 指示列、以及 high-confidence 0/1 指示列都保持不变，因此“缺哪些值”这一结构本身并没有被破坏。第三，真实 prior 相对 shuffled prior 的 Pearson 提升约为 +0.085，R2 提升约为 +0.135，说明真正起作用的是 prior 数值与基因身份之间的对应关系，而不是“额外多了几列”。
+
+在三组独立随机划分的 10-fold OOF 评估中，真实双 prior global 模型为 Pearson 0.830±0.001，shuffled-prior control 为 0.748±0.001，human-only `compact_all` 也为 0.748±0.001；`coverage-aware fallback` 为 0.832±0.001。这里的 `±` 是 across-seed SD。三组 OOF predictions 合并后的 paired bootstrap 显示，real prior 相对 shuffled prior 的增益为 0.0794（95% CI 0.0735-0.0855），相对 human-only 的增益为 0.0799（95% CI 0.0740-0.0862）。因此，split sensitivity 与 gene-level uncertainty 都支持同一结论。
+
+## S7. 残差分解的补充解释
+
+残差分解的目的，是把 prior 信号和 human feature 信号分解开来看。直接相关分析已经表明，`mouse_pc1` 与 Saluki human PC1 的相关接近 0.78，因此 prior 本身就是强信号。为了避免把“prior 很强”误解成“prior-enhanced model 只是复制 prior”，我们把预测显式拆成两阶段 out-of-fold decomposition，而不是把 prior 和 human features 一起丢进同一个黑箱后再回头解释。
+
+具体实现如下。第一，只保留同时具有 `mouse_pc1` 与 Saluki mouse prior 的 `both_priors_available` genes（N=11,107），因为 prior-only 分解需要每个 gene 同时具备两类 mouse-side prior。第二，在每个 5-fold outer split 中，仅用 `mouse_pc1` 和 Saluki mouse prior 两列训练 RidgeCV，并对 held-out genes 生成 `prior_only_prediction`。第三，在训练折中计算 Saluki human PC1 减去 prior prediction，把它作为 residual target。第四，只用 human `compact_all` features 训练 XGBoost/CUDA 去预测这个 residual target。第五，对 held-out genes 的最终预测定义为 `prior_only_prediction + compact_residual_prediction`。因此，最终分数不是把 prior 和 human features 同时丢进一个黑箱后直接解释，而是在折外预测层面明确分解为 `mouse-prior component` 与 `human-feature residual correction`。
+
+复现命令如下：
+
+```bash
+source scripts/activate_env.sh
+python -m mrna_half_life_paper.prior_residual_analysis
+```
+
+### 补充表 S4. Prior residual analysis 的两阶段 OOF 分解
+
+| model | genes | prior_features | human_features | pearson | spearman | r2 | delta_r2_vs_prior | remaining_variance_explained |
+|:--|--:|--:|--:|--:|--:|--:|--:|--:|
+| prior_only_linear | 11107 | 2 | 0 | 0.792 | 0.782 | 0.627 | 0.000 | 0.00% |
+| compact_all_only | 11107 | 0 | 1802 | 0.739 | 0.731 | 0.544 | -0.084 | NA |
+| prior_plus_compact_residual | 11107 | 2 | 1802 | 0.826 | 0.818 | 0.675 | 0.048 | 12.79% |
+
+这里的 `remaining_variance_explained` 计算为 `(R2_final - R2_prior) / (1 - R2_prior)`。也就是说，在 prior-only model 已经解释的部分之外，human `compact_all` features 还能解释约 12.8% 的剩余方差。这说明 prior-enhanced model 更准确地说是“strong mouse prior + human correction”，而不是“prior 单独就够了”。
+
+这组结果也明确了方法边界：held-out human genes 的监督标签不进入输入，所有预测均在 out-of-fold 框架下生成；但 mouse priors 本身是与目标相关的外部 gene-level 信息，因此相应结果属于 cross-species transfer，而不是 sequence-only setting。完整 transfer model 也不是简单复制 prior，而是在其基础上继续学习 human-specific 结构。
+
+## S8. 0.10 弱同源基因正则化的补充解释与 cross-target 检验
+
+该分析改变的是**监督目标**，global prior benchmark 改变的是**输入信息**，二者必须分开解释。0.10 ortholog-regularized target 定义为 90% human no-Gejman z-scored label 加 10% mapped reconstructed-mouse z-scored label；没有 ortholog signal 的 human genes 保留 human label。它不是新的直接实验 half-life，而是从 multi-study compendium 中得到的 human-dominant mammalian stability score。
+
+几何证据支持 human dominance。正则化前，human no-Gejman PC1 与本地重建 mouse PC1 在 10,768 个 one-to-one ortholog 上的 Pearson 为 0.789，RMSE 为 0.663，MAE 为 0.512。正则化后，目标与 mouse PC1 的 Pearson 为 0.827，但与 human no-Gejman PC1 的 Pearson 仍为 0.9982（95% bootstrap CI 0.9981-0.9983），RMSE 为 0.065，MAE 为 0.050。其 label shift 也远小于 ordinary study-to-study differences（S9 和补充表 S12）。
+
+`λ` 敏感性结果进一步说明为何主分析采用 0.10。相同 5-fold、三组 random seeds 的控制中，`λ = 0.05/0.10/0.30` 对应的 target-versus-Saluki Pearson 分别为 0.988/0.987/0.975，target-versus-mapped-mouse Pearson 分别为 0.809/0.827/0.895，prior-enhanced target prediction 分别为 0.842/0.854/0.896。较大的 `λ = 0.30` 得分最高，但目标也更明显地向 mouse 方向移动；0.10 因此是限制跨物种贡献的保守操作点，而不是使 CV 分数最大的权重。完整结果见 `results/ortholog_regularized_label_multiseed/summary_by_label.tsv`。
+
+Cross-target evaluation 进一步检查“改 target 是否损害原 human 标签”。在同一 12,307-gene universe、同一 1802 human-only features、同一 10-fold × 3 seeds 和相同模型参数下，以 human no-Gejman PC1 训练后在该目标上评估得到 r=0.7476±0.0010；改用 regularized target 训练、仍在原 human target 上评估得到 r=0.7480±0.0010。三组 OOF prediction 合并后的 paired difference 为 +0.0003（95% CI -0.0006 至 0.0012）。因此，在当前分辨率下没有检测到 human-label predictability 的损失或人为提升。
+
+使用显式 mouse priors 预测 regularized target 时可达到 0.855±0.001，而 fixed Saluki human PC1 的同宇宙 prior-enhanced baseline 为 0.839±0.001。这一差异反映 regularized target 与 conserved ortholog covariates 更一致，不能解释成 pure human sequence-only 能力提高。移除构造目标时使用的本地重建 `mouse PC1`、仅保留 Saluki mouse prior 及指示列后仍为 0.852±0.001；只保留 missingness/high-confidence indicators 则回到 0.753±0.001。`λ = 0.10` 因而是有边界的核心标签构建结果，不是固定 human target 的替代排行榜。
+
+## S9. `λ = 0.10` 标签偏移与 study-level 噪音的尺度比较
+
+主文图 6c 和表 3 已给出“正则化引入的标签偏移远小于 study-level noise”的对应证据；本节只记录这一比较的精确计算口径。这里需要先区分两个概念：`human no-Gejman PC1` 是多个 study 综合后的 consensus label，而 `study mean label` 是把单个 study 内样本取均值后得到的 single-study proxy。后者天然带有更强的 study-specific measurement noise，因此其两两相关不应被误读为最终 consensus label 的稳定性。
+
+具体计算分三步。第一，在 one-to-one ortholog human gene universe 上，对 MOESM2 human 样本执行 sample-wise z-score，避免不同样本量纲直接混合。第二，对每个 study 内样本取均值，得到 study mean label；随后每个 study mean label 自身再做 z-score，使其与 `λ = 0.10` target、human no-Gejman PC1 处在同一标准化标签尺度。第三，只进行方向对齐，即若某个 study label 与参考标签的 Pearson 为负，则乘以 `-1`；不执行线性拟合、不重标定斜率，也不使用下游模型预测值。主分析中方向对齐参考为 human no-Gejman PC1；直接改为对齐 `λ = 0.10` target 后，153 个 no-Gejman study pairs 的中位 Pearson、RMSE 和 MAE 不变，因为 `λ = 0.10` target 与 human no-Gejman PC1 本身几乎同向（Pearson=0.9979）。
+
+关键结果见补充表 S12。`λ = 0.10` target 与原 human no-Gejman PC1 几乎完全一致：Pearson=0.9979，RMSE=0.0646，MAE=0.0501。相比之下，normal studies 的 study mean labels 两两比较只有中位 Pearson=0.5303，中位 RMSE=0.9540，中位 MAE=0.7203；这个中位 Pearson 偏低，主要反映两个 single-study proxies 的独立噪音衰减，而不是方向对齐错误。更直接的量级比较来自误差指标：normal-study pair 的中位 RMSE 和 MAE 分别约为 `λ = 0.10` 标签 shift 的 14.8 倍和 14.4 倍。即使只保留样本数不少于 2 的 study，或先执行完整 Saluki-like preprocessing 再按 study 取均值，这个量级关系仍然成立。因而，更稳妥的说法不是“正则化偏移可以忽略不计”，而是：`λ = 0.10` 代表一个相对于实验噪音尺度很小的 shrinkage。
+
+## S10. 预测输入、调控特征来源与使用边界
+
+本框架不能简单表述为“给一条裸序列即可得到完整预测”。当前模型的输入分为三个层级，每个层级对应不同的可用性和性能边界。第一层是 base sequence prediction：用户需要提供明确分区的 5′UTR、CDS 和 3′UTR 序列，模型据此计算区域长度、GC、codon frequency、区域 3-mer 和 3′UTR 4-mer 等基础特征。这一层最适合全新人工序列或没有外部注释的新 transcript，但它只对应 base sequence 或 human-only 预测，不包含完整 regulatory blocks，也不应宣称达到 prior-enhanced 最高性能。
+
+第二层是 compact sequence/regulatory prediction，适用于已有 Ensembl human gene。这里的 CWCS、SeqWeaver 和 DeepRiPe 调控特征不是从裸序列即时计算出来的，而是来自 Saluki datapack 中已经预计算好的表格：`CWCS.txt.gz`、`SeqWeaver_predictions/*_avg.txt.gz` 和 `DeepRiPe_predictions_v83/*_avg.txt.gz`（Alipanahi et al. 2015；Avsec et al. 2021）。因此，对已有 gene_id，可以直接把这些调控块合并到基础序列特征中，形成 `compact_all`；但对新的人工序列，若不重新运行对应的 miRNA/RBP/regulatory prediction pipeline，就不能生成同等意义的 compact regulatory features。
+
+第三层是 cross-species prior-enhanced prediction，适用于已有 human gene 且存在可映射 mouse ortholog prior 的场景。输入包括两个 prior 数值（`mouse_pc1` 和 Saluki mouse prior）及对应的 availability/high-confidence 指示列。这些 mouse-side covariates 独立于 human target 构建；与 0.10 ortholog regularization 不同，这一层并**不改变监督目标**，预测目标仍是 Saluki human PC1。没有任何 mouse prior 时，应采用 coverage-aware fallback，退回 human-only compact model。
+
+prior-missingness 分层分析支持这一使用边界。在全部 12,916 个基因上，real both-prior 模型 Pearson 为 0.8300±0.0007；coverage-aware fallback 达到 0.8318±0.0008。两种 mouse prior 都可用的 11,107 个基因上，real both-prior 模型 Pearson 为 0.8433±0.0010，而 human-only 为 0.7456±0.0014；相反，在两种 mouse prior 都缺失的 1,347 个基因上，real both-prior 模型 Pearson 为 0.7555±0.0013，低于 human-only 的 0.7695±0.0006。因此，本研究的实际应用口径应写为：模型可支持 feature-based gene-level prediction；最高性能依赖 regulatory feature blocks 和 mouse ortholog priors；对于新序列，若只提供 5′UTR/CDS/3′UTR，则应限定为 base sequence human-only prediction。
+
+### 补充表 S5. 训练集合、prior 可用性子集与标签比较集合
+
+所有 prediction benchmark 均以 gene 为建模单位；`both-priors` 和 one-to-one ortholog 集合是用途不同的分析子集，不是主线训练全集。
+
+| 集合 | N | 定义 | 主要用途 |
+| --- | ---: | --- | --- |
+| `global prediction universe` | 12,916 genes | 同时具有 human `compact_all` 特征和 Saluki human PC1 target 的共同 human genes | 主线 fixed-target human-only 与 prior-enhanced OOF 训练/预测全集 |
+| `both-priors` subset | 11,107 genes | 在 global prediction universe 中同时具有 `mouse_pc1` 和 Saluki mouse prior 的 genes | prior coverage 解读、prior-only/residual decomposition 和 prior-complete 分层分析 |
+| missing both priors | 1,347 genes | 在 global prediction universe 中两类 mouse prior 均缺失的 genes | coverage-aware fallback 与使用边界评估 |
+| 0.10 ortholog-regularized universe | 12,307 genes | weak ortholog regularization 使用的独立 human gene universe | 评估 90:10 regularized target |
+| one-to-one ortholog label-distance set | 10,768 pairs | 同时具有 human label、mouse label 和 Ensembl one-to-one ortholog mapping | 比较 regularized target 与 human/mouse 标签的相关和误差 |
+
+## S11. MOESM3 派生监督标签控制实验
+
+`MOESM3` 控制实验回答的是一个非常具体的问题：既然 Saluki 原文已经给出了 processed matrix 和 `half-life (PC1)` summary label，那我们是否应该直接用 `MOESM3` 上重新派生的标签来替代 Saluki human PC1 作为主监督目标？补充表 S6 的答案是否定的。保留 human `MOESM3` 全部样本、包括 `Gejman` 时，派生标签对 Saluki human PC1 的恢复能力整体下降；去掉 `Gejman` 后，`as_is_pc1` 基本只是回到与 Saluki human PC1 等价的水平；只有 `no_gejman_rerun_pipeline_pc1` 在 human-only 下带来极小增益，幅度大约在 `+0.001` 量级。
+
+这组结果的意义不在于制造一个新的主标签，而在于解释为什么主线不直接改成 `MOESM3` 派生标签。它说明 `MOESM3` 更适合作为 Saluki 处理口径的控制和诊断资源，而不是更好的主任务标签来源。
+
+### 补充表 S6. `MOESM3` 派生监督标签的下游 benchmark
+
+| 特征集 | 目标标签 | 基因数 | 标签与 Saluki human PC1 的 Pearson | 对训练标签的 Pearson | 对 Saluki human PC1 的 Pearson | 对 Saluki human PC1 的 R2 |
+|:--|:--|--:|--:|--:|--:|--:|
+| compact_all | moesm3_no_gejman_rerun_pipeline_pc1 | 13532 | 1.000 | 0.730 | 0.730 | 0.533 |
+| compact_all | Saluki_human_PC1 | 13532 | 1.000 | 0.729 | 0.729 | 0.530 |
+| compact_all | moesm3_no_gejman_as_is_pc1 | 13532 | 1.000 | 0.729 | 0.729 | 0.530 |
+| compact_all | moesm3_no_gejman_zscore_only_pc1 | 13532 | 1.000 | 0.729 | 0.729 | 0.530 |
+| compact_all | moesm3_all_samples_zscore_only_pc1 | 13532 | 0.963 | 0.707 | 0.722 | 0.520 |
+| compact_all | moesm3_all_samples_rerun_pipeline_pc1 | 13532 | 0.963 | 0.707 | 0.721 | 0.519 |
+| compact_all | moesm3_all_samples_as_is_pc1 | 13532 | 0.963 | 0.707 | 0.721 | 0.520 |
+| base_sequence | moesm3_no_gejman_zscore_only_pc1 | 13532 | 1.000 | 0.720 | 0.720 | 0.518 |
+| base_sequence | Saluki_human_PC1 | 13532 | 1.000 | 0.720 | 0.720 | 0.517 |
+| base_sequence | moesm3_no_gejman_as_is_pc1 | 13532 | 1.000 | 0.720 | 0.720 | 0.517 |
+| base_sequence | moesm3_no_gejman_rerun_pipeline_pc1 | 13532 | 1.000 | 0.718 | 0.718 | 0.516 |
+| base_sequence | moesm3_all_samples_rerun_pipeline_pc1 | 13532 | 0.963 | 0.698 | 0.713 | 0.507 |
+| base_sequence | moesm3_all_samples_zscore_only_pc1 | 13532 | 0.963 | 0.697 | 0.713 | 0.506 |
+| base_sequence | moesm3_all_samples_as_is_pc1 | 13532 | 0.963 | 0.696 | 0.712 | 0.507 |
+
+## S12. MOESM3 派生监督标签在 mouse prior 设定下的针对性控制
+
+更严格的检验是：如果允许加入 `mouse prior`，这些 `MOESM3` 派生标签会不会突然比直接训练 Saluki human PC1 更优？补充表 S7 表明，答案仍然是否定的。在 focused prior benchmark 中，Saluki human PC1（代码字段 `Saluki_human_PC1`）加 `compact_all_plus_both_mouse_priors_global` 的 Pearson 为 `0.815917`，而最好的替代标签 `moesm3_no_gejman_rerun_pipeline_pc1 + compact_all_plus_both_mouse_priors_global` 为 `0.815588`，仍然略低。
+
+因此，这两组控制实验共同支持一个更稳的投稿说法：`MOESM3` 派生标签可以作为对 Saluki 标签流程的解释性控制，但即使在 cross-species transfer setting 下，它们也不足以替代 Saluki human PC1 作为主监督目标。
+
+### 补充表 S7. `MOESM3` 派生监督标签在 prior 设定下的针对性 benchmark
+
+| 目标标签 | 设定 | 基因数 | 有 `mouse_pc1` 的基因数 | 有 `saluki_mouse_prior` 的基因数 | 标签与 Saluki human PC1 的 Pearson | 对训练标签的 Pearson | 对 Saluki human PC1 的 Pearson | 对 Saluki human PC1 的 R2 |
+|:--|:--|--:|--:|--:|--:|--:|--:|--:|
+| Saluki_human_PC1 | compact_all_plus_both_mouse_priors_global | 13532 | 11569 | 11423 | 1.000 | 0.816 | 0.816 | 0.666 |
+| moesm3_no_gejman_rerun_pipeline_pc1 | compact_all_plus_both_mouse_priors_global | 13532 | 11569 | 11423 | 1.000 | 0.816 | 0.816 | 0.665 |
+| moesm3_no_gejman_rerun_pipeline_pc1 | compact_all_plus_mouse_pc1_global | 13532 | 11569 | 11423 | 1.000 | 0.814 | 0.814 | 0.662 |
+| Saluki_human_PC1 | compact_all_plus_mouse_pc1_global | 13532 | 11569 | 11423 | 1.000 | 0.814 | 0.814 | 0.662 |
+| Saluki_human_PC1 | compact_all_plus_saluki_mouse_prior_global | 13532 | 11569 | 11423 | 1.000 | 0.812 | 0.812 | 0.659 |
+| moesm3_no_gejman_rerun_pipeline_pc1 | compact_all_plus_saluki_mouse_prior_global | 13532 | 11569 | 11423 | 1.000 | 0.812 | 0.811 | 0.658 |
+| moesm3_no_gejman_rerun_pipeline_pc1 | compact_all_global | 13532 | 11569 | 11423 | 1.000 | 0.730 | 0.730 | 0.533 |
+| Saluki_human_PC1 | compact_all_global | 13532 | 11569 | 11423 | 1.000 | 0.729 | 0.729 | 0.530 |
+
+## S13. 10-fold 稳健性、弱同源正则化与不确定性补充表
+
+补充表 S8-S14 汇总严格检查。S8 报告 global prior benchmark 的三组 10-fold 稳健性；S9 报告 0.10 ortholog-regularized target 与固定 Saluki-PC1 baseline 的同宇宙比较；S10 报告 prior ablation；S11-S12 报告标签距离与 study-noise scale；S13 报告 human-only cross-target evaluation；S14 给出标签审计、ortholog 验证和 prior gain 的 paired bootstrap CI。
+
+### 补充表 S8. Global prior 的 10-fold 稳健性
+
+| setting | prior_mode | cv_folds | random_states | genes | pearson_mean_sd | spearman_mean_sd | r2_mean_sd |
+|:--|:--|--:|--:|--:|:--|:--|:--|
+| compact_all_plus_both_mouse_priors_global | real | 10 | 3 | 12916 | 0.830 ± 0.001 | 0.824 ± 0.001 | 0.689 ± 0.001 |
+| compact_all_plus_both_mouse_priors_shuffled_global | shuffled | 10 | 3 | 12916 | 0.748 ± 0.001 | 0.741 ± 0.001 | 0.558 ± 0.001 |
+| compact_all_global | none | 10 | 3 | 12916 | 0.748 ± 0.001 | 0.740 ± 0.001 | 0.558 ± 0.002 |
+| coverage-aware fallback | availability-based model selection | 10 | 3 | 12916 | 0.832 ± 0.001 | 0.826 ± 0.001 | 0.690 ± 0.001 |
+
+### 补充表 S9. 0.10 weak ortholog regularization 的 10-fold target benchmark
+
+| label | source | λ | cv_folds | random_states | genes | target_vs_Saluki_pearson | ortholog_pearson | real_prior_pearson_target_mean_sd | pure_human_pearson_target_mean_sd | shuffled_prior_pearson_target_mean_sd | real_minus_shuffled |
+|:--|:--|--:|--:|--:|--:|--:|--:|:--|:--|:--|:--|
+| 0.10 ortholog-regularized target | reconstructed mouse PC1 | 0.1 | 10 | 3 | 12307 | 0.987 | 0.827 | 0.855 ± 0.001 | 0.754 ± 0.001 | 0.753 ± 0.001 | 0.102 ± 0.001 |
+| Saluki_human_PC1 | Saluki_human_PC1 | 0 | 10 | 3 | 12307 | 1.000 | 0.798 | 0.839 ± 0.001 | 0.754 ± 0.001 | 0.754 ± 0.001 | 0.085 ± 0.000 |
+
+### 补充表 S10. 0.10 weak ortholog regularization 的 10-fold prior-ablation benchmark
+
+| setting | features | cv_folds | random_states | pearson_target_mean_sd | pearson_vs_Saluki_mean_sd | delta_vs_10fold_Saluki_prior_baseline |
+|:--|--:|--:|--:|:--|:--|:--|
+| human-only features | 1802 | 10 | 3 | 0.754 ± 0.001 | 0.753 ± 0.001 | -0.086 ± 0.001 |
+| availability/confidence indicators only | 1806 | 10 | 3 | 0.753 ± 0.000 | 0.753 ± 0.001 | -0.086 ± 0.000 |
+| Saluki mouse prior only | 1805 | 10 | 3 | 0.852 ± 0.001 | 0.835 ± 0.001 | 0.013 ± 0.001 |
+| no direct reconstructed mouse PC1 value | 1807 | 10 | 3 | 0.852 ± 0.001 | 0.835 ± 0.001 | 0.013 ± 0.001 |
+| reconstructed mouse PC1 only | 1805 | 10 | 3 | 0.854 ± 0.000 | 0.836 ± 0.000 | 0.015 ± 0.000 |
+| both mouse priors | 1808 | 10 | 3 | 0.855 ± 0.001 | 0.837 ± 0.001 | 0.016 ± 0.001 |
+
+### 补充表 S11. Human-mouse ortholog label distance
+
+| comparison | subset | n | pearson | spearman | mse | rmse | mae | median_abs_error | p95_abs_error |
+|:--|:--|--:|--:|--:|--:|--:|--:|--:|--:|
+| human no-Gejman PC1 vs reconstructed mouse PC1 | all_one2one | 10768 | 0.789 | 0.782 | 0.440 | 0.663 | 0.512 | 0.413 | 1.330 |
+| regularized target vs reconstructed mouse PC1 | all_one2one | 10768 | 0.827 | 0.820 | 0.361 | 0.601 | 0.464 | 0.373 | 1.209 |
+| regularized target vs human no-Gejman PC1 | all_one2one | 10768 | 0.998 | 0.998 | 0.004 | 0.065 | 0.050 | 0.041 | 0.129 |
+| Saluki human PC1 vs Saluki mouse prior | all_one2one | 10768 | 0.798 | 0.788 | 0.418 | 0.646 | 0.503 | 0.411 | 1.285 |
+| regularized target vs Saluki human PC1 | all_one2one | 10768 | 0.990 | 0.992 | 0.020 | 0.142 | 0.094 | 0.063 | 0.291 |
+| human no-Gejman PC1 vs reconstructed mouse PC1 | high_confidence | 10626 | 0.791 | 0.784 | 0.436 | 0.660 | 0.510 | 0.410 | 1.326 |
+| regularized target vs reconstructed mouse PC1 | high_confidence | 10626 | 0.829 | 0.822 | 0.357 | 0.598 | 0.462 | 0.371 | 1.201 |
+| regularized target vs human no-Gejman PC1 | high_confidence | 10626 | 0.998 | 0.998 | 0.004 | 0.064 | 0.050 | 0.041 | 0.129 |
+| Saluki human PC1 vs Saluki mouse prior | high_confidence | 10626 | 0.800 | 0.789 | 0.414 | 0.644 | 0.500 | 0.409 | 1.275 |
+| regularized target vs Saluki human PC1 | high_confidence | 10626 | 0.990 | 0.992 | 0.020 | 0.142 | 0.094 | 0.063 | 0.290 |
+
+### 补充表 S12. Study-level noise versus `λ = 0.10` label shift
+
+| comparison | cohort | n_comparisons | median Pearson | median residual Pearson | median RMSE | median MAE |
+|:--|:--|--:|--:|--:|--:|--:|
+| `λ = 0.10` target vs human no-Gejman PC1 | all one-to-one ortholog genes | 1 | 0.9979 | NA | 0.0646 | 0.0501 |
+| study mean label pairs | no-Gejman studies | 153 | 0.5303 | NA | 0.9540 | 0.7203 |
+| study-specific residual pairs | no-Gejman studies | 153 | NA | 0.0796 | 0.9540 | 0.7203 |
+| study labels vs human no-Gejman PC1 | no-Gejman studies | 18 | 0.7420 | NA | 0.7145 | 0.5429 |
+| study mean label pairs | no-Gejman studies with at least two samples | 21 | 0.5756 | NA | 0.8963 | 0.6963 |
+| study-specific residual pairs | no-Gejman studies with at least two samples | 21 | NA | 0.0337 | 0.8963 | 0.6963 |
+| study mean label pairs | no-Gejman full preprocessing before study averaging | 153 | 0.5937 | NA | 0.9014 | 0.6779 |
+| study-specific residual pairs | no-Gejman full preprocessing before study averaging | 153 | NA | 0.1026 | 0.9014 | 0.6779 |
+
+### 补充表 S13. 0.10 ortholog-regularized target 的 human-only cross-target evaluation
+
+两类模型使用相同的 12,307 个 genes、1802 维 human-only `compact_all` 特征、10 folds、3 random seeds 和相同超参数。`mean ± SD` 中的 SD 表示 across-seed split sensitivity。
+
+| training target | evaluation target | genes | Pearson mean ± SD | R2 mean ± SD | RMSE mean ± SD | MAE mean ± SD |
+|:--|:--|--:|:--|:--|:--|:--|
+| human no-Gejman PC1 | human no-Gejman PC1 | 12307 | 0.7476 ± 0.0010 | 0.5572 ± 0.0015 | 0.6687 ± 0.0012 | 0.5260 ± 0.0013 |
+| 0.10 ortholog-regularized target | human no-Gejman PC1 | 12307 | 0.7480 ± 0.0010 | 0.5582 ± 0.0014 | 0.6680 ± 0.0011 | 0.5248 ± 0.0009 |
+| human no-Gejman PC1 | 0.10 ortholog-regularized target | 12307 | 0.7532 ± 0.0010 | 0.5651 ± 0.0015 | 0.6627 ± 0.0012 | 0.5215 ± 0.0014 |
+| 0.10 ortholog-regularized target | 0.10 ortholog-regularized target | 12307 | 0.7538 ± 0.0010 | 0.5664 ± 0.0014 | 0.6617 ± 0.0010 | 0.5201 ± 0.0009 |
+| human no-Gejman PC1 | Saluki human PC1 | 12307 | 0.7529 ± 0.0014 | 0.5638 ± 0.0021 | 0.6723 ± 0.0016 | 0.5273 ± 0.0017 |
+| 0.10 ortholog-regularized target | Saluki human PC1 | 12307 | 0.7533 ± 0.0013 | 0.5650 ± 0.0019 | 0.6714 ± 0.0015 | 0.5261 ± 0.0014 |
+
+在原 human no-Gejman PC1 上，每个 gene 的三组 OOF predictions 取平均后，Pearson 分别为 0.75233（human-target training）和 0.75259（regularized-target training）。Paired difference 为 +0.00026，2,000 次 gene bootstrap 的 95% CI 为 -0.00061 至 0.00118。该平均只用于汇总 split sensitivity，不构成额外的模型融合。置信区间跨越 0，说明当前分辨率下没有证据表明正则化训练降低或提高了原 human 标签的可预测性；本文不把这一结果表述为未经预设界值的统计等效性检验。
+
+### 补充表 S14. 关键相关差值的 paired bootstrap uncertainty
+
+除 cross-target analysis 单独使用 2,000 次 bootstrap 外，本表使用 5,000 次 gene 或 one-to-one ortholog-pair bootstrap。Prior rows 中的 prediction 是三组 10-fold OOF vectors 的 gene-wise mean。
+
+| claim | N | candidate A Pearson | candidate B Pearson | A - B | 95% CI for difference |
+|:--|--:|--:|--:|--:|:--|
+| Saluki agreement: no-Gejman vs full human PC1 | 13265 | 0.98294 | 0.95152 | 0.03142 | 0.02978 to 0.03303 |
+| Ortholog concordance: no-Gejman vs full, all one-to-one | 12592 | 0.75528 | 0.74062 | 0.01466 | 0.01110 to 0.01814 |
+| Ortholog concordance: no-Gejman vs full, high confidence | 12376 | 0.75829 | 0.74366 | 0.01463 | 0.01099 to 0.01811 |
+| Real prior vs human-only seed-averaged OOF prediction | 12916 | 0.83244 | 0.75253 | 0.07991 | 0.07398 to 0.08617 |
+| Real prior vs shuffled-prior seed-averaged OOF prediction | 12916 | 0.83244 | 0.75306 | 0.07938 | 0.07348 to 0.08554 |
+
+## S14. 投稿口径边界与表格格式说明
+
+主文和补充材料保留四项解释规则。第一，pure human 路线是透明的 human-only fixed-target benchmark。第二，更高的 fixed-target 性能限定在 cross-species transfer setting，因为输入显式包含 mouse ortholog priors。第三，0.10 weak ortholog regularization 是核心标签构建结果，但其 0.855 只表示 regularized target 在显式跨物种输入下的可预测性；cross-target test 支持其保留 human-label predictability，却不把它变成固定 Saluki human PC1 或 pure-sequence 排名。第四，当前框架不是任意裸序列的一键预测器；完整 compact/prior-enhanced 预测依赖预计算调控特征和可用 mouse ortholog prior，新序列只能在提供 5′UTR/CDS/3′UTR 后进入 base sequence prediction。
+
+本补充中的所有表格当前都以紧凑 Markdown 表形式保存，便于脚本重建、版本比对和后续自动抽取。提交版排版时可整理为三线表：保留顶线、表头线和底线，弱化或删除多余竖线，便于后续统一整理为正式投稿版。
+
+## S15. 复现入口与表格说明
+
+主文表 1 只概括方法模块的逻辑输入、核心操作和验证目的，不列本地绝对路径。具体结果文件、脚本入口和复现命令应以本节和正式投稿前发布的版本化仓库为准：`https://github.com/wwzdl/mrna-pc1-label`。下表中的路径均为仓库相对路径，便于审稿人和读者在仓库发布后于不同计算环境中复现。
+
+在仓库根目录中，分阶段复现入口为：
+
+```bash
+bash scripts/create_env.sh
+source scripts/activate_env.sh
+bash scripts/reproduce_bmb_key_results.sh labels
+bash scripts/reproduce_bmb_key_results.sh models
+bash scripts/reproduce_bmb_key_results.sh figures
+```
+
+`labels` 阶段下载 MOESM2/MOESM3，并运行标签重建、study influence、ortholog concordance、label distance、study noise 和 PCA 插补分析。`models` 阶段需要按 README 放置 18.8 GB 的公开 Saluki datapack（DOI：[10.5281/zenodo.6326409](https://doi.org/10.5281/zenodo.6326409)），并需要支持 CUDA 的 XGBoost 环境；如果 human sequence feature table 不存在，该阶段会从 Ensembl release 115 自动重建。`figures` 阶段从固定结果表重画全部活跃图件、重建 DOCX/PDF，并运行投稿审计。MOESM2、MOESM3 和 Ensembl release 115 mouse-homology 文件均由下载/分析代码校验 checksum。仓库同时提供便携依赖文件、Conda 配置和 `requirements-validated.txt`，后者记录通过最终预投稿审计的直接软件包版本。
+
+### 补充表 S15. 主要复现入口与结果文件
+
+| 类别 | 路径或入口 | 用途 |
+|:--|:--|:--|
+| 版本化仓库 | `https://github.com/wwzdl/mrna-pc1-label` | 正式投稿前发布代码、结果表、图件脚本和环境说明 |
+| 分阶段复现入口 | `scripts/reproduce_bmb_key_results.sh` | 按当前结果路径运行 `labels`、`models` 和 `figures` 三个阶段 |
+| 环境与输入完整性 | `requirements.txt`、`environment.yml`、`requirements-validated.txt`、`scripts/fetch_real_data.sh` | 记录便携与已验证依赖，并以 checksum 校验公开补充输入 |
+| OOF 完整性审计 | `scripts/audit_oof_integrity.py` | 检查规范基因数、gene ID 唯一性、不同 setting/seed 的共同宇宙、fold 覆盖和预测缺失 |
+| 主文与补充稿件 | `manuscript/bmb_submission/` | 保存中英文主文、补充材料、DOCX 稿件和投稿图件 |
+| Sample-level PCA 插补复现 | `scripts/run_sample_pca_imputation_reproducibility.sh`、`scripts/reproduce_sample_pca_imputation.py` | 复现 raw/processed sample PCA 的低秩插补、坐标、参数 JSON 和诊断图 |
+| Human-only benchmark | `results/human_compact_oof_models.tsv` | 汇总 base sequence 与 compact feature 的 out-of-fold 结果 |
+| Global prior benchmark | `results/human_global_mouse_prior_benchmark.tsv`、`results/tenfold_global_prior/summary_by_setting.tsv` | 记录 mouse-prior-enhanced 模型及 10-fold 稳健性 |
+| Prior control | `results/human_global_mouse_prior_permutation_control.tsv`、`results/prior_residual_analysis/summary.tsv` | 支撑 shuffled-prior control 与两阶段 residual analysis |
+| 0.10 weak ortholog regularization | `results/ortholog_regularized_label_10fold_main/summary_by_label.tsv`、`results/ortholog_regularized_label_multiseed/summary_by_label.tsv`、`results/ortholog_prior_ablation_lambda0p1_10fold/summary_by_setting.tsv` | 记录 `λ = 0.10` target benchmark、λ sensitivity 与 prior ablation |
+| Human-only cross-target evaluation | `results/ortholog_regularized_cross_target/summary_aggregate.tsv`、`results/ortholog_regularized_cross_target/paired_bootstrap_ci.tsv` | 检验 regularized-target training 是否保持原 human-label predictability |
+| Key-claim uncertainty | `results/key_claim_bootstrap/paired_bootstrap_summary.tsv` | 给出 Gejman、ortholog concordance 与 real-prior gain 的 paired bootstrap CI |
+| 标签距离与 study noise | `results/ortholog_label_distance/distance_summary.tsv`、`results/study_noise_vs_orthoreg_shift/noise_summary.tsv` | 比较 label shift、human-mouse distance 与 study-to-study variability |
+| 主文 weak-regularization 验证图 | `scripts/plot_bmb_ortholog_regularized_target.py`、`manuscript/bmb_submission/figures/main/Fig06_ortholog_regularized_target_cn.*` | 生成图 6 的 label geometry、study-noise 和 cross-target panels |
+| 主文 ortholog validation 图 | `scripts/redraw_bmb_ortholog_combined_cn.py`、`manuscript/bmb_submission/figures/main/Fig05_ortholog_summary_cn.*` | 由 ortholog 结果表直接生成图 5 的 paired scatter、correlation summary 与 gain panels |
+| 标签审计与 ortholog validation | `results/study_influence/**/*.tsv`、`results/ortholog_analysis/*.tsv` | 保存 leave-one-study-out、Saluki-label agreement 和 human-mouse consistency 结果 |
+| 使用边界分析 | `results/prior_missingness_analysis/summary_by_coverage.tsv`、`docs/prior_residual_analysis.md` | 说明 prior 缺失时的性能边界和 residual analysis 实现 |
+
+主要图件和稿件生成脚本包括 `scripts/redraw_bmb_dataset_summary_cn.py`、`scripts/redraw_bmb_human_pca_panel.py`、`scripts/redraw_bmb_study_influence_cn.py`、`scripts/redraw_bmb_ortholog_combined_cn.py`、`scripts/plot_bmb_ortholog_regularized_target.py`、`scripts/redraw_bmb_sequence_progression_cn.py`、`scripts/redraw_bmb_prior_summary_cn.py`、`scripts/redraw_bmb_flow_figures.py`、`scripts/redraw_bmb_supplementary_diagnostics.py`、`scripts/render_markdown_to_docx.py` 和 `scripts/render_markdown_to_pdf.py`。流程图与诊断图均使用 matplotlib 原生矢量对象，不裁切或嵌入 AI 生成图片；图件同时输出 editable SVG/PDF 与 600 dpi PNG/TIFF。`ortholog_regularized_cross_target.py` 和 `bootstrap_bmb_key_claims.py` 分别生成 cross-target 与 paired-bootstrap 结果。当前 Markdown 表格是版本管理与脚本重建的源格式，提交版统一渲染为简洁的 DOCX/PDF。
+
+## S16. 参考文献
+
+Agarwal V, Kelley DR (2022) The genetic and biochemical determinants of mRNA degradation rates in mammals. Genome Biology 23(1):245. https://doi.org/10.1186/s13059-022-02811-x
+
+Alipanahi B, Delong A, Weirauch MT, Frey BJ (2015) Predicting the sequence specificities of DNA- and RNA-binding proteins by deep learning. Nature Biotechnology 33:831-838. https://doi.org/10.1038/nbt.3300
+
+Avsec Z, Agarwal V, Visentin D, Ledsam JR, Grabska-Barwinska A, Taylor KR, Assael Y, Jumper J, Kohli P, Kelley DR (2021) Effective gene expression prediction from sequence by integrating long-range interactions. Nature Methods 18:1196-1203. https://doi.org/10.1038/s41592-021-01252-x
+
+Bolstad BM, Irizarry RA, Astrand M, Speed TP (2003) A comparison of normalization methods for high density oligonucleotide array data based on variance and bias. Bioinformatics 19(2):185-193. https://doi.org/10.1093/bioinformatics/19.2.185
+
+Chen T, Guestrin C (2016) XGBoost: A scalable tree boosting system. Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining 785-794. https://doi.org/10.1145/2939672.2939785
+
+Gabaldon T, Koonin EV (2013) Functional and evolutionary implications of gene orthology. Nature Reviews Genetics 14(5):360-366. https://doi.org/10.1038/nrg3456
+
+Martin FJ, Amode MR, Aneja A, Austine-Orimoloye O, Azov AG, Barnes I, Becker A, Bennett R, Berry A, Bhai J, et al (2023) Ensembl 2023. Nucleic Acids Research 51(D1):D933-D941. https://doi.org/10.1093/nar/gkac958
+
+Pedregosa F, Varoquaux G, Gramfort A, Michel V, Thirion B, Grisel O, Blondel M, Prettenhofer P, Weiss R, Dubourg V, et al (2011) Scikit-learn: Machine learning in Python. Journal of Machine Learning Research 12:2825-2830. https://jmlr.org/papers/v12/pedregosa11a.html
+
+Tipping ME, Bishop CM (1999) Probabilistic principal component analysis. Journal of the Royal Statistical Society: Series B 61(3):611-622. https://doi.org/10.1111/1467-9868.00196
+
+Troyanskaya O, Cantor M, Sherlock G, Brown P, Hastie T, Tibshirani R, Botstein D, Altman RB (2001) Missing value estimation methods for DNA microarrays. Bioinformatics 17(6):520-525. https://doi.org/10.1093/bioinformatics/17.6.520

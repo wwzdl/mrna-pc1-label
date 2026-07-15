@@ -1,0 +1,5 @@
+analysis	evaluation_target	model_a	model_b	n	n_bootstrap	pearson_a	pearson_b	difference_a_minus_b	difference_ci95_low	difference_ci95_high	bootstrap_fraction_le_zero	pearson	pearson_ci95_low	pearson_ci95_high
+paired_prediction_comparison	human_no_gejman_pc1	trained_on_orthoreg_reconstructed_mouse_pc1_0.10	trained_on_human_no_gejman_pc1	12307	2000	0.7525910499903493	0.7523310614739219	0.0002599885164273896	-0.0006086133422767536	0.0011818235409330356	0.2775			
+paired_prediction_comparison	orthoreg_reconstructed_mouse_pc1_0.10	trained_on_orthoreg_reconstructed_mouse_pc1_0.10	trained_on_human_no_gejman_pc1	12307	2000	0.7584198567066144	0.7579639507363432	0.0004559059702712309	-0.0004094208573579727	0.001390604114095369	0.152			
+paired_prediction_comparison	saluki_human_pc1	trained_on_orthoreg_reconstructed_mouse_pc1_0.10	trained_on_human_no_gejman_pc1	12307	2000	0.7579883651149405	0.7576809956333823	0.000307369481558184	-0.000555451529592546	0.001224285509085118	0.24			
+label_geometry	human_no_gejman_pc1	orthoreg_reconstructed_mouse_pc1_0.10	human_no_gejman_pc1	12307	2000							0.9981989610249027	0.9981282197713458	0.9982663516136437

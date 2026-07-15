@@ -1,0 +1,4 @@
+analysis	model	n	cv_splits	random_state	n_prior_features	n_human_features	pearson	spearman	r2	delta_r2_vs_prior	remaining_variance_explained	mean_best_iter
+prior_residual_analysis	prior_only_linear	11107	5	42	2	0	0.7918947511280673	0.7817472106444581	0.6270959377288818	0.0	0.0	
+prior_residual_analysis	compact_all_only	11107	5	42	0	1802	0.7386452976775112	0.7308186043147564	0.5435508489608765	-0.08354508876800537		1482.4
+prior_residual_analysis	prior_plus_compact_residual	11107	5	42	2	1802	0.826223895292212	0.8175488438566175	0.674774169921875	0.047678232192993164	0.12785656423964867	312.6

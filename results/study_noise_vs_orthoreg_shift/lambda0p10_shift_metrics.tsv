@@ -1,0 +1,2 @@
+comparison	subset	n	pearson	spearman	mse	rmse	mae	median_abs_error	mean_signed_diff	sd_signed_diff	p90_abs_error	p95_abs_error	comparison_type
+orthoreg_lambda0p10_vs_human_no_gejman_pc1	all_one2one	10768	0.9978908080112764	0.997788241319792	0.0041683637931291	0.0645628669835005	0.0500585455082519	0.0407018521619101	-0.0005485644868086	0.0645605364764962	0.1054376572649001	0.1293227829976859	orthoreg_lambda0p10_shift

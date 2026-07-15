@@ -1,0 +1,5 @@
+species	dataset	n_genes	n_samples	matrix_path	gene_annotation_path	metadata_path	saluki_label_path	source_xlsx
+human	moesm2	19503	54	data/processed/real_data/human/moesm2_raw_sparse_matrix.tsv	data/processed/real_data/human/moesm2_gene_annotations.tsv	metadata/real_human_samples.tsv		data/raw/supplements/13059_2022_2811_MOESM2_ESM.xlsx
+human	moesm3	13921	54	data/processed/real_data/human/moesm3_saluki_processed_matrix.tsv	data/processed/real_data/human/moesm3_gene_annotations.tsv	metadata/real_human_samples.tsv	data/processed/real_data/human/moesm3_saluki_human_pc1.tsv	data/raw/supplements/13059_2022_2811_MOESM3_ESM.xlsx
+mouse	moesm2	22499	27	data/processed/real_data/mouse/moesm2_raw_sparse_matrix.tsv	data/processed/real_data/mouse/moesm2_gene_annotations.tsv	metadata/real_mouse_samples.tsv		data/raw/supplements/13059_2022_2811_MOESM2_ESM.xlsx
+mouse	moesm3	14463	27	data/processed/real_data/mouse/moesm3_saluki_processed_matrix.tsv	data/processed/real_data/mouse/moesm3_gene_annotations.tsv	metadata/real_mouse_samples.tsv	data/processed/real_data/mouse/moesm3_saluki_mouse_prior.tsv	data/raw/supplements/13059_2022_2811_MOESM3_ESM.xlsx

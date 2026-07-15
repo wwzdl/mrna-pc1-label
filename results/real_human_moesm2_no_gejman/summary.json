@@ -1,0 +1,15 @@
+{
+  "n_genes_input": 19503,
+  "n_samples_input": 39,
+  "n_genes_processed": 15788,
+  "n_samples_processed": 39,
+  "apply_log": false,
+  "min_observed_per_gene": 3,
+  "n_components": null,
+  "max_impute_iter": 30,
+  "impute_tol": 1e-06,
+  "bias_aware_iterations": 1,
+  "bias_max_iter": 200,
+  "bias_tol": 1e-08,
+  "output_dir": "results/real_human_moesm2_no_gejman"
+}

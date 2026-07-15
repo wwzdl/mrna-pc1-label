@@ -1,0 +1,5 @@
+sample_id	study	method	cell_type	species
+sample_01	study_a	4sU	HEK293	human
+sample_02	study_a	4sU	HEK293	human
+sample_03	study_b	ActD	HeLa	human
+sample_04	study_b	ActD	HeLa	human

@@ -1,0 +1,47 @@
+{
+  "species": "human",
+  "n_genes_input": 19503,
+  "n_samples_input": 54,
+  "n_genes_after_coverage_filter": 16444,
+  "n_samples_after_alignment": 54,
+  "input_matrix": "paper_pca/data/processed/real_data/human/moesm2_raw_sparse_matrix.tsv",
+  "metadata": "paper_pca/metadata/real_human_samples.tsv",
+  "coverage_filter": {
+    "min_observed_per_gene": 3,
+    "applied_before_raw_and_processed_views": true
+  },
+  "raw_view": {
+    "purpose": "visualization only",
+    "sample_zscore": false,
+    "quantile_normalization": false,
+    "imputation": {
+      "method": "iterative low-rank PCA imputation",
+      "n_components": 5,
+      "max_iter": 10,
+      "tol": 1e-05,
+      "observed_entries_are_kept_fixed": true,
+      "initial_missing_values": "sample/column means; all-NaN columns use 0"
+    }
+  },
+  "processed_view": {
+    "purpose": "visualization of the label-reconstruction preprocessing space",
+    "apply_log": false,
+    "sample_zscore": true,
+    "quantile_normalization": true,
+    "imputation": {
+      "method": "iterative low-rank PCA imputation",
+      "n_components": null,
+      "effective_default": "min(5, min(n_genes, n_samples)-1) when n_components is null",
+      "max_iter": 30,
+      "tol": 1e-06,
+      "observed_entries_are_kept_fixed": true,
+      "initial_missing_values": "sample/column means; all-NaN columns use 0"
+    }
+  },
+  "sample_pca": {
+    "matrix_orientation": "sample x gene after transposing gene x sample matrix",
+    "sklearn_pca_n_components": 2,
+    "random_state": 0
+  },
+  "no_label_or_model_information_used": true
+}

@@ -1,0 +1,4 @@
+target	model	gene_universe	n	pearson	spearman	r2	mean_best_iter
+saluki_human_pc1	compact_all_xgb_cuda	common	12916	0.7430351508258569	0.7350636345048492	0.5501513481140137	1081.0
+human_full_pc1	compact_all_xgb_cuda	common	12916	0.7207362866481608	0.7157390672325957	0.5177921056747437	1201.0
+human_pruned_pc1	compact_all_xgb_cuda	common	12916	0.7368527341714308	0.7288253952253494	0.5413288474082947	1260.4

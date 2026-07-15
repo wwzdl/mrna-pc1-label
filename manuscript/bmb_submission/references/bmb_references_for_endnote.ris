@@ -1,0 +1,783 @@
+TY  - JOUR
+AU  - Agarwal, Vikram
+AU  - Bell, George W.
+AU  - Nam, Jin-Wu
+AU  - Bartel, David P.
+TI  - Predicting effective microRNA target sites in mammalian mRNAs
+JO  - eLife
+PY  - 2015
+VL  - 4
+DO  - 10.7554/eLife.05005
+SP  - e05005
+ID  - agarwal2015mirna
+ER  - 
+
+TY  - JOUR
+AU  - Agarwal, Vikram
+AU  - Kelley, David R.
+TI  - The genetic and biochemical determinants of mRNA degradation rates in mammals
+JO  - Genome Biology
+PY  - 2022
+VL  - 23
+IS  - 1
+DO  - 10.1186/s13059-022-02811-x
+SP  - 245
+ID  - agarwal2022saluki
+ER  - 
+
+TY  - JOUR
+AU  - Alipanahi, Babak
+AU  - Delong, Andrew
+AU  - Weirauch, Matthew T.
+AU  - Frey, Brendan J.
+TI  - Predicting the sequence specificities of DNA- and RNA-binding proteins by deep learning
+JO  - Nature Biotechnology
+PY  - 2015
+VL  - 33
+DO  - 10.1038/nbt.3300
+SP  - 831
+EP  - 838
+ID  - alipanahi2015deepbind
+ER  - 
+
+TY  - JOUR
+AU  - Avsec, Ziga
+AU  - Agarwal, Vikram
+AU  - Visentin, Daniel
+AU  - Ledsam, Joseph R.
+AU  - Grabska-Barwinska, Agnieszka
+AU  - Taylor, Kyle R.
+AU  - Assael, Yannis
+AU  - Jumper, John
+AU  - Kohli, Pushmeet
+AU  - Kelley, David R.
+TI  - Effective gene expression prediction from sequence by integrating long-range interactions
+JO  - Nature Methods
+PY  - 2021
+VL  - 18
+DO  - 10.1038/s41592-021-01252-x
+SP  - 1196
+EP  - 1203
+ID  - avsec2021enformer
+ER  - 
+
+TY  - JOUR
+AU  - Bolstad, Benjamin M.
+AU  - Irizarry, Rafael A.
+AU  - Astrand, Magnus
+AU  - Speed, Terence P.
+TI  - A comparison of normalization methods for high density oligonucleotide array data based on variance and bias
+JO  - Bioinformatics
+PY  - 2003
+VL  - 19
+IS  - 2
+DO  - 10.1093/bioinformatics/19.2.185
+SP  - 185
+EP  - 193
+ID  - bolstad2003normalization
+ER  - 
+
+TY  - JOUR
+AU  - Breiman, Leo
+TI  - Random forests
+JO  - Machine Learning
+PY  - 2001
+VL  - 45
+DO  - 10.1023/A:1010933404324
+SP  - 5
+EP  - 32
+ID  - breiman2001random
+ER  - 
+
+TY  - JOUR
+AU  - Cetnar, Daniel P.
+AU  - Hossain, Ayaan
+AU  - Vezeau, Grace E.
+AU  - Salis, Howard M.
+TI  - Predicting synthetic mRNA stability using massively parallel kinetic measurements, biophysical modeling, and machine learning
+JO  - Nature Communications
+PY  - 2024
+VL  - 15
+DO  - 10.1038/s41467-024-54059-7
+SP  - 9601
+ID  - cetnar2024synthetic
+ER  - 
+
+TY  - JOUR
+AU  - Chen, Tianqi
+AU  - Guestrin, Carlos
+TI  - XGBoost: A scalable tree boosting system
+JO  - Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining
+PY  - 2016
+DO  - 10.1145/2939672.2939785
+SP  - 785
+EP  - 794
+ID  - chen2016xgboost
+ER  - 
+
+TY  - JOUR
+AU  - Duan, Jubao
+AU  - Shi, Jianxin
+AU  - Ge, Xi
+AU  - Dolken, Lars
+AU  - Moy, Wei
+AU  - He, Dandan
+AU  - Shi, Suhua
+AU  - Sanders, Alan R.
+AU  - Ross, Jessica
+AU  - Gejman, Pablo V.
+TI  - Genome-wide survey of interindividual differences of RNA stability in human lymphoblastoid cell lines
+JO  - Scientific Reports
+PY  - 2013
+VL  - 3
+DO  - 10.1038/srep01318
+SP  - 1318
+ID  - duan2013rna
+ER  - 
+
+TY  - JOUR
+AU  - Duffy, Erin E.
+AU  - Rutenberg-Schoenberg, Miranda
+AU  - Stark, Caleb D.
+AU  - Kitchen, Rebecca R.
+AU  - Gerstein, Mark B.
+AU  - Simon, Matthew D.
+TI  - Tracking distinct RNA populations using efficient and reversible covalent chemistry
+JO  - Molecular Cell
+PY  - 2015
+VL  - 59
+IS  - 5
+DO  - 10.1016/j.molcel.2015.07.023
+SP  - 858
+EP  - 866
+ID  - duffy2015tracking
+ER  - 
+
+TY  - JOUR
+AU  - Friedel, Caroline C.
+AU  - Dolken, Lars
+AU  - Ruzsics, Zsolt
+AU  - Koszinowski, Ulrich H.
+AU  - Zimmer, Ralf
+TI  - Conserved principles of mammalian transcriptional regulation revealed by RNA half-life
+JO  - Nucleic Acids Research
+PY  - 2009
+VL  - 37
+IS  - 17
+DO  - 10.1093/nar/gkp542
+SP  - e115
+ID  - friedel2009conserved
+ER  - 
+
+TY  - JOUR
+AU  - Friedman, Jerome H.
+TI  - Greedy function approximation: A gradient boosting machine
+JO  - The Annals of Statistics
+PY  - 2001
+VL  - 29
+IS  - 5
+DO  - 10.1214/aos/1013203451
+SP  - 1189
+EP  - 1232
+ID  - friedman2001greedy
+ER  - 
+
+TY  - JOUR
+AU  - Gabaldón, Toni
+AU  - Koonin, Eugene V.
+TI  - Functional and evolutionary implications of gene orthology
+JO  - Nature Reviews Genetics
+PY  - 2013
+VL  - 14
+IS  - 5
+DO  - 10.1038/nrg3456
+SP  - 360
+EP  - 366
+ID  - gabaldon2013orthology
+ER  - 
+
+TY  - JOUR
+AU  - Garneau, Nicole L.
+AU  - Wilusz, Jeffrey
+AU  - Wilusz, Carol J.
+TI  - The highways and byways of mRNA decay
+JO  - Nature Reviews Molecular Cell Biology
+PY  - 2007
+VL  - 8
+DO  - 10.1038/nrm2104
+SP  - 113
+EP  - 126
+ID  - garneau2007decay
+ER  - 
+
+TY  - JOUR
+AU  - Grimson, Andrew
+AU  - Farh, Kyle K.-H.
+AU  - Johnston, Wendy K.
+AU  - Garrett-Engele, Philip
+AU  - Lim, Lee P.
+AU  - Bartel, David P.
+TI  - MicroRNA targeting specificity in mammals: determinants beyond seed pairing
+JO  - Molecular Cell
+PY  - 2007
+VL  - 27
+IS  - 1
+DO  - 10.1016/j.molcel.2007.06.017
+SP  - 91
+EP  - 105
+ID  - grimson2007mirna
+ER  - 
+
+TY  - JOUR
+AU  - Herzog, Veronika A.
+AU  - Reichholf, Brian
+AU  - Neumann, Tobias
+AU  - Rescheneder, Philipp
+AU  - Bhat, Parth
+AU  - Burkard, Thomas R.
+AU  - Wlotzka, Wiebke
+AU  - von Haeseler, Arndt
+AU  - Zuber, Johannes
+AU  - Ameres, Stefan L.
+TI  - Thiol-linked alkylation of RNA to assess expression dynamics
+JO  - Nature Methods
+PY  - 2017
+VL  - 14
+DO  - 10.1038/nmeth.4435
+SP  - 1198
+EP  - 1204
+ID  - herzog2017timelapse
+ER  - 
+
+TY  - JOUR
+AU  - Hia, Fabian
+AU  - Yang, Samie R.
+AU  - Shichino, Yuichi
+AU  - Yoshinaga, Masatoshi
+AU  - Murakawa, Yasuhiro
+AU  - Vandenbon, Alexis
+AU  - Fukao, Atsushi
+AU  - Fujiwara, Takanori
+AU  - Landthaler, Markus
+AU  - Natsume, Tohru
+AU  - Adachi, Shuhei
+AU  - Iwasaki, Shintaro
+AU  - Takeuchi, Osamu
+TI  - Codon bias confers stability to human mRNAs
+JO  - EMBO Reports
+PY  - 2019
+VL  - 20
+IS  - 11
+DO  - 10.15252/embr.201948220
+SP  - e48220
+ID  - hia2019codon
+ER  - 
+
+TY  - JOUR
+AU  - Ji, Yanrong
+AU  - Zhou, Zhihan
+AU  - Liu, Han
+AU  - Davuluri, Ramana V.
+TI  - DNABERT: pre-trained Bidirectional Encoder Representations from Transformers model for DNA-language in genome
+JO  - Bioinformatics
+PY  - 2021
+VL  - 37
+IS  - 15
+DO  - 10.1093/bioinformatics/btab083
+SP  - 2112
+EP  - 2120
+ID  - ji2021dnabert
+ER  - 
+
+TY  - JOUR
+AU  - Johnson, W. Evan
+AU  - Li, Cheng
+AU  - Rabinovic, Ariel
+TI  - Adjusting batch effects in microarray expression data using empirical Bayes methods
+JO  - Biostatistics
+PY  - 2007
+VL  - 8
+IS  - 1
+DO  - 10.1093/biostatistics/kxj037
+SP  - 118
+EP  - 127
+ID  - johnson2007batch
+ER  - 
+
+TY  - CPAPER
+AU  - Ke, Guolin
+AU  - Meng, Qi
+AU  - Finley, Thomas
+AU  - Wang, Taifeng
+AU  - Chen, Wei
+AU  - Ma, Weidong
+AU  - Ye, Qiwei
+AU  - Liu, Tie-Yan
+TI  - LightGBM: A highly efficient gradient boosting decision tree
+T2  - Advances in Neural Information Processing Systems
+PY  - 2017
+VL  - 30
+PB  - Curran Associates, Inc.
+UR  - https://proceedings.neurips.cc/paper_files/paper/2017/hash/6449f44a102fde848669bdd9eb6b76fa-Abstract.html
+ID  - ke2017lightgbm
+ER  - 
+
+TY  - JOUR
+AU  - Kelley, David R.
+TI  - Cross-species regulatory sequence activity prediction
+JO  - PLOS Computational Biology
+PY  - 2020
+VL  - 16
+IS  - 7
+DO  - 10.1371/journal.pcbi.1008050
+SP  - e1008050
+ID  - kelley2020cross
+ER  - 
+
+TY  - JOUR
+AU  - Koonin, Eugene V.
+TI  - Orthologs, paralogs, and evolutionary genomics
+JO  - Annual Review of Genetics
+PY  - 2005
+VL  - 39
+DO  - 10.1146/annurev.genet.39.073003.114725
+SP  - 309
+EP  - 338
+ID  - koonin2005orthologs
+ER  - 
+
+TY  - JOUR
+AU  - Leek, Jeffrey T.
+AU  - Scharpf, Robert B.
+AU  - Bravo, Hector C.
+AU  - Simcha, David
+AU  - Langmead, Ben
+AU  - Johnson, W. Evan
+AU  - Geman, Donald
+AU  - Baggerly, Keith
+AU  - Irizarry, Rafael A.
+TI  - Tackling the widespread and critical impact of batch effects in high-throughput data
+JO  - Nature Reviews Genetics
+PY  - 2010
+VL  - 11
+IS  - 10
+DO  - 10.1038/nrg2825
+SP  - 733
+EP  - 739
+ID  - leek2010batch
+ER  - 
+
+TY  - JOUR
+AU  - Leppek, Kathrin
+AU  - Byeon, Gary W.
+AU  - Kladwang, Wipapat
+AU  - Wayment-Steele, Hannah K.
+AU  - Kerr, Christopher H.
+AU  - Xu, Andrew F.
+AU  - Kim, David S.
+AU  - Topkar, Vishal V.
+AU  - Choe, Catherine
+AU  - Rothschild, Daniel
+AU  - others
+TI  - Combinatorial optimization of mRNA structure, stability, and translation for RNA-based therapeutics
+JO  - Nature Communications
+PY  - 2022
+VL  - 13
+DO  - 10.1038/s41467-022-28776-w
+SP  - 1536
+ID  - leppek2022combinatorial
+ER  - 
+
+TY  - JOUR
+AU  - Martin, Fergal J.
+AU  - Amode, M. Ridwan
+AU  - Aneja, Anmol
+AU  - Austine-Orimoloye, Oluwatosin
+AU  - Azov, Andrey G.
+AU  - Barnes, If
+AU  - Becker, Anna
+AU  - Bennett, Ruth
+AU  - Berry, Anthony
+AU  - Bhai, Jyothish
+AU  - others
+TI  - Ensembl 2023
+JO  - Nucleic Acids Research
+PY  - 2023
+VL  - 51
+IS  - D1
+DO  - 10.1093/nar/gkac958
+SP  - D933
+EP  - D941
+ID  - martin2023ensembl
+ER  - 
+
+TY  - JOUR
+AU  - Mauger, David M.
+AU  - Cabral, Bruno J.
+AU  - Presnyak, Vladimir
+AU  - Su, Steven V.
+AU  - Reid, David W.
+AU  - Goodman, Brian
+AU  - Link, Katherine
+AU  - Khatwani, Nisha
+AU  - Reynders, Jacques
+AU  - Moore, Melissa J.
+AU  - McFadyen, Ian J.
+TI  - mRNA structure regulates protein expression through changes in functional half-life
+JO  - Proceedings of the National Academy of Sciences
+PY  - 2019
+VL  - 116
+IS  - 48
+DO  - 10.1073/pnas.1908052116
+SP  - 24075
+EP  - 24083
+ID  - mauger2019structure
+ER  - 
+
+TY  - JOUR
+AU  - Mayr, Christine
+TI  - Regulation by 3'-untranslated regions
+JO  - Annual Review of Genetics
+PY  - 2017
+VL  - 51
+DO  - 10.1146/annurev-genet-120116-024704
+SP  - 171
+EP  - 194
+ID  - mayr2017utr
+ER  - 
+
+TY  - JOUR
+AU  - Meyer, Kate D.
+AU  - Saletore, Yogesh
+AU  - Zumbo, Paul
+AU  - Elemento, Olivier
+AU  - Mason, Christopher E.
+AU  - Jaffrey, Samie R.
+TI  - Comprehensive analysis of mRNA methylation reveals enrichment in 3' UTRs and near stop codons
+JO  - Cell
+PY  - 2012
+VL  - 149
+IS  - 7
+DO  - 10.1016/j.cell.2012.05.003
+SP  - 1635
+EP  - 1646
+ID  - meyer2012m6a
+ER  - 
+
+TY  - JOUR
+AU  - Muhar, Matthias
+AU  - Ebert, Alexander
+AU  - Neumann, Tobias
+AU  - Umkehrer, Christian
+AU  - Jude, Julius
+AU  - Wieshofer, Caroline
+AU  - Rescheneder, Philipp
+AU  - Lipp, Johannes J.
+AU  - Herzog, Veronika A.
+AU  - Reichholf, Brian
+AU  - others
+TI  - SLAM-seq defines direct gene-regulatory functions of the BRD4-MYC axis
+JO  - Science
+PY  - 2018
+VL  - 360
+IS  - 6390
+DO  - 10.1126/science.aao2793
+SP  - 800
+EP  - 805
+ID  - muhar2018slamseq
+ER  - 
+
+TY  - JOUR
+AU  - Musaev, Damir
+AU  - Abdelmessih, Mario
+AU  - Vejnar, Charles E.
+AU  - Yartseva, Valeria
+AU  - Weiss, Linnea A.
+AU  - Strayer, Ethan C.
+AU  - Takacs, Carter M.
+AU  - Giraldez, Antonio J.
+TI  - UPF1 regulates mRNA stability by sensing poorly translated coding sequences
+JO  - Cell Reports
+PY  - 2024
+VL  - 43
+DO  - 10.1016/j.celrep.2024.114074
+SP  - 114074
+ID  - musaev2024upf1
+ER  - 
+
+TY  - JOUR
+AU  - Pedregosa, Fabian
+AU  - Varoquaux, Gael
+AU  - Gramfort, Alexandre
+AU  - Michel, Vincent
+AU  - Thirion, Bertrand
+AU  - Grisel, Olivier
+AU  - Blondel, Mathieu
+AU  - Prettenhofer, Peter
+AU  - Weiss, Ron
+AU  - Dubourg, Vincent
+AU  - others
+TI  - Scikit-learn: Machine learning in Python
+JO  - Journal of Machine Learning Research
+PY  - 2011
+VL  - 12
+UR  - https://jmlr.org/papers/v12/pedregosa11a.html
+SP  - 2825
+EP  - 2830
+ID  - pedregosa2011sklearn
+ER  - 
+
+TY  - JOUR
+AU  - Presnyak, Vladimir
+AU  - Alhusaini, Najwa
+AU  - Chen, Yi-Hsuan
+AU  - Martin, Sophie
+AU  - Morris, Nathan
+AU  - Kline, Natasha
+AU  - Olson, Sara
+AU  - Weinberg, David
+AU  - Baker, Kristian E.
+AU  - Graveley, Brenton R.
+AU  - Coller, Jeff
+TI  - Codon optimality is a major determinant of mRNA stability
+JO  - Cell
+PY  - 2015
+VL  - 160
+IS  - 6
+DO  - 10.1016/j.cell.2015.02.029
+SP  - 1111
+EP  - 1124
+ID  - presnyak2015codon
+ER  - 
+
+TY  - JOUR
+AU  - Rabani, Michal
+AU  - Levin, Joshua Z.
+AU  - Fan, Lin
+AU  - Adiconis, Xian
+AU  - Raychowdhury, Raktima
+AU  - Garber, Manuel
+AU  - Gnirke, Andreas
+AU  - Nusbaum, Chad
+AU  - Hacohen, Nir
+AU  - Friedman, Nir
+AU  - Amit, Ido
+AU  - Regev, Aviv
+TI  - Metabolic labeling of RNA uncovers principles of RNA production and degradation dynamics in mammalian cells
+JO  - Nature Biotechnology
+PY  - 2011
+VL  - 29
+DO  - 10.1038/nbt.1861
+SP  - 436
+EP  - 442
+ID  - rabani2011metabolic
+ER  - 
+
+TY  - JOUR
+AU  - Rambout, Xavier
+AU  - Maquat, Lynne E.
+TI  - Nuclear mRNA decay: regulatory networks that control gene expression
+JO  - Nature Reviews Genetics
+PY  - 2024
+VL  - 25
+DO  - 10.1038/s41576-024-00712-2
+SP  - 679
+EP  - 697
+ID  - rambout2024nuclear
+ER  - 
+
+TY  - JOUR
+AU  - Ross, Jeffrey
+TI  - mRNA stability in mammalian cells
+JO  - Microbiological Reviews
+PY  - 1995
+VL  - 59
+IS  - 3
+DO  - 10.1128/mr.59.3.423-450.1995
+SP  - 423
+EP  - 450
+ID  - ross1995mrna
+ER  - 
+
+TY  - JOUR
+AU  - Sample, Paul J.
+AU  - Wang, Ban
+AU  - Reid, David W.
+AU  - Presnyak, Vladimir
+AU  - McFadyen, Ian J.
+AU  - Morris, David R.
+AU  - Seelig, Georg
+TI  - Human 5' UTR design and variant effect prediction from a massively parallel translation assay
+JO  - Nature Biotechnology
+PY  - 2019
+VL  - 37
+DO  - 10.1038/s41587-019-0164-5
+SP  - 803
+EP  - 809
+ID  - sample2019utr
+ER  - 
+
+TY  - JOUR
+AU  - Schoenberg, Daniel R.
+AU  - Maquat, Lynne E.
+TI  - Regulation of cytoplasmic mRNA decay
+JO  - Nature Reviews Genetics
+PY  - 2012
+VL  - 13
+IS  - 4
+DO  - 10.1038/nrg3160
+SP  - 246
+EP  - 259
+ID  - schoenberg2012cytoplasmic
+ER  - 
+
+TY  - JOUR
+AU  - Schofield, Jeremy A.
+AU  - Duffy, Erin E.
+AU  - Kiefer, Laura
+AU  - Sullivan, Melissa C.
+AU  - Simon, Matthew D.
+TI  - TimeLapse-seq: adding a temporal dimension to RNA sequencing through nucleoside recoding
+JO  - Nature Methods
+PY  - 2018
+VL  - 15
+IS  - 3
+DO  - 10.1038/nmeth.4582
+SP  - 221
+EP  - 225
+ID  - schofield2018timelapse
+ER  - 
+
+TY  - JOUR
+AU  - Schwalb, Bjorn
+AU  - Schulz, Daniel
+AU  - Sun, Minchul
+AU  - Zacher, Benedikt
+AU  - Dumcke, Sebastian
+AU  - Martin, Dietmar E.
+AU  - Cramer, Patrick
+AU  - Tresch, Achim
+TI  - Measurement of genome-wide RNA synthesis and decay rates with Dynamic Transcriptome Analysis (DTA)
+JO  - Bioinformatics
+PY  - 2012
+VL  - 28
+IS  - 6
+DO  - 10.1093/bioinformatics/bts052
+SP  - 884
+EP  - 885
+ID  - schwalb2012dta
+ER  - 
+
+TY  - JOUR
+AU  - Schwanhausser, Bjorn
+AU  - Busse, Dorothea
+AU  - Li, Na
+AU  - Dittmar, Gunnar
+AU  - Schuchhardt, Johannes
+AU  - Wolf, Jana
+AU  - Chen, Wei
+AU  - Selbach, Matthias
+TI  - Global quantification of mammalian gene expression control
+JO  - Nature
+PY  - 2011
+VL  - 473
+DO  - 10.1038/nature10098
+SP  - 337
+EP  - 342
+ID  - schwanhausser2011global
+ER  - 
+
+TY  - JOUR
+AU  - Tani, Hidenori
+AU  - Mizutani, Ryo
+AU  - Salam, Khalid A.
+AU  - Tano, Koichi
+AU  - Ijiri, Kenichi
+AU  - Wakamatsu, Aki
+AU  - Isogai, Takao
+AU  - Suzuki, Yutaka
+AU  - Akimitsu, Nobuyoshi
+TI  - Genome-wide determination of RNA stability reveals hundreds of short-lived noncoding transcripts in mammals
+JO  - Genome Research
+PY  - 2012
+VL  - 22
+IS  - 5
+DO  - 10.1101/gr.130559.111
+SP  - 947
+EP  - 956
+ID  - tani2012stability
+ER  - 
+
+TY  - JOUR
+AU  - Tipping, Michael E.
+AU  - Bishop, Christopher M.
+TI  - Probabilistic principal component analysis
+JO  - Journal of the Royal Statistical Society: Series B
+PY  - 1999
+VL  - 61
+IS  - 3
+DO  - 10.1111/1467-9868.00196
+SP  - 611
+EP  - 622
+ID  - tipping1999ppca
+ER  - 
+
+TY  - JOUR
+AU  - Troyanskaya, Olga
+AU  - Cantor, Michael
+AU  - Sherlock, Gavin
+AU  - Brown, Pat
+AU  - Hastie, Trevor
+AU  - Tibshirani, Robert
+AU  - Botstein, David
+AU  - Altman, Russ B.
+TI  - Missing value estimation methods for DNA microarrays
+JO  - Bioinformatics
+PY  - 2001
+VL  - 17
+IS  - 6
+DO  - 10.1093/bioinformatics/17.6.520
+SP  - 520
+EP  - 525
+ID  - troyanskaya2001missing
+ER  - 
+
+TY  - JOUR
+AU  - Wang, Xiao
+AU  - Lu, Zike
+AU  - Gomez, Adriana
+AU  - Hon, Gary C.
+AU  - Yue, Yanan
+AU  - Han, Dong
+AU  - Fu, Yanjun
+AU  - Parisien, Marc
+AU  - Dai, Qing
+AU  - Jia, Guifang
+AU  - others
+TI  - N6-methyladenosine-dependent regulation of messenger RNA stability
+JO  - Nature
+PY  - 2014
+VL  - 505
+DO  - 10.1038/nature12730
+SP  - 117
+EP  - 120
+ID  - wang2014m6a
+ER  - 
+
+TY  - JOUR
+AU  - Wu, Qi
+AU  - Medina, Samuel G.
+AU  - Kushawah, Gautam
+AU  - DeVore, Matthew L.
+AU  - Castellano, Luis A.
+AU  - Hand, John M.
+AU  - Wright, Madison
+AU  - Bazzini, Ariel A.
+TI  - Translation affects mRNA stability in a codon-dependent manner in human cells
+JO  - eLife
+PY  - 2019
+VL  - 8
+DO  - 10.7554/eLife.45396
+SP  - e45396
+ID  - wu2019translation
+ER  - 

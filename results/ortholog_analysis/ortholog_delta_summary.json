@@ -1,0 +1,30 @@
+{
+  "common_pair_correlations": {
+    "pc1_full": {
+      "n": 12592.0,
+      "pearson": 0.7406205595071675,
+      "spearman": 0.7304985510030776
+    },
+    "pc1_pruned": {
+      "n": 12592.0,
+      "pearson": 0.7552849492591988,
+      "spearman": 0.7436406662614344
+    },
+    "mean_full": {
+      "n": 12592.0,
+      "pearson": 0.6801874251368611,
+      "spearman": 0.6803044521058895
+    },
+    "mean_pruned": {
+      "n": 12592.0,
+      "pearson": 0.7329991952916451,
+      "spearman": 0.7315883567332042
+    }
+  },
+  "deltas": {
+    "pc1_delta_pearson": 0.014664389752031215,
+    "pc1_delta_spearman": 0.013142115258356846,
+    "mean_delta_pearson": 0.052811770154784,
+    "mean_delta_spearman": 0.05128390462731469
+  }
+}

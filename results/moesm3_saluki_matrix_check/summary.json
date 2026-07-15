@@ -1,0 +1,92 @@
+[
+  {
+    "species": "human",
+    "subset": "all_samples",
+    "variant": "as_is_pc1",
+    "n_samples": 54,
+    "n_genes_labels": 13921,
+    "n_common_genes": 13921,
+    "pearson_vs_saluki_human_pc1": 0.963045485363426,
+    "spearman_vs_saluki_human_pc1": 0.9618460309896723
+  },
+  {
+    "species": "human",
+    "subset": "all_samples",
+    "variant": "zscore_only_pc1",
+    "n_samples": 54,
+    "n_genes_labels": 13921,
+    "n_common_genes": 13921,
+    "pearson_vs_saluki_human_pc1": 0.9631557283163559,
+    "spearman_vs_saluki_human_pc1": 0.9619683964235263
+  },
+  {
+    "species": "human",
+    "subset": "all_samples",
+    "variant": "rerun_pipeline_pc1",
+    "n_samples": 54,
+    "n_genes_labels": 13921,
+    "n_common_genes": 13921,
+    "pearson_vs_saluki_human_pc1": 0.9631213039552501,
+    "spearman_vs_saluki_human_pc1": 0.9619291412620763
+  },
+  {
+    "species": "human",
+    "subset": "no_gejman",
+    "variant": "as_is_pc1",
+    "n_samples": 39,
+    "n_genes_labels": 13921,
+    "n_common_genes": 13921,
+    "pearson_vs_saluki_human_pc1": 1.0,
+    "spearman_vs_saluki_human_pc1": 0.9999999999999999
+  },
+  {
+    "species": "human",
+    "subset": "no_gejman",
+    "variant": "zscore_only_pc1",
+    "n_samples": 39,
+    "n_genes_labels": 13921,
+    "n_common_genes": 13921,
+    "pearson_vs_saluki_human_pc1": 0.9999995080360614,
+    "spearman_vs_saluki_human_pc1": 0.9999993706939175
+  },
+  {
+    "species": "human",
+    "subset": "no_gejman",
+    "variant": "rerun_pipeline_pc1",
+    "n_samples": 39,
+    "n_genes_labels": 13921,
+    "n_common_genes": 13921,
+    "pearson_vs_saluki_human_pc1": 0.9999888473171398,
+    "spearman_vs_saluki_human_pc1": 0.9999950759787029
+  },
+  {
+    "species": "mouse",
+    "subset": "all_samples",
+    "variant": "as_is_pc1",
+    "n_samples": 27,
+    "n_genes_labels": 14463,
+    "n_common_genes": 14463,
+    "pearson_vs_saluki_human_pc1": 1.0,
+    "spearman_vs_saluki_human_pc1": 1.0
+  },
+  {
+    "species": "mouse",
+    "subset": "all_samples",
+    "variant": "zscore_only_pc1",
+    "n_samples": 27,
+    "n_genes_labels": 14463,
+    "n_common_genes": 14463,
+    "pearson_vs_saluki_human_pc1": 0.9999894607218105,
+    "spearman_vs_saluki_human_pc1": 0.9999889289741247
+  },
+  {
+    "species": "mouse",
+    "subset": "all_samples",
+    "variant": "rerun_pipeline_pc1",
+    "n_samples": 27,
+    "n_genes_labels": 14463,
+    "n_common_genes": 14463,
+    "pearson_vs_saluki_human_pc1": 0.9999238785469998,
+    "spearman_vs_saluki_human_pc1": 0.9999596709486113
+  }
+]

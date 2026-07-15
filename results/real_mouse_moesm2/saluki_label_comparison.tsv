@@ -1,0 +1,4 @@
+species	label	n_genes_overlap	pearson_vs_saluki_human_pc1	spearman_vs_saluki_human_pc1
+mouse	mean	14463	0.9539072119793618	0.9543621743226782
+mouse	pc1	14463	0.9577413332450867	0.9574553641377478
+mouse	bias_aware	14463	0.9539072119793618	0.9543621743226782

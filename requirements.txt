@@ -1,0 +1,16 @@
+numpy
+pandas
+scipy
+scikit-learn
+statsmodels
+matplotlib
+seaborn
+openpyxl
+xgboost
+python-docx
+pillow
+beautifulsoup4
+lxml
+bibtexparser>=1.4,<2
+markdown>=3.6,<4
+weasyprint>=62,<69

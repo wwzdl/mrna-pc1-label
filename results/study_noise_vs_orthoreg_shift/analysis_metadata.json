@@ -1,0 +1,9 @@
+{
+  "lambda": 0.1,
+  "min_common_genes": 500,
+  "min_observed_per_study": 1,
+  "gene_universe": "one-to-one ortholog human genes used in ortholog_label_distance",
+  "n_gene_universe": 10768,
+  "study_label_definition": "mean of sample-wise z-scored MOESM2 values within each study, z-scored and sign-aligned to human no-Gejman PC1",
+  "reference": "human no-Gejman Saluki-like PC1, z-scored"
+}

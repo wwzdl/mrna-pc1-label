@@ -1,0 +1,7 @@
+{
+  "bootstrap_unit": "gene or one-to-one ortholog pair",
+  "bootstrap_iterations": 5000,
+  "interval": "percentile 95% confidence interval",
+  "prior_prediction_summary": "mean of three aligned 10-fold OOF prediction vectors (seeds 13, 42, 101)",
+  "difference_definition": "Pearson(candidate_a, reference) - Pearson(candidate_b, reference)"
+}
