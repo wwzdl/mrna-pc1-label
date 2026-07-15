@@ -25,6 +25,6 @@ This directory contains the current English upload-candidate files for
 
 - Confirm Wenzhuo Wang and Yuebin Zhang ORCID status.
 - Confirm author contributions, funding, affiliations, and corresponding emails with every coauthor.
-- Make the GitHub repository public and create the cited release tag, or adjust the Code Availability wording.
+- Confirm that the cited public repository and release tag still resolve from a signed-out browser.
 - Confirm that the generative-AI use statement already included in Methods remains complete under the journal policy in force on the submission date.
 - Perform a final visual check in the exact files uploaded to Editorial Manager.

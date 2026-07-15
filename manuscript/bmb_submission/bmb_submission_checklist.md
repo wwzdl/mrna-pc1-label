@@ -77,6 +77,6 @@
 - [x] README 已整理
 - [ ] 英文 Online Resource 1 PDF 冻结后重建 `upload_candidate/`
 - [ ] 最终英文上传候选 ZIP 仅在全部作者信息、PDF 和 GitHub 版本冻结后生成一次，并执行 `unzip -t` 与 SHA-256 校验
-- [ ] 正式提交前确认 GitHub 仓库 `wwzdl/mrna-pc1-label` 已公开并打版本标签，或相应调整 Code Availability wording
+- [x] GitHub 仓库 `wwzdl/mrna-pc1-label` 已公开，Data/Code Availability 已改为当前时态，并标记 `mRNA-PC1-label-v1.0`
 - [ ] 选择并加入适合软件公开发布的许可证
 - [ ] 上传系统前由全体作者确认作者顺序、Author Contributions、funding 和英文单位名

@@ -10,11 +10,11 @@ Xu Jin performed data curation, computational analysis, reproducibility checks, 
 
 ## Data Availability
 
-The half-life matrices analyzed here are from the public supplementary material of the Saluki study; the precomputed feature datapack is available from Zenodo (DOI: [10.5281/zenodo.6326409](https://doi.org/10.5281/zenodo.6326409)); and ortholog mappings are from Ensembl comparative genomics resources. Result tables, figure source data, and reproduction notes will be made public before formal submission in the versioned repository [wwzdl/mrna-pc1-label](https://github.com/wwzdl/mrna-pc1-label).
+The half-life matrices analyzed here are from the public supplementary material of the Saluki study; the precomputed feature datapack is available from Zenodo (DOI: [10.5281/zenodo.6326409](https://doi.org/10.5281/zenodo.6326409)); and ortholog mappings are from Ensembl comparative genomics resources. Result tables, figure source data, and reproduction notes are publicly available in the versioned repository [wwzdl/mrna-pc1-label](https://github.com/wwzdl/mrna-pc1-label).
 
 ## Code Availability
 
-Code, figure-generation scripts, and result-reproduction workflows will be made public before formal submission in the versioned repository [wwzdl/mrna-pc1-label](https://github.com/wwzdl/mrna-pc1-label).
+Code, figure-generation scripts, and result-reproduction workflows are publicly available in [wwzdl/mrna-pc1-label](https://github.com/wwzdl/mrna-pc1-label); the manuscript-reviewed state is identified by the release tag `mRNA-PC1-label-v1.0`.
 
 ## Competing Interests
 

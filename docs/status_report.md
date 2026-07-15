@@ -89,7 +89,7 @@ MOESM2/MOESM3 由脚本直接下载；`compact_all` 所需预计算 Saluki featu
 - BibTeX/RIS 均仅保留上述 45 条实际使用记录，可由脚本同步导出
 - 中英文 DOCX 均已从当前 Markdown 重建；英文主文含连续行号和页码字段，英文补充含页码字段
 - 12 张 PNG 已完成整体验证，图号、panel label、图注、分辨率、边界和可读性未见阻断问题；最终 SI PDF 的逐页检查留到版本冻结后执行
-- GitHub 独立仓库模拟发布范围为 `277` 个文件、`24.60 MiB`，最大单文件 `2.29 MB`；大矩阵、逐基因 OOF arrays、feature packages、DOCX、PDF 与 TIFF 投稿包继续忽略
+- GitHub 独立仓库已公开发布 `277` 个文件、`24.60 MiB`，最大单文件 `2.29 MB`；大矩阵、逐基因 OOF arrays、feature packages、DOCX、PDF 与 TIFF 投稿包继续忽略
 - 关键 OOF 完整性审计通过：9 个 global、3 个 cross-target、18 个 ortholog-regularized 文件均覆盖规范基因宇宙、gene ID 唯一且预测无缺失；residual 11,107 genes 覆盖 folds 1-5
 
 ## 发布产物状态
@@ -102,10 +102,10 @@ MOESM2/MOESM3 由脚本直接下载；`compact_all` 所需预计算 Saluki featu
 
 1. Wenzhuo Wang 和 Yuebin Zhang 的 ORCID（如无 ORCID，可不填，但需确认）。
 2. 全体作者确认 Author Contributions、作者顺序、funding 与正式英文单位名。
-3. GitHub 仓库 `wwzdl/mrna-pc1-label` 公开并打版本标签；建议使用 `mRNA-PC1-label-v1.0`。
-4. 仓库公开后，将 Data/Code Availability 中的 `will be made public before formal submission` 更为当前时态。
-5. 选择软件许可证；当前已提供 `CITATION.cff`，但尚未替作者决定法律许可条款。
-6. 生成最终英文 Online Resource 1 PDF，逐页检查后再组装上传目录和最终 ZIP。
+3. 选择软件许可证；当前已提供 `CITATION.cff`，但尚未替作者决定法律许可条款。
+4. 生成最终英文 Online Resource 1 PDF，逐页检查后再组装上传目录和最终 ZIP。
+
+GitHub 仓库 [wwzdl/mrna-pc1-label](https://github.com/wwzdl/mrna-pc1-label) 已于 2026-07-15 公开，Data/Code Availability 已改为当前时态，稿件审阅版本标记为 `mRNA-PC1-label-v1.0`。
 
 ## 科学局限
 

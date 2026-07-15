@@ -306,7 +306,7 @@ All tables in this supplement are currently stored as compact Markdown tables fo
 
 ## S15. Reproducibility entry points and table notes
 
-Table 1 in the main text summarizes only the logical inputs, core operations, and validation roles of the method modules and does not list local absolute paths. Concrete result files, script entry points, and reproduction commands are documented in this section and will be released in the versioned repository: `https://github.com/wwzdl/mrna-pc1-label`. All paths below are repository-relative so that reviewers and readers can reproduce the analysis across environments after repository release.
+Table 1 in the main text summarizes only the logical inputs, core operations, and validation roles of the method modules and does not list local absolute paths. Concrete result files, script entry points, and reproduction commands are documented in this section and in the public versioned repository: `https://github.com/wwzdl/mrna-pc1-label`. All paths below are repository-relative so that reviewers and readers can reproduce the analysis across environments.
 
 From the repository root, the staged reproduction entry points are:
 
@@ -324,7 +324,7 @@ The `labels` stage downloads MOESM2/MOESM3 and runs label reconstruction, study 
 
 | Category | Path or entry point | Purpose |
 |:--|:--|:--|
-| Public repository | `https://github.com/wwzdl/mrna-pc1-label` | Releases code, result tables, figure scripts, and environment notes |
+| Public repository | `https://github.com/wwzdl/mrna-pc1-label` | Provides code, result tables, figure scripts, and environment notes; manuscript tag: `mRNA-PC1-label-v1.0` |
 | Staged reproduction driver | `scripts/reproduce_bmb_key_results.sh` | Runs the `labels`, `models`, and `figures` stages with the active result paths |
 | Environment and input integrity | `requirements.txt`, `environment.yml`, `requirements-validated.txt`, `scripts/fetch_real_data.sh` | Records portable and validated dependencies and verifies the public supplementary inputs by checksum |
 | OOF integrity audit | `scripts/audit_oof_integrity.py` | Checks canonical gene counts, unique IDs, shared universes across settings/seeds, fold coverage, and complete predictions |

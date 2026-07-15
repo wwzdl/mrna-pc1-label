@@ -10,7 +10,7 @@ The main contributions are threefold. First, a reference-free PC1-stability rank
 
 We believe the manuscript fits the scope of *Bulletin of Mathematical Biology* because it treats a biologically meaningful phenotype as a quantitative object whose labels, study structure, cross-species conservation, and predictive boundaries can be audited mathematically. The work is not simply a report of a higher score; it provides a reproducible framework for separating label diagnosis, fixed-target baseline modeling, and controlled cross-species prior enhancement in mRNA stability prediction.
 
-This manuscript is original, has not been published previously, and is not under consideration elsewhere. All authors have reviewed the manuscript and approved its submission. The authors declare no known competing financial interests or personal relationships that could have influenced the work reported in this manuscript. Code, result tables, figure-generation scripts, and reproduction notes will be made public before formal submission in the versioned repository [wwzdl/mrna-pc1-label](https://github.com/wwzdl/mrna-pc1-label).
+This manuscript is original, has not been published previously, and is not under consideration elsewhere. All authors have reviewed the manuscript and approved its submission. The authors declare no known competing financial interests or personal relationships that could have influenced the work reported in this manuscript. Code, result tables, figure-generation scripts, and reproduction notes are publicly available in the versioned repository [wwzdl/mrna-pc1-label](https://github.com/wwzdl/mrna-pc1-label).
 
 Thank you for considering our manuscript.
 

@@ -2,6 +2,8 @@ cff-version: 1.2.0
 message: "If you use this software or its derived labels, please cite the accompanying manuscript."
 title: "mrna-pc1-label: study-aware mammalian mRNA half-life label auditing and prediction"
 type: software
+version: 1.0.0
+date-released: 2026-07-15
 authors:
   - family-names: Jin
     given-names: Xu

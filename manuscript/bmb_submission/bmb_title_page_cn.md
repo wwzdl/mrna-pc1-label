@@ -48,7 +48,7 @@ mRNA half-life；study heterogeneity；label audit；ortholog regularization；c
 
 当前主文口径为：
 
-> 本文使用的 half-life 矩阵来自 Saluki 论文公开补充材料；预计算 feature datapack 可从 Zenodo 获取（DOI：[10.5281/zenodo.6326409](https://doi.org/10.5281/zenodo.6326409)）；ortholog 映射来自 Ensembl comparative genomics 资源。代码、结果表、图件生成脚本和复现说明将通过版本化仓库 [wwzdl/mrna-pc1-label](https://github.com/wwzdl/mrna-pc1-label) 提供。
+> 本文使用的 half-life 矩阵来自 Saluki 论文公开补充材料；预计算 feature datapack 可从 Zenodo 获取（DOI：[10.5281/zenodo.6326409](https://doi.org/10.5281/zenodo.6326409)）；ortholog 映射来自 Ensembl comparative genomics 资源。代码、结果表、图件生成脚本和复现说明已通过版本化仓库 [wwzdl/mrna-pc1-label](https://github.com/wwzdl/mrna-pc1-label) 公开。
 
 ## 8. 使用提醒
 

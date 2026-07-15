@@ -12,13 +12,13 @@
 
 建议口径：
 
-> 本文使用的 half-life 矩阵来自 Saluki 论文公开补充材料；预计算 feature datapack 可从 Zenodo 获取（DOI：[10.5281/zenodo.6326409](https://doi.org/10.5281/zenodo.6326409)）；ortholog 映射来自 Ensembl comparative genomics 资源。本文分析过程中生成的结果表、图件源数据和复现说明将通过版本化仓库 [wwzdl/mrna-pc1-label](https://github.com/wwzdl/mrna-pc1-label) 提供。
+> 本文使用的 half-life 矩阵来自 Saluki 论文公开补充材料；预计算 feature datapack 可从 Zenodo 获取（DOI：[10.5281/zenodo.6326409](https://doi.org/10.5281/zenodo.6326409)）；ortholog 映射来自 Ensembl comparative genomics 资源。本文分析过程中生成的结果表、图件源数据和复现说明已通过版本化仓库 [wwzdl/mrna-pc1-label](https://github.com/wwzdl/mrna-pc1-label) 公开。
 
 ## 3. Code Availability
 
 建议口径：
 
-> 代码、图件生成脚本和结果复现流程将通过版本化仓库 [wwzdl/mrna-pc1-label](https://github.com/wwzdl/mrna-pc1-label) 提供。
+> 代码、图件生成脚本和结果复现流程已通过 [wwzdl/mrna-pc1-label](https://github.com/wwzdl/mrna-pc1-label) 公开；与本文稿件对应的审阅版本标记为 `mRNA-PC1-label-v1.0`。
 
 ## 4. Competing Interests
 

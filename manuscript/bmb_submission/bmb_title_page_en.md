@@ -38,4 +38,4 @@ mRNA half-life; study heterogeneity; label audit; ortholog regularization; cross
 
 ## Data and Code Availability
 
-The half-life matrices analyzed here are from the public supplementary material of the Saluki study; the precomputed feature datapack is available from Zenodo (DOI: [10.5281/zenodo.6326409](https://doi.org/10.5281/zenodo.6326409)); and ortholog mappings are from Ensembl comparative genomics resources. Code, result tables, figure-generation scripts, and reproduction notes will be made public before formal submission in the versioned repository [wwzdl/mrna-pc1-label](https://github.com/wwzdl/mrna-pc1-label).
+The half-life matrices analyzed here are from the public supplementary material of the Saluki study; the precomputed feature datapack is available from Zenodo (DOI: [10.5281/zenodo.6326409](https://doi.org/10.5281/zenodo.6326409)); and ortholog mappings are from Ensembl comparative genomics resources. Code, result tables, figure-generation scripts, and reproduction notes are publicly available in the versioned repository [wwzdl/mrna-pc1-label](https://github.com/wwzdl/mrna-pc1-label).

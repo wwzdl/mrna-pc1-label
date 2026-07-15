@@ -1,12 +1,12 @@
 # BMB Final Pre-submission Audit
 
-Date: 2026-07-14  
+Date: 2026-07-14; release status updated 2026-07-15  
 Target: *Bulletin of Mathematical Biology*  
 Scope: Chinese/English main manuscripts, Supplementary Information, figures, tables, references, submission materials, code, public inputs, and reproducibility
 
 ## Executive verdict
 
-The scientific manuscript is ready for author approval and journal submission. No blocking inconsistency was found in the three-estimand logic, canonical analysis universes, quantitative claims, figures, tables, citations, or OOF implementation. The package is **conditionally upload-ready**, because four release actions remain external to the scientific source: author metadata/contribution confirmation, public GitHub release, software-license selection, and final generation plus visual inspection of the English Supplementary PDF and upload ZIP.
+The scientific manuscript is ready for author approval and journal submission. No blocking inconsistency was found in the three-estimand logic, canonical analysis universes, quantitative claims, figures, tables, citations, or OOF implementation. The package is **conditionally upload-ready**, because three actions remain external to the scientific source: author metadata/contribution confirmation, software-license selection, and final generation plus visual inspection of the English Supplementary PDF and upload ZIP. The public GitHub release gate was completed on 2026-07-15.
 
 The 0.10 ortholog-regularized target remains a core contribution. It is not demoted to an incidental supplement, but it is consistently separated from the fixed Saluki-human-PC1 ranking. This framing preserves the result's novelty while avoiding the claim that changing a target improves prediction of an unchanged ground truth.
 
@@ -65,15 +65,14 @@ The prior-enhanced result is not information leakage under the declared estimand
 - The `models` stage now rebuilds the ignored human sequence-feature table when absent and checks all required Saluki regulatory blocks before training.
 - Generated manifests and summaries use repository-relative paths; no local absolute path, private key, or GitHub/API token pattern was found in the release candidate.
 - Legacy Saluki result-schema tokens (`*_vs_author` and `mouse_author`) were removed from retained result snapshots and normalized to the same `*_vs_saluki` and `saluki_mouse_prior` vocabulary used by the current code and manuscripts; numerical values were unchanged.
-- A simulated standalone repository contains 277 source/result assets totaling 24.60 MiB, with a largest file of 2.29 MB. Raw data, large matrices, per-gene OOF arrays, feature packages, DOCX, PDF, ZIP, and TIFF submission artifacts are excluded.
+- The public standalone repository [wwzdl/mrna-pc1-label](https://github.com/wwzdl/mrna-pc1-label) contains 277 source/result assets totaling 24.60 MiB in its initial commit, with a largest file of 2.29 MB. Raw data, large matrices, per-gene OOF arrays, feature packages, DOCX, PDF, ZIP, and TIFF submission artifacts are excluded.
 - `CITATION.cff` is present. A legal software license is intentionally not chosen on the authors' behalf.
 
 ## Required release gates
 
 1. Confirm Wenzhuo Wang and Yuebin Zhang's ORCID status and approve the final Author Contributions, author order, funding, and affiliations.
-2. Create or expose the public repository `wwzdl/mrna-pc1-label`, initialize this project as its standalone Git root, commit the reviewed scope, and tag `mRNA-PC1-label-v1.0`.
-3. Select and add a software license, then change Code/Data Availability from future to present tense after the public release is reachable.
-4. Generate the frozen English Online Resource 1 PDF, inspect every page, assemble the upload candidate, and create one final ZIP with integrity and SHA-256 checks.
+2. Select and add a software license.
+3. Generate the frozen English Online Resource 1 PDF, inspect every page, assemble the upload candidate, and create one final ZIP with integrity and SHA-256 checks.
 
 ## Verification limitation
 

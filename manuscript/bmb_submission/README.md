@@ -72,7 +72,7 @@
 - `figures/`
   - 当前 PNG/SVG 图件及本地 600 dpi TIFF 投稿图件；表格以 Markdown 和结果 TSV 为可编辑源
 
-当前目录已经保留英文主文、英文补充材料、英文 title page、英文 cover letter 和英文 declarations。最终补充材料上传名将使用 `Online_Resource_1_supplementary_material.pdf`；当前 PDF、上传候选目录和 ZIP 按作者要求推迟到版本冻结后一次生成。生成式 AI 使用说明已按 BMB 要求写入方法部分。最终系统上传前仍需作者侧确认两位作者的 ORCID、Author Contributions、GitHub 公开版本与软件许可。
+当前目录已经保留英文主文、英文补充材料、英文 title page、英文 cover letter 和英文 declarations。最终补充材料上传名将使用 `Online_Resource_1_supplementary_material.pdf`；当前 PDF、上传候选目录和 ZIP 按作者要求推迟到版本冻结后一次生成。生成式 AI 使用说明已按 BMB 要求写入方法部分。GitHub 公开版本已完成；最终系统上传前仍需作者侧确认两位作者的 ORCID、Author Contributions 与软件许可。
 
 ## 最新内容更新
 
@@ -90,7 +90,7 @@
 - 已补齐中文内部外围材料：标题页、附信、投稿要点摘要、作者贡献草案和声明汇总，供后续英文 `title page`、`cover letter` 和系统表单统一转换。
 - 主文已纳入 10-fold global prior robustness、ortholog-regularized target 的 label geometry、cross-target evaluation、prior ablation 与 no-direct-prior 解释边界。
 - 补充材料保留 ortholog-regularized target 的相关补充表与必要控制结果。
-- 旧 TCBB 打包脚本和历史备份目录不再属于当前活跃 BMB 投稿链路；推送 GitHub 时以当前项目目录作为 `mrna-pc1-label` 仓库根目录。
+- 旧 TCBB 打包脚本和历史备份目录不再属于当前活跃 BMB 投稿链路；当前项目目录已作为公开 `mrna-pc1-label` 仓库根目录。
 
 ## 已对齐的关键官方要求
 
@@ -141,7 +141,6 @@ bash scripts/assemble_bmb_upload_candidate.sh
 
 - Wenzhuo Wang 和 Yuebin Zhang 的 ORCID
 - 最终 `Author contributions` 表述
-- GitHub 仓库 `wwzdl/mrna-pc1-label` 正式提交前需要公开、打版本标签，或相应调整 Code Availability wording
 - 选择并加入软件许可证；当前尚未替作者决定法律许可条款
 - 冻结后生成并逐页检查英文 `Online Resource 1` PDF，再组装上传目录和最终 ZIP
 - 是否坚持以 `Original research article` 身份提交，还是改走 `Methods`

@@ -14,7 +14,7 @@
 
 我们认为该工作与 *Bulletin of Mathematical Biology* 的定位契合，原因在于它并不只是报告一个更高分数，而是围绕一个具有明确生物学意义的表型，系统讨论了标签构建、异质性诊断、跨物种保守性验证以及受约束的预测建模边界。本文的核心结果涉及：公开哺乳动物转录后调控数据在何种条件下可以被整合为可审计的数学对象；以及在清楚区分输入增强与目标改变之后，mRNA stability prediction 能得出哪些可信结论。我们相信，这种把 biological phenotype、ortholog conservation 和 transparent benchmark design 结合起来的研究，会对期刊读者中的计算生物学、系统生物学和定量建模研究者具有吸引力。
 
-本稿件为原创工作，未曾发表，也未同时投往其他期刊。所有作者均已参与当前稿件内容的整理与审阅；正式投稿前，将由通讯作者在系统中完成最终作者确认。作者为 Xu Jin、Wenzhuo Wang、Anhui Wang、Yuebin Zhang、Yingchen Mao 和 Dinglin Zhang；共同通讯作者为 Yingchen Mao（`myc@lnnu.edu.cn`）和 Dinglin Zhang（`dlzhang@dicp.ac.cn`）。本工作受国家自然科学基金（22373101、22203089、22573043）资助。作者声明不存在任何已知的、可能对本文所报告工作产生影响的竞争性经济利益或个人关系。代码、结果表、图件生成脚本和复现说明将在正式投稿前通过版本化仓库 [wwzdl/mrna-pc1-label](https://github.com/wwzdl/mrna-pc1-label) 公开。当前已公开确认的 ORCID 包括 Xu Jin（0009-0007-7776-0541）、Anhui Wang（0000-0003-4041-9095）、Yingchen Mao（0000-0002-2469-054X）和 Dinglin Zhang（0000-0002-9674-0577）；Wenzhuo Wang 和 Yuebin Zhang 的 ORCID 仍待作者本人最后核对。
+本稿件为原创工作，未曾发表，也未同时投往其他期刊。所有作者均已参与当前稿件内容的整理与审阅；正式投稿前，将由通讯作者在系统中完成最终作者确认。作者为 Xu Jin、Wenzhuo Wang、Anhui Wang、Yuebin Zhang、Yingchen Mao 和 Dinglin Zhang；共同通讯作者为 Yingchen Mao（`myc@lnnu.edu.cn`）和 Dinglin Zhang（`dlzhang@dicp.ac.cn`）。本工作受国家自然科学基金（22373101、22203089、22573043）资助。作者声明不存在任何已知的、可能对本文所报告工作产生影响的竞争性经济利益或个人关系。代码、结果表、图件生成脚本和复现说明已通过版本化仓库 [wwzdl/mrna-pc1-label](https://github.com/wwzdl/mrna-pc1-label) 公开。当前已公开确认的 ORCID 包括 Xu Jin（0009-0007-7776-0541）、Anhui Wang（0000-0003-4041-9095）、Yingchen Mao（0000-0002-2469-054X）和 Dinglin Zhang（0000-0002-9674-0577）；Wenzhuo Wang 和 Yuebin Zhang 的 ORCID 仍待作者本人最后核对。
 
 感谢您的审阅与考虑。
 

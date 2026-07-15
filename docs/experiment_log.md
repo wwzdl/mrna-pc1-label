@@ -1309,3 +1309,16 @@ PYTHONPATH=paper_pca/src python -m mrna_half_life_paper.study_noise_vs_orthoreg_
 - 验证：
   - BMB package audit：`136 checks, 0 failures, 0 warnings`。
   - 2026-07-15 在公网访问新地址仍返回 404，因此 Data/Code Availability 继续使用将来时，待仓库公开后再改为当前时态。
+
+### Public GitHub release
+
+- 时间：
+  - `2026-07-15 CST`
+- 关键处理：
+  - 将 `paper_pca` 初始化为独立 Git 仓库，并按 `.gitignore` 发布源码、紧凑结果表、稿件 Markdown、参考文献及 PNG/SVG 图件。
+  - 公开仓库为 `https://github.com/wwzdl/mrna-pc1-label`；raw/interim 大数据、大矩阵、逐基因 OOF arrays、feature packages、DOCX、PDF、TIFF 和 ZIP 未进入公开提交。
+  - 中英文 Data/Code Availability、title page、cover letter、declarations、补充材料复现说明及 README 均由将来时改为当前时态。
+  - `CITATION.cff` 增加 `version: 1.0.0` 与发布日期；稿件审阅状态标记为 `mRNA-PC1-label-v1.0`。
+- 验证：
+  - 初始公开提交包含 `277` 个文件，范围约 `24.60 MiB`；未发现本机绝对路径、私钥或 GitHub token。
+  - 发布后再次执行中英文一致性和 BMB package audit；最终结果记录于本次发布提交。

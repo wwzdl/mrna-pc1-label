@@ -134,6 +134,6 @@ All active main figures (Fig. 1-8) and supplementary figures (S1-S4) are generat
 
 ## Release
 
-Before public release, create the GitHub repository `wwzdl/mrna-pc1-label`, run the preflight, and tag the reviewed state as `mRNA-PC1-label-v1.0`. Update the manuscript Code Availability statement from future to present tense only after the repository and release are public.
+The public source repository is [wwzdl/mrna-pc1-label](https://github.com/wwzdl/mrna-pc1-label). The manuscript-reviewed state is tagged as `mRNA-PC1-label-v1.0`; run the release preflight before deriving any later submission package from a newer commit.
 
 中文说明：本 README 采用英文以便审稿人与读者直接复现；中文定稿状态和术语说明见 `docs/status_report.md`。

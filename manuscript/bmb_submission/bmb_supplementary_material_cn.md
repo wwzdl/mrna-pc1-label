@@ -306,7 +306,7 @@ prior-missingness 分层分析支持这一使用边界。在全部 12,916 个基
 
 ## S15. 复现入口与表格说明
 
-主文表 1 只概括方法模块的逻辑输入、核心操作和验证目的，不列本地绝对路径。具体结果文件、脚本入口和复现命令应以本节和正式投稿前发布的版本化仓库为准：`https://github.com/wwzdl/mrna-pc1-label`。下表中的路径均为仓库相对路径，便于审稿人和读者在仓库发布后于不同计算环境中复现。
+主文表 1 只概括方法模块的逻辑输入、核心操作和验证目的，不列本地绝对路径。具体结果文件、脚本入口和复现命令见本节及公开的版本化仓库：`https://github.com/wwzdl/mrna-pc1-label`。下表中的路径均为仓库相对路径，便于审稿人和读者在不同计算环境中复现。
 
 在仓库根目录中，分阶段复现入口为：
 
@@ -324,7 +324,7 @@ bash scripts/reproduce_bmb_key_results.sh figures
 
 | 类别 | 路径或入口 | 用途 |
 |:--|:--|:--|
-| 版本化仓库 | `https://github.com/wwzdl/mrna-pc1-label` | 正式投稿前发布代码、结果表、图件脚本和环境说明 |
+| 版本化仓库 | `https://github.com/wwzdl/mrna-pc1-label` | 提供代码、结果表、图件脚本和环境说明；稿件版本标签为 `mRNA-PC1-label-v1.0` |
 | 分阶段复现入口 | `scripts/reproduce_bmb_key_results.sh` | 按当前结果路径运行 `labels`、`models` 和 `figures` 三个阶段 |
 | 环境与输入完整性 | `requirements.txt`、`environment.yml`、`requirements-validated.txt`、`scripts/fetch_real_data.sh` | 记录便携与已验证依赖，并以 checksum 校验公开补充输入 |
 | OOF 完整性审计 | `scripts/audit_oof_integrity.py` | 检查规范基因数、gene ID 唯一性、不同 setting/seed 的共同宇宙、fold 覆盖和预测缺失 |
