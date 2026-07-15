@@ -2,25 +2,15 @@ cff-version: 1.2.0
 message: "If you use this software or its derived labels, please cite the accompanying manuscript."
 title: "mrna-pc1-label: study-aware mammalian mRNA half-life label auditing and prediction"
 type: software
-version: 1.1.0
-date-released: 2026-07-15
+version: 1.2.0
+date-released: 2026-07-16
 authors:
-  - family-names: Jin
-    given-names: Xu
-    orcid: "https://orcid.org/0009-0007-7776-0541"
   - family-names: Wang
     given-names: Wenzhuo
-  - family-names: Wang
-    given-names: Anhui
-    orcid: "https://orcid.org/0000-0003-4041-9095"
-  - family-names: Zhang
-    given-names: Yuebin
-  - family-names: Mao
-    given-names: Yingchen
-    orcid: "https://orcid.org/0000-0002-2469-054X"
-  - family-names: Zhang
-    given-names: Dinglin
-    orcid: "https://orcid.org/0000-0002-9674-0577"
+    affiliation: "School of Science, Dalian Maritime University"
+  - family-names: Shao
+    given-names: Ying
+    affiliation: "School of Science, Dalian Maritime University"
 repository-code: "https://github.com/wwzdl/mrna-pc1-label"
 abstract: >-
   Reproducible code, compact result tables, figure scripts, and manuscript

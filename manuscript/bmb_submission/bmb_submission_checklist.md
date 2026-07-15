@@ -26,12 +26,12 @@
 
 ## Title page / author metadata
 
-- [x] 作者顺序、单位、通讯作者邮箱已写入
-- [x] funding 已写入
+- [x] 作者顺序、单位和通讯作者身份已写入
+- [ ] Ying Shao 通讯作者邮箱待补充
+- [x] no-funding statement 已写入，旧基金编号已删除
 - [x] competing interests 已写入
-- [x] 已公开确认 ORCID：Xu Jin / Anhui Wang / Yingchen Mao / Dinglin Zhang
 - [ ] Wenzhuo Wang ORCID 最终核对
-- [ ] Yuebin Zhang ORCID 最终核对
+- [ ] Ying Shao ORCID 最终核对
 
 ## References
 
@@ -66,7 +66,7 @@
 - [x] 中文内部 title page 草案已整理
 - [x] 中文内部 cover letter 草案已整理
 - [x] 中文内部投稿要点摘要已整理（非系统必传）
-- [x] 中文内部 author contributions 草案已整理（待作者确认）
+- [x] 中文内部 author contributions 已按两位作者重写（待作者确认实际分工）
 - [x] 中文内部 declarations 汇总已整理
 - [x] 英文 title page 已生成
 - [x] 英文 cover letter 已生成
@@ -77,6 +77,6 @@
 - [x] README 已整理
 - [ ] 英文 Online Resource 1 PDF 冻结后重建 `upload_candidate/`
 - [ ] 最终英文上传候选 ZIP 仅在全部作者信息、PDF 和 GitHub 版本冻结后生成一次，并执行 `unzip -t` 与 SHA-256 校验
-- [x] GitHub 仓库 `wwzdl/mrna-pc1-label` 已公开，Data/Code Availability 已改为当前时态，本轮审阅版本标记为 `mRNA-PC1-label-v1.1`
+- [x] GitHub 仓库 `wwzdl/mrna-pc1-label` 已公开，Data/Code Availability 已改为当前时态；两作者审阅版本标记为 `mRNA-PC1-label-v1.2`
 - [ ] 选择并加入适合软件公开发布的许可证
-- [ ] 上传系统前由全体作者确认作者顺序、Author Contributions、funding 和英文单位名
+- [ ] 上传系统前由两位作者确认作者顺序、Author Contributions、no-funding statement 和英文单位名

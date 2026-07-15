@@ -16,5 +16,5 @@ Thank you for considering our manuscript.
 
 Sincerely,
 
-Yingchen Mao and Dinglin Zhang  
-Corresponding authors
+Ying Shao  
+Corresponding author

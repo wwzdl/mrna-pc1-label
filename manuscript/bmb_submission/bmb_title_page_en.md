@@ -7,34 +7,27 @@
 **Article type:** Original research article  
 **Target journal:** *Bulletin of Mathematical Biology*
 
-## Authors and Affiliations
+## Authors and Affiliation
 
-Xu Jin<sup>1,2</sup>, Wenzhuo Wang<sup>3</sup>, Anhui Wang<sup>1,4</sup>, Yuebin Zhang<sup>1,4</sup>, Yingchen Mao*<sup>2</sup>, Dinglin Zhang*<sup>1,4</sup>
+Wenzhuo Wang<sup>1</sup>, Ying Shao*<sup>1</sup>
 
-<sup>1</sup> Interdisciplinary Research Center for Biology and Chemistry, Liaoning Normal University, Dalian 116029, China  
-<sup>2</sup> School of Physics and Electronic Technology, Liaoning Normal University, Dalian 116029, China  
-<sup>3</sup> School of Science, Dalian Maritime University, Dalian 116026, China  
-<sup>4</sup> Laboratory of Molecular Modeling and Design, State Key Laboratory of Molecular Reaction Dynamics, Dalian Institute of Chemical Physics, Chinese Academy of Sciences, Dalian 116023, China
+<sup>1</sup> School of Science, Dalian Maritime University, Dalian 116026, China
 
-## Corresponding Authors
+## Corresponding Author
 
-Yingchen Mao, myc@lnnu.edu.cn  
-Dinglin Zhang, dlzhang@dicp.ac.cn
+Ying Shao, Email:
 
 ## ORCID
 
-Xu Jin: 0009-0007-7776-0541  
-Anhui Wang: 0000-0003-4041-9095  
-Yingchen Mao: 0000-0002-2469-054X  
-Dinglin Zhang: 0000-0002-9674-0577
+Not provided.
 
 ## Funding
 
-This work was supported by the National Natural Science Foundation of China (22373101, 22203089, and 22573043).
+No specific funding was received for this work.
 
 ## Author Contributions
 
-Xu Jin performed data curation, computational analysis, reproducibility checks, figure preparation, and manuscript drafting. Dinglin Zhang and Yingchen Mao contributed to study conception, method design, result interpretation, project supervision, and manuscript revision. Wenzhuo Wang, Anhui Wang, and Yuebin Zhang contributed to result discussion and manuscript review. All authors reviewed and approved the final manuscript.
+Wenzhuo Wang contributed to conceptualization, methodology, software, formal analysis, data curation, validation, visualization, and writing of the original draft. Ying Shao contributed to conceptualization, methodology, validation, supervision, project administration, and review and editing of the manuscript. Both authors reviewed and approved the final manuscript.
 
 ## Keywords
 

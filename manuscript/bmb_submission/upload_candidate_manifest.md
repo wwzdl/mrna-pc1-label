@@ -23,8 +23,8 @@ This directory contains the current English upload-candidate files for
 
 ## Final author-side checks before upload
 
-- Confirm Wenzhuo Wang and Yuebin Zhang ORCID status.
-- Confirm author contributions, funding, affiliations, and corresponding emails with every coauthor.
+- Add Ying Shao's corresponding-author email and confirm Wenzhuo Wang and Ying Shao ORCID status.
+- Confirm author contributions, the no-funding statement, and the shared affiliation with both authors.
 - Confirm that the cited public repository and release tag still resolve from a signed-out browser.
 - Confirm that the generative-AI use statement already included in Methods remains complete under the journal policy in force on the submission date.
 - Perform a final visual check in the exact files uploaded to Editorial Manager.

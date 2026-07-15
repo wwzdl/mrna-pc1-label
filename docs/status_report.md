@@ -103,12 +103,12 @@ MOESM2/MOESM3 由脚本直接下载；`compact_all` 所需预计算 Saluki featu
 
 ## 仍需作者确认
 
-1. Wenzhuo Wang 和 Yuebin Zhang 的 ORCID（如无 ORCID，可不填，但需确认）。
-2. 全体作者确认 Author Contributions、作者顺序、funding 与正式英文单位名。
+1. 补充 Ying Shao 的通讯作者邮箱，并确认 Wenzhuo Wang 和 Ying Shao 的 ORCID（如无 ORCID，可不填）。
+2. 两位作者确认 Author Contributions、作者顺序、no-funding statement 与正式英文单位名。
 3. 选择软件许可证；当前已提供 `CITATION.cff`，但尚未替作者决定法律许可条款。
 4. 生成最终英文 Online Resource 1 PDF，逐页检查后再组装上传目录和最终 ZIP。
 
-GitHub 仓库 [wwzdl/mrna-pc1-label](https://github.com/wwzdl/mrna-pc1-label) 已于 2026-07-15 公开，Data/Code Availability 已改为当前时态，稿件审阅版本标记为 `mRNA-PC1-label-v1.1`。
+GitHub 仓库 [wwzdl/mrna-pc1-label](https://github.com/wwzdl/mrna-pc1-label) 已公开，Data/Code Availability 已改为当前时态；两作者稿件审阅版本标记为 `mRNA-PC1-label-v1.2`。
 
 ## 科学局限
 

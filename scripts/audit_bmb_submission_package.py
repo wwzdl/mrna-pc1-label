@@ -61,8 +61,8 @@ SI_METADATA_MARKERS = [
     "**Journal:**",
     "**Article title:**",
     "**Authors:**",
-    "**Affiliations:**",
-    "**Corresponding authors:**",
+    "**Affiliation:**",
+    "**Corresponding author:**",
 ]
 
 @dataclass
@@ -444,10 +444,7 @@ def check_artifact_freshness() -> list[Check]:
 
 def check_metadata_and_reference_files() -> list[Check]:
     checks: list[Check] = []
-    expected_affiliations = (
-        "Interdisciplinary Research Center for Biology and Chemistry",
-        "Laboratory of Molecular Modeling and Design",
-    )
+    expected_affiliations = ("School of Science, Dalian Maritime University",)
     for path in (MAIN_EN, SUPP_EN, TITLE_EN):
         text = read_text(path)
         missing = [affiliation for affiliation in expected_affiliations if affiliation not in text]
@@ -466,29 +463,32 @@ def check_metadata_and_reference_files() -> list[Check]:
         else:
             checks.append(Check("FAIL", f"manuscript title mismatch in {path.name}"))
 
-    author_names = ("Xu Jin", "Wenzhuo Wang", "Anhui Wang", "Yuebin Zhang", "Yingchen Mao", "Dinglin Zhang")
+    author_names = ("Wenzhuo Wang", "Ying Shao")
     for path in (MAIN_EN, SUPP_EN, TITLE_EN, DECL_EN):
         missing = [name for name in author_names if name not in read_text(path)]
         if missing:
             checks.append(Check("FAIL", f"author metadata missing from {path.name}: {missing}"))
         else:
-            checks.append(Check("PASS", f"all six author names are present in {path.name}"))
+            checks.append(Check("PASS", f"both author names are present in {path.name}"))
 
     for path in (MAIN_EN, SUPP_EN, TITLE_EN):
         text = read_text(path)
-        missing = [email for email in ("myc@lnnu.edu.cn", "dlzhang@dicp.ac.cn") if email not in text]
-        if missing:
-            checks.append(Check("FAIL", f"corresponding-author email missing from {path.name}: {missing}"))
+        if "Ying Shao" not in text:
+            checks.append(Check("FAIL", f"corresponding-author name missing from {path.name}: Ying Shao"))
+        elif any(email in text for email in ("myc@lnnu.edu.cn", "dlzhang@dicp.ac.cn")):
+            checks.append(Check("FAIL", f"superseded corresponding-author email remains in {path.name}"))
         else:
-            checks.append(Check("PASS", f"corresponding-author emails match in {path.name}"))
+            checks.append(Check("PASS", f"corresponding author is Ying Shao; email intentionally blank in {path.name}"))
 
+    funding_statement = "No specific funding was received for this work."
     for path in (MAIN_EN, TITLE_EN, DECL_EN):
         text = read_text(path)
-        missing = [grant for grant in ("22373101", "22203089", "22573043") if grant not in text]
-        if missing:
-            checks.append(Check("FAIL", f"funding identifiers missing from {path.name}: {missing}"))
+        if funding_statement not in text:
+            checks.append(Check("FAIL", f"no-funding statement missing from {path.name}"))
+        elif any(grant in text for grant in ("22373101", "22203089", "22573043")):
+            checks.append(Check("FAIL", f"superseded funding identifier remains in {path.name}"))
         else:
-            checks.append(Check("PASS", f"funding identifiers match in {path.name}"))
+            checks.append(Check("PASS", f"no-funding statement matches in {path.name}"))
 
     repository_url = "https://github.com/wwzdl/mrna-pc1-label"
     for path in (MAIN_EN, SUPP_EN, TITLE_EN, COVER_EN, DECL_EN):

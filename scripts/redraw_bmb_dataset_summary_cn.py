@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 import matplotlib as mpl
@@ -52,7 +53,8 @@ def save_all(fig: plt.Figure, out_no_ext: Path) -> None:
         bbox_inches="tight",
         pil_kwargs={"compression": "tiff_lzw"},
     )
-    fig.savefig(out_no_ext.with_suffix(".pdf"), bbox_inches="tight")
+    if os.environ.get("BMB_SKIP_PDF") != "1":
+        fig.savefig(out_no_ext.with_suffix(".pdf"), bbox_inches="tight")
     fig.savefig(out_no_ext.with_suffix(".svg"), bbox_inches="tight")
     plt.close(fig)
 
@@ -290,9 +292,9 @@ def panel_d(ax: plt.Axes) -> None:
     for lane in lanes:
         draw_box(
             ax,
-            (0.05, lane["y"] - 0.085),
-            0.35,
-            0.17,
+            (0.03, lane["y"] - 0.095),
+            0.40,
+            0.19,
             lane["source_title"],
             lane["source_body"],
             lane["color"],
@@ -304,19 +306,19 @@ def panel_d(ax: plt.Axes) -> None:
         )
         draw_box(
             ax,
-            (0.54, lane["y"] - 0.085),
-            0.35,
-            0.17,
+            (0.54, lane["y"] - 0.095),
+            0.42,
+            0.19,
             lane["role_title"],
             lane["role_body"],
             lane["color"],
             facecolor=mpl.colors.to_rgba(lane["color"], 0.05),
             title_fs=9.2,
-            body_fs=7.6,
+            body_fs=7.5,
             title_y=0.68,
             body_y=0.27,
         )
-        ax.text(0.465, lane["y"], "→", fontsize=18, color=lane["color"], ha="center", va="center")
+        ax.text(0.485, lane["y"], "→", fontsize=18, color=lane["color"], ha="center", va="center")
 
 
 def main() -> None:
@@ -326,7 +328,7 @@ def main() -> None:
     fig = plt.figure(figsize=(8.3, 7.0))
     outer = fig.add_gridspec(2, 1, height_ratios=[0.98, 1.22])
     top = outer[0].subgridspec(1, 2, width_ratios=[1.0, 1.0], wspace=0.24)
-    bottom = outer[1].subgridspec(1, 2, width_ratios=[0.92, 1.08], wspace=0.16)
+    bottom = outer[1].subgridspec(1, 2, width_ratios=[0.90, 1.10], wspace=0.16)
     axes = [
         fig.add_subplot(top[0, 0]),
         fig.add_subplot(top[0, 1]),

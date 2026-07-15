@@ -99,8 +99,7 @@
 
 ## 仍待作者侧确认
 
-- Wenzhuo Wang ORCID
-- Yuebin Zhang ORCID
+- Current metadata supersedes this historical checklist: Wenzhuo Wang and Ying Shao are the two authors; both ORCID records remain to be confirmed.
 - `Author contributions` 最终表述
 - 连续行号与页码的最终提交版
 - supplementary 最终 PDF 命名与 `Online Resource` 口径

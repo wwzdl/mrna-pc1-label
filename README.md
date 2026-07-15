@@ -134,6 +134,6 @@ All active main figures (Fig. 1-8) and supplementary figures (S1-S4) are generat
 
 ## Release
 
-The public source repository is [wwzdl/mrna-pc1-label](https://github.com/wwzdl/mrna-pc1-label). The manuscript-reviewed state is tagged as `mRNA-PC1-label-v1.1`; run the release preflight before deriving any later submission package from a newer commit.
+The public source repository is [wwzdl/mrna-pc1-label](https://github.com/wwzdl/mrna-pc1-label). The two-author manuscript-reviewed state is tagged as `mRNA-PC1-label-v1.2`; run the release preflight before deriving any later submission package from a newer commit.
 
 中文说明：本 README 采用英文以便审稿人与读者直接复现；中文定稿状态和术语说明见 `docs/status_report.md`。

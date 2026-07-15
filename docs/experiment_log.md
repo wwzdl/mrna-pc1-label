@@ -1359,3 +1359,18 @@ PYTHONPATH=paper_pca/src python -m mrna_half_life_paper.study_noise_vs_orthoreg_
   - 不把 study-balanced 分析包装成 `Gejman` 仍为第 1；真实结果为第 3，正文据此收紧结论。
   - 不虚构第二个独立 half-life compendium、模拟结果或理论最优 `lambda`；这些内容保留为明确局限和后续验证方向。
   - 不将 `lambda=0.10` 降为无关附属分析；它保留为第三项核心贡献，但与固定 Saluki human PC1 的模型排名完全分开。
+
+### Submission-author metadata revision
+
+- 时间：
+  - `2026-07-16 CST`
+- 作者与单位：
+  - 活跃投稿材料的作者统一为 Wenzhuo Wang 与 Ying Shao；Ying Shao 标记为唯一通讯作者。
+  - 两位作者均使用 `School of Science, Dalian Maritime University, Dalian 116026, China`。
+  - Ying Shao 的通讯作者邮箱按作者要求暂留空，待最终投稿前补充；两位作者 ORCID 均待确认。
+- 声明与贡献：
+  - 删除原国家自然科学基金编号，Funding 统一为 `No specific funding was received for this work.`。
+  - Author Contributions 改为两作者口径：Wenzhuo Wang 负责分析、软件、数据、验证、图表和初稿；Ying Shao 负责构思、方法、验证、监督、项目管理和审阅修改。正式投稿前仍需两位作者确认其与实际贡献一致。
+- 同步范围：
+  - 中英文正文、补充材料、title page、cover letter、declarations、中文贡献核对稿、投稿清单、README、`CITATION.cff` 与自动审计规则。
+  - 由于不可移动既有 v1.1 标签，两作者稿件与元数据冻结为新标签 `mRNA-PC1-label-v1.2`。

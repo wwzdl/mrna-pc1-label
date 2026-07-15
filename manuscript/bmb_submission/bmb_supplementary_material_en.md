@@ -2,9 +2,9 @@
 
 **Journal:** *Bulletin of Mathematical Biology*  
 **Article title:** Study-aware label auditing, cross-species transfer, and ortholog-informed target shrinkage for mammalian mRNA half-life prediction  
-**Authors:** Xu Jin, Wenzhuo Wang, Anhui Wang, Yuebin Zhang, Yingchen Mao, Dinglin Zhang  
-**Affiliations:** Interdisciplinary Research Center for Biology and Chemistry, Liaoning Normal University, Dalian 116029, China; School of Physics and Electronic Technology, Liaoning Normal University, Dalian 116029, China; School of Science, Dalian Maritime University, Dalian 116026, China; Laboratory of Molecular Modeling and Design, State Key Laboratory of Molecular Reaction Dynamics, Dalian Institute of Chemical Physics, Chinese Academy of Sciences, Dalian 116023, China  
-**Corresponding authors:** Yingchen Mao, myc@lnnu.edu.cn; Dinglin Zhang, dlzhang@dicp.ac.cn
+**Authors:** Wenzhuo Wang, Ying Shao  
+**Affiliation:** School of Science, Dalian Maritime University, Dalian 116026, China  
+**Corresponding author:** Ying Shao; Email:
 
 ## S1. Supplementary overview
 
@@ -340,7 +340,7 @@ The `labels` stage downloads MOESM2/MOESM3 and runs label reconstruction, study 
 
 | Category | Path or entry point | Purpose |
 |:--|:--|:--|
-| Public repository | `https://github.com/wwzdl/mrna-pc1-label` | Provides code, result tables, figure scripts, and environment notes; manuscript tag: `mRNA-PC1-label-v1.1` |
+| Public repository | `https://github.com/wwzdl/mrna-pc1-label` | Provides code, result tables, figure scripts, and environment notes; two-author manuscript tag: `mRNA-PC1-label-v1.2` |
 | Staged reproduction driver | `scripts/reproduce_bmb_key_results.sh` | Runs the `labels`, `models`, and `figures` stages with the active result paths |
 | Environment and input integrity | `requirements.txt`, `environment.yml`, `requirements-validated.txt`, `scripts/fetch_real_data.sh` | Records portable and validated dependencies and verifies the public supplementary inputs by checksum |
 | OOF integrity audit | `scripts/audit_oof_integrity.py` | Checks canonical gene counts, unique IDs, shared universes across settings/seeds, fold coverage, and complete predictions |

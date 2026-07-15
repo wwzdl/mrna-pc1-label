@@ -10,39 +10,25 @@
 
 ## 2. 作者与单位
 
-Xu Jin<sup>1,2</sup>，Wenzhuo Wang<sup>3</sup>，Anhui Wang<sup>1,4</sup>，Yuebin Zhang<sup>1,4</sup>，Yingchen Mao*<sup>2</sup>，Dinglin Zhang*<sup>1,4</sup>
+Wenzhuo Wang<sup>1</sup>，Ying Shao*<sup>1</sup>
 
-<sup>1</sup> 辽宁师范大学生物与化学交叉研究中心，辽宁大连 116029  
-<sup>2</sup> 辽宁师范大学物理与电子技术学院，辽宁大连 116029  
-<sup>3</sup> 大连海事大学理学院，辽宁大连 116026  
-<sup>4</sup> 分子模拟与设计实验室，分子反应动力学国家重点实验室，中国科学院大连化学物理研究所，辽宁大连 116023
+<sup>1</sup> 大连海事大学理学院，辽宁大连 116026
 
 ## 3. 通讯作者
 
-- Yingchen Mao，`myc@lnnu.edu.cn`
-- Dinglin Zhang，`dlzhang@dicp.ac.cn`
+- Ying Shao，邮箱：
 
 ## 4. 基金
 
-国家自然科学基金（22373101、22203089、22573043）
+本研究未获得专项资助。
 
 ## 5. 作者贡献
 
-Xu Jin 负责数据整理、计算分析、可重复性检查、图件制备和稿件起草。Dinglin Zhang 与 Yingchen Mao 参与研究构思、方法设计、结果解释、项目监督和稿件修改。Wenzhuo Wang、Anhui Wang 与 Yuebin Zhang 参与结果讨论和稿件审阅。所有作者均审阅并同意最终稿。
+Wenzhuo Wang 负责研究构思、方法设计、软件实现、正式分析、数据整理、结果验证、图表制作和论文初稿撰写。Ying Shao 负责研究构思、方法设计、结果验证、项目监督、项目管理和论文审阅与修改。两位作者均审阅并批准最终稿。
 
 ## 6. ORCID 状态
 
-**已公开确认**
-
-- Xu Jin：`0009-0007-7776-0541`
-- Anhui Wang：`0000-0003-4041-9095`
-- Yingchen Mao：`0000-0002-2469-054X`
-- Dinglin Zhang：`0000-0002-9674-0577`
-
-**待作者最终核对**
-
-- Wenzhuo Wang
-- Yuebin Zhang
+Wenzhuo Wang 与 Ying Shao 的 ORCID 尚未提供。
 
 ## 7. 关键词
 
@@ -57,5 +43,5 @@ mRNA half-life；study heterogeneity；label audit；target shrinkage；cross-sp
 ## 9. 使用提醒
 
 - 本文件用于后续英文 `title page` 重建。
-- 正式英文版生成前，需再次核对作者单位英文写法、ORCID 和 funding 口径。
+- 正式投稿前，需补充通讯作者邮箱，并核对两位作者的 ORCID。
 - 若投稿系统要求单独上传 `title page`，建议以本文件为唯一中文源稿。

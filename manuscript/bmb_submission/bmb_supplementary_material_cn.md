@@ -2,9 +2,9 @@
 
 **期刊：** *Bulletin of Mathematical Biology*  
 **论文题名：** Study-aware label auditing, cross-species transfer, and ortholog-informed target shrinkage for mammalian mRNA half-life prediction  
-**作者：** Xu Jin，Wenzhuo Wang，Anhui Wang，Yuebin Zhang，Yingchen Mao，Dinglin Zhang  
-**单位：** 辽宁师范大学生物与化学交叉研究中心，辽宁大连 116029；辽宁师范大学物理与电子技术学院，辽宁大连 116029；大连海事大学理学院，辽宁大连 116026；分子模拟与设计实验室，分子反应动力学国家重点实验室，中国科学院大连化学物理研究所，辽宁大连 116023  
-**通讯作者：** Yingchen Mao，myc@lnnu.edu.cn；Dinglin Zhang，dlzhang@dicp.ac.cn
+**作者：** Wenzhuo Wang，Ying Shao  
+**单位：** 大连海事大学理学院，辽宁大连 116026  
+**通讯作者：** Ying Shao；邮箱：
 
 ## S1. 补充说明
 
@@ -340,7 +340,7 @@ bash scripts/reproduce_bmb_key_results.sh figures
 
 | 类别 | 路径或入口 | 用途 |
 |:--|:--|:--|
-| 版本化仓库 | `https://github.com/wwzdl/mrna-pc1-label` | 提供代码、结果表、图件脚本和环境说明；稿件版本标签为 `mRNA-PC1-label-v1.1` |
+| 版本化仓库 | `https://github.com/wwzdl/mrna-pc1-label` | 提供代码、结果表、图件脚本和环境说明；当前两作者稿件版本标签为 `mRNA-PC1-label-v1.2` |
 | 分阶段复现入口 | `scripts/reproduce_bmb_key_results.sh` | 按当前结果路径运行 `labels`、`models` 和 `figures` 三个阶段 |
 | 环境与输入完整性 | `requirements.txt`、`environment.yml`、`requirements-validated.txt`、`scripts/fetch_real_data.sh` | 记录便携与已验证依赖，并以 checksum 校验公开补充输入 |
 | OOF 完整性审计 | `scripts/audit_oof_integrity.py` | 检查规范基因数、gene ID 唯一性、不同 setting/seed 的共同宇宙、fold 覆盖和预测缺失 |

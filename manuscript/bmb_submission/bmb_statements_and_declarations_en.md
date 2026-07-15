@@ -2,11 +2,11 @@
 
 ## Funding
 
-This work was supported by the National Natural Science Foundation of China (22373101, 22203089, and 22573043).
+No specific funding was received for this work.
 
 ## Author Contributions
 
-Xu Jin performed data curation, computational analysis, reproducibility checks, figure preparation, and manuscript drafting. Dinglin Zhang and Yingchen Mao contributed to study conception, method design, result interpretation, project supervision, and manuscript revision. Wenzhuo Wang, Anhui Wang, and Yuebin Zhang contributed to result discussion and manuscript review. All authors reviewed and approved the final manuscript.
+Wenzhuo Wang contributed to conceptualization, methodology, software, formal analysis, data curation, validation, visualization, and writing of the original draft. Ying Shao contributed to conceptualization, methodology, validation, supervision, project administration, and review and editing of the manuscript. Both authors reviewed and approved the final manuscript.
 
 ## Data Availability
 
@@ -14,7 +14,7 @@ The half-life matrices analyzed here are from the public supplementary material 
 
 ## Code Availability
 
-Code, figure-generation scripts, and result-reproduction workflows are publicly available in [wwzdl/mrna-pc1-label](https://github.com/wwzdl/mrna-pc1-label); the manuscript-reviewed state is identified by the release tag `mRNA-PC1-label-v1.1`.
+Code, figure-generation scripts, and result-reproduction workflows are publicly available in [wwzdl/mrna-pc1-label](https://github.com/wwzdl/mrna-pc1-label); the two-author manuscript-reviewed state is identified by the release tag `mRNA-PC1-label-v1.2`.
 
 ## Competing Interests
 

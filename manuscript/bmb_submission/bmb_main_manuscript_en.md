@@ -1,10 +1,10 @@
 # Study-aware label auditing, cross-species transfer, and ortholog-informed target shrinkage for mammalian mRNA half-life prediction
 
 **Article type:** Original research article  
-**Authors:** Xu Jin<sup>1,2</sup>, Wenzhuo Wang<sup>3</sup>, Anhui Wang<sup>1,4</sup>, Yuebin Zhang<sup>1,4</sup>, Yingchen Mao*<sup>2</sup>, Dinglin Zhang*<sup>1,4</sup>  
-**Affiliations:** <sup>1</sup> Interdisciplinary Research Center for Biology and Chemistry, Liaoning Normal University, Dalian 116029, China; <sup>2</sup> School of Physics and Electronic Technology, Liaoning Normal University, Dalian 116029, China; <sup>3</sup> School of Science, Dalian Maritime University, Dalian 116026, China; <sup>4</sup> Laboratory of Molecular Modeling and Design, State Key Laboratory of Molecular Reaction Dynamics, Dalian Institute of Chemical Physics, Chinese Academy of Sciences, Dalian 116023, China  
-**Corresponding authors:** Yingchen Mao, myc@lnnu.edu.cn; Dinglin Zhang, dlzhang@dicp.ac.cn  
-**Funding:** National Natural Science Foundation of China (22373101, 22203089, 22573043)  
+**Authors:** Wenzhuo Wang<sup>1</sup>, Ying Shao*<sup>1</sup>  
+**Affiliation:** <sup>1</sup> School of Science, Dalian Maritime University, Dalian 116026, China  
+**Corresponding author:** Ying Shao; Email:  
+**Funding:** No specific funding was received for this work.  
 **Keywords:** mRNA half-life; study heterogeneity; label audit; target shrinkage; cross-species transfer; XGBoost
 
 ## Abstract
@@ -237,11 +237,11 @@ Study-aware auditing showed that `Gejman` has sample-count-sensitive leverage on
 
 ### Funding
 
-This work was supported by the National Natural Science Foundation of China (22373101, 22203089, and 22573043).
+No specific funding was received for this work.
 
 ### Author Contributions
 
-Xu Jin performed data curation, computational analysis, reproducibility checks, figure preparation, and manuscript drafting. Dinglin Zhang and Yingchen Mao contributed to study conception, method design, result interpretation, project supervision, and manuscript revision. Wenzhuo Wang, Anhui Wang, and Yuebin Zhang contributed to result discussion and manuscript review. All authors reviewed and approved the final manuscript.
+Wenzhuo Wang contributed to conceptualization, methodology, software, formal analysis, data curation, validation, visualization, and writing of the original draft. Ying Shao contributed to conceptualization, methodology, validation, supervision, project administration, and review and editing of the manuscript. Both authors reviewed and approved the final manuscript.
 
 ### Data Availability
 
@@ -249,7 +249,7 @@ The half-life matrices analyzed here are from the public supplementary material 
 
 ### Code Availability
 
-Code, figure-generation scripts, and result-reproduction workflows are publicly available in [wwzdl/mrna-pc1-label](https://github.com/wwzdl/mrna-pc1-label); the manuscript-reviewed state is identified by the release tag `mRNA-PC1-label-v1.1`.
+Code, figure-generation scripts, and result-reproduction workflows are publicly available in [wwzdl/mrna-pc1-label](https://github.com/wwzdl/mrna-pc1-label); the two-author manuscript-reviewed state is identified by the release tag `mRNA-PC1-label-v1.2`.
 
 ### Competing Interests
 

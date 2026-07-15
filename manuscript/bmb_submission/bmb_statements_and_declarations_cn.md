@@ -6,7 +6,7 @@
 
 建议口径：
 
-> 本工作受国家自然科学基金（22373101、22203089、22573043）资助。
+> 本研究未获得专项资助。
 
 ## 2. Data Availability Statement
 
@@ -18,7 +18,7 @@
 
 建议口径：
 
-> 代码、图件生成脚本和结果复现流程已通过 [wwzdl/mrna-pc1-label](https://github.com/wwzdl/mrna-pc1-label) 公开；与本文稿件对应的审阅版本标记为 `mRNA-PC1-label-v1.1`。
+> 代码、图件生成脚本和结果复现流程已通过 [wwzdl/mrna-pc1-label](https://github.com/wwzdl/mrna-pc1-label) 公开；与当前两作者稿件对应的审阅版本标记为 `mRNA-PC1-label-v1.2`。
 
 ## 4. Competing Interests
 
@@ -42,28 +42,17 @@
 
 建议口径：
 
-> 正式投稿前由通讯作者在投稿系统中统一确认所有作者已审阅并同意当前稿件版本。
+> 正式投稿前由通讯作者在投稿系统中确认两位作者均已审阅并同意当前稿件版本。
 
 ## 8. Author Contributions
 
-当前状态：
+建议口径：
 
-- 中文建议草案见 `bmb_author_contributions_cn.md`
-- 该项仍需作者最终确认后再并入正式英文稿
+> Wenzhuo Wang 负责研究构思、方法设计、软件实现、正式分析、数据整理、结果验证、图表制作和论文初稿撰写。Ying Shao 负责研究构思、方法设计、结果验证、项目监督、项目管理和论文审阅与修改。两位作者均审阅并批准最终稿。
 
 ## 9. ORCID
 
-已公开确认：
-
-- Xu Jin：`0009-0007-7776-0541`
-- Anhui Wang：`0000-0003-4041-9095`
-- Yingchen Mao：`0000-0002-2469-054X`
-- Dinglin Zhang：`0000-0002-9674-0577`
-
-待作者核对：
-
-- Wenzhuo Wang
-- Yuebin Zhang
+Wenzhuo Wang 与 Ying Shao 的 ORCID 尚未提供。
 
 ## 10. 生成式 AI 使用说明（如需披露时再启用）
 
