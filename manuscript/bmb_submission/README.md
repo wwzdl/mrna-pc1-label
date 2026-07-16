@@ -83,7 +83,8 @@
 - 中文补充材料已去掉与正文完全重复的 human PCA、human leave-one-study-out，以及重复度过高的 Saluki feature quick scan / compact ablation / OOF blend / subset scan 图；当前中文补图编号收紧为连续的 `S1-S4`，并把 human 主证据保留在正文、mouse 扩展与必要控制保留在补充中。
 - 一致性检查脚本 `scripts/check_bmb_cn_consistency.py` 已支持 `--lang cn|en|both`，可同时检查中英文主文/补充图号连续性、图片存在性，以及 active submission markdown 中是否残留退役标签术语。
 - `scripts/render_bmb_submission_bundle.sh` 可一次性重建中英文正文、补充材料和外围投稿材料的 `docx` 导出物，减少手工漏导。
-- `scripts/audit_bmb_submission_package.py` 已加入 preflight，可检查英文摘要词数、关键词数、声明、补充材料 metadata、DOCX 行号/页码、引用残留、退役术语、Online Resource 口径、参考文献引用一致性和 600 dpi 图件。
+- `scripts/render_markdown_to_docx.py` 将 `$...$` 行内数学和 `equation` 公式块转换为 Word 原生可编辑 OMML；中英文正文均含连续编号公式（1）-（9），双语补充材料含补充式（S1）-（S2）。PDF 渲染链由同一 LaTeX 源生成矢量 SVG 公式，避免分数和上下标退化。
+- `scripts/audit_bmb_submission_package.py` 已加入 preflight，可检查英文摘要词数、关键词数、声明、补充材料 metadata、DOCX 行号/页码、OMML 公式及编号、引用残留、退役术语、Online Resource 口径、参考文献引用一致性和 600 dpi 图件。
 - `scripts/assemble_bmb_upload_candidate.sh` 只重建 `upload_candidate/`，避免每次预检都重复生成 zip；压缩包只在最终发布时生成一次。
 - `BMB_SKIP_PDF=1 bash scripts/preflight_bmb_release.sh` 可在编辑阶段重建全部 DOCX 并完成审计，同时跳过 PDF 与上传候选目录，避免混合新旧版本。
 - `scripts/audit_oof_integrity.py` 检查关键 OOF 文件的规范基因数、唯一 ID、共同 universe、fold 覆盖和预测缺失；当前 preflight 会先自动运行单元测试和该 OOF 审计。

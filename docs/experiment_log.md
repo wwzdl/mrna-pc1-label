@@ -1394,3 +1394,16 @@ PYTHONPATH=paper_pca/src python -m mrna_half_life_paper.study_noise_vs_orthoreg_
   - 已同步中英文正文、补充材料、title page、cover letter、declarations、投稿清单和 `CITATION.cff`。
   - 自动投稿审计改为要求英文活动稿件与仓库引用元数据中的邮箱精确匹配，不再允许通讯邮箱留空。
   - 作者元数据目前仅剩 Wenzhuo Wang 的 ORCID 待确认。
+
+### Native Word equation conversion
+
+- 时间：
+  - `2026-07-16 CST`
+- 稿件更新：
+  - 将 study influence、经验 p 值、0.10 target shrinkage、measurement-error decomposition 和 residual variance 的核心定义整理为正文公式（1）-（9）。
+  - 中英文补充材料中的 iterative-PCA convergence criterion 与 remaining-variance definition 分别编为补充式（S1）和（S2）；短数学表达使用 `$...$` 行内标记，代码字段继续保留等宽字体。
+- 渲染与验证：
+  - `render_markdown_to_docx.py` 新增 LaTeX -> MathML -> OMML 转换，生成 Word/WPS 可编辑公式对象及右侧编号。
+  - `render_markdown_to_pdf.py` 使用同一 LaTeX 源生成矢量 SVG 公式，避免 WeasyPrint 对 MathML 分数、上下标的降级。
+  - 新增公式渲染单元测试和自动审计：英文/中文正文分别检测到 44/46 个 OMML math objects，其中各 9 个编号公式；英文/中文补充分别检测到 22/24 个 OMML math objects，其中各 2 个编号公式。
+  - DOCX-only preflight 为 `158 checks, 0 failures, 1 warning`；warning 仅来自打开文档产生的 WPS 临时锁文件。

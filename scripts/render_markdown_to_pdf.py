@@ -9,7 +9,10 @@ import re
 from pathlib import Path
 
 import markdown
+from bs4 import BeautifulSoup
 from weasyprint import HTML
+
+from equation_markup import replace_math_for_html
 
 
 CSS = r"""
@@ -56,6 +59,29 @@ pre {
   background: #f5f5f5;
   border: 0.4pt solid #c8c8c8;
   padding: 6pt;
+}
+.display-equation {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  margin: 7pt 0 9pt;
+  break-inside: avoid;
+}
+.equation-formula { text-align: center; padding-left: 24pt; }
+.equation-number { text-align: right; min-width: 24pt; }
+.equation-formula img.display-equation-svg {
+  display: inline-block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  margin: 0;
+}
+img.inline-equation-svg {
+  display: inline-block;
+  width: auto;
+  height: 1.05em;
+  margin: 0 0.04em;
+  vertical-align: -0.18em;
 }
 figure {
   margin: 11pt auto 12pt;
@@ -119,6 +145,9 @@ def render(input_path: Path, output_path: Path) -> None:
         extensions=["tables", "fenced_code", "sane_lists"],
         output_format="html5",
     )
+    soup = BeautifulSoup(fragment, "lxml")
+    replace_math_for_html(soup)
+    fragment = "".join(str(node) for node in soup.body.contents)
     fragment = wrap_figures(fragment)
     title_match = re.search(r"^#\s+(.+)$", source, flags=re.MULTILINE)
     title = title_match.group(1).strip() if title_match else input_path.stem

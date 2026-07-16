@@ -20,7 +20,7 @@ At the data level, mammalian mRNA half-life measurements have evolved from small
 
 Saluki and related work provided an important first-generation solution to this problem by integrating multiple studies into a compendium and extracting a consensus first principal component (PC1) label after unified preprocessing (Agarwal and Kelley 2022). That work provided both a mammalian half-life benchmark and a strong demonstration of sequence-based prediction. At the same time, it exposed a deeper issue. If the consensus label itself still carries study-level bias, downstream performance comparisons reflect both model capacity and label quality. A benchmark-oriented computational biology study must address this issue explicitly.
 
-We place label auditing, rather than model scale, at the center of the paper. Complete leave-one-study-out reconstruction screens influential studies by PC1 stability without using Saluki labels. Saluki human PC1 agreement and human-mouse ortholog concordance then assess the direction of each change. With Saluki human PC1 fixed, we compare a human-only baseline with cross-species transfer using external mouse ortholog priors. We also examine a target formed by weak ortholog-informed shrinkage at `λ = 0.10`. Input augmentation and target shrinkage are evaluated separately because they change different parts of the prediction problem.
+We place label auditing, rather than model scale, at the center of the paper. Complete leave-one-study-out reconstruction screens influential studies by PC1 stability without using Saluki labels. Saluki human PC1 agreement and human-mouse ortholog concordance then assess the direction of each change. With Saluki human PC1 fixed, we compare a human-only baseline with cross-species transfer using external mouse ortholog priors. We also examine a target formed by weak ortholog-informed shrinkage at $\lambda=0.10$. Input augmentation and target shrinkage are evaluated separately because they change different parts of the prediction problem.
 
 ## 2. Related Work
 
@@ -84,13 +84,34 @@ We use this local procedure as an auditable and rerunnable reconstruction, while
 
 ### 3.4 Leave-one-study-out influence analysis
 
-For each study `s`, we removed all of its samples and reran coverage filtering, z-scoring, PCA imputation, quantile normalization, and PC1 extraction. If `L_full` is the full label and `L_-s` is the reconstructed label after removal, PC1 stability is `S_s = corr(L_full, L_-s)`, with lower values indicating greater geometric influence. For a comparison label `R`, agreement change is `A_s(R) = corr(L_-s, R) - corr(L_full, R)`, computed on the paired common genes for that comparison.
+For each study $s$, we removed all of its samples and reran coverage filtering, z-scoring, PCA imputation, quantile normalization, and PC1 extraction. If $L_{\mathrm{full}}$ is the full label and $L_{-s}$ is the reconstructed label after removal, PC1 stability is defined as
+
+```equation
+number: 1
+S_s = \operatorname{corr}(L_{\mathrm{full}}, L_{-s})
+```
+
+Lower values of Eq. (1) indicate greater geometric influence. For a comparison label $R$, agreement change is defined as
+
+```equation
+number: 2
+A_s(R) = \operatorname{corr}(L_{-s}, R) - \operatorname{corr}(L_{\mathrm{full}}, R)
+```
+
+Equation (2) is computed on the paired common genes for each comparison.
 
 The audit has two stages. PC1 stability first screens influential studies without using `MOESM3`, Saluki human PC1, or downstream prediction scores. We then assess the direction of change using agreement with released Saluki human PC1 and human-mouse ortholog concordance. Because Saluki documentation identifies `Gejman`, the first comparison measures recovery of the published processing choice and does not establish biological invalidity. Ortholog concordance provides a cross-species check with a different evidential role.
 
-Because `Gejman` contributes 15 of the 54 human samples, we added a size-matched null. In each of 500 replicates, 15 samples were drawn without replacement from the 39 non-Gejman samples, and the full reconstruction pipeline was rerun. One-sided empirical p values were calculated as `(1 + number of null values at least as extreme as observed) / 501`, using the lower tail for PC1 stability and the upper tail for both agreement gains. This separates the amount of geometric change caused by removing many samples from the direction of that change on the Saluki-processing and ortholog-comparison axes.
+Because `Gejman` contributes 15 of the 54 human samples, we added a size-matched null. In each of $B=500$ replicates, 15 samples were drawn without replacement from the 39 non-Gejman samples, and the full reconstruction pipeline was rerun. Let $N_{\mathrm{extreme}}$ denote the number of null values at least as extreme as the observed statistic. The one-sided empirical p value was
 
-Three sensitivity analyses addressed pipeline dependence. First, the primary dynamic coverage analysis was repeated on a fixed gene universe that satisfied the coverage threshold in the full matrix and every leave-one-study-out matrix. Second, we varied the minimum observed samples per gene (3, 5, or 10), PCA-imputation rank (3, 5, or 10), and replaced iterative PCA imputation with sample-wise median imputation. Third, we reduced sample-count imbalance by either multiplying samples from study `s` by `1/sqrt(n_s)` before PCA, which equalizes each study's total squared PCA weight, or collapsing each study to its mean processed profile before PC1 extraction. Complete definitions and results are provided in Supplementary Section S5.
+```equation
+number: 3
+p_{\mathrm{emp}} = \frac{1 + N_{\mathrm{extreme}}}{B + 1}
+```
+
+We used the lower tail for PC1 stability and the upper tail for both agreement gains. This separates the amount of geometric change caused by removing many samples from the direction of that change on the Saluki-processing and ortholog-comparison axes.
+
+Three sensitivity analyses addressed pipeline dependence. First, the primary dynamic coverage analysis was repeated on a fixed gene universe that satisfied the coverage threshold in the full matrix and every leave-one-study-out matrix. Second, we varied the minimum observed samples per gene (3, 5, or 10), PCA-imputation rank (3, 5, or 10), and replaced iterative PCA imputation with sample-wise median imputation. Third, we reduced sample-count imbalance by either multiplying samples from study $s$ by $1/\sqrt{n_s}$ before PCA, which equalizes each study's total squared PCA weight, or collapsing each study to its mean processed profile before PC1 extraction. Complete definitions and results are provided in Supplementary Section S5.
 
 ### 3.5 Ortholog concordance as a cross-species label check
 
@@ -100,13 +121,48 @@ Saluki agreement and ortholog concordance serve different purposes. An isolated 
 
 ### 3.6 Construction and cross-target validation of the 0.10 ortholog-informed shrinkage target
 
-We use a small ortholog constraint to construct a human-dominant target that represents conserved mammalian stability. This step changes the supervised target while leaving the human feature definitions unchanged. We reconstructed human no-Gejman PC1 and mouse PC1 under Saluki-like coverage, z-scored both labels, and mapped the mouse label to human genes through one-to-one orthologs. For genes with an ortholog signal, we defined `T_0.10 = 0.90 × human z-scored label + 0.10 × mapped mouse z-scored label`; genes without an ortholog signal retained the human label. The resulting target was re-z-scored and sign-aligned to Saluki human PC1. We refer to it as the **0.10 ortholog-informed shrinkage target**; it is a constructed target rather than a new experimental human half-life measurement. `ortholog_regularized` is retained only in code and result filenames.
+We use a small ortholog constraint to construct a human-dominant target that represents conserved mammalian stability. This step changes the supervised target while leaving the human feature definitions unchanged. We reconstructed human no-Gejman PC1 and mouse PC1 under Saluki-like coverage, z-scored both labels, and mapped the mouse label to human genes through one-to-one orthologs. For genes with an ortholog signal, let $H$ denote the standardized human label and $M$ the mapped standardized mouse label. The general shrinkage target and the primary operating point are
 
-A measurement-error model gives the statistical interpretation. Let the standardized human and mapped mouse labels be `H = Z + ε_H` and `M = Z + Δ + ε_M`, where `Z` is a shared mammalian stability axis, `Δ` is a species-specific shift, and `ε_H` and `ε_M` are compendium-specific errors. Then `T_λ = (1-λ)H + λM = Z + λΔ + (1-λ)ε_H + λε_M`. Conditional on `Z` and `Δ`, its error variance is `(1-λ)^2 σ_H^2 + λ^2 σ_M^2 + 2λ(1-λ)Cov(ε_H, ε_M)`; under independent errors, the covariance term vanishes. If the errors also have zero conditional means, the mean squared error relative to `Z` is this variance plus the squared species-shift bias `λ^2Δ^2`. Increasing `λ` can therefore reduce the contribution of human-label noise but increases potential species-shift bias by `λΔ`. This working model describes the bias-variance trade-off. Error independence and theoretical optimality of `λ = 0.10` are not assumed.
+```equation
+number: 4
+T_{\lambda} = (1-\lambda)H + \lambda M, \qquad T_{0.10} = 0.90H + 0.10M
+```
 
-The target was evaluated in three separate ways. First, within a common one-to-one ortholog universe, we calculated Pearson, Spearman, MSE, RMSE, and MAE against the human and mouse labels. Second, we compared the error in `T_0.10 - human label` with study-to-study variability among no-Gejman human studies on the same z-scored label scale. Third, we performed cross-target evaluation. Models were trained on either human no-Gejman PC1 or `T_0.10`, then evaluated against the original human no-Gejman PC1. Both analyses used the same 12,307 genes, 1802 human-only `compact_all` features, 10 folds by 3 random seeds, and model parameters. A gene-level paired bootstrap provided a 95% CI for the difference in Pearson correlation. This design tests whether target shrinkage sacrifices predictability of the original human target.
+Genes without an ortholog signal retained $H$. The resulting target was re-z-scored and sign-aligned to Saluki human PC1. We refer to it as the **0.10 ortholog-informed shrinkage target**; it is a constructed target rather than a new experimental human half-life measurement. `ortholog_regularized` is retained only in code and result filenames.
 
-We fixed `λ = 0.10` for the primary analysis to limit the mouse contribution to 10%. It was not selected by maximizing prior-enhanced cross-validation. Sensitivity results for `λ = 0.05`, 0.10, and 0.30 are reported in full in the supplement. Larger values produce higher predictability after alignment with mouse priors, but also a larger target displacement, and are therefore not used for the primary claim.
+A measurement-error model gives the statistical interpretation. Let $Z$ be a shared mammalian stability axis, $\Delta$ a species-specific shift, and $\varepsilon_H$ and $\varepsilon_M$ compendium-specific errors. The observed labels are represented as
+
+```equation
+number: 5
+H = Z + \varepsilon_H, \qquad M = Z + \Delta + \varepsilon_M
+```
+
+Substitution of Eq. (5) into Eq. (4) gives
+
+```equation
+number: 6
+T_{\lambda} = Z + \lambda\Delta + (1-\lambda)\varepsilon_H + \lambda\varepsilon_M
+```
+
+Writing $\sigma_H^2=\operatorname{Var}(\varepsilon_H)$, $\sigma_M^2=\operatorname{Var}(\varepsilon_M)$, and $C_{HM}=\operatorname{Cov}(\varepsilon_H,\varepsilon_M)$, the conditional error variance is
+
+```equation
+number: 7
+V_{\lambda} = (1-\lambda)^2\sigma_H^2 + \lambda^2\sigma_M^2 + 2\lambda(1-\lambda)C_{HM}
+```
+
+Under independent errors, $C_{HM}=0$. If the errors also have zero conditional means, the mean squared error relative to $Z$ is
+
+```equation
+number: 8
+\operatorname{MSE}(T_{\lambda}, Z) = V_{\lambda} + \lambda^2\Delta^2
+```
+
+Increasing $\lambda$ can therefore reduce the contribution of human-label noise but increases potential species-shift bias by $\lambda\Delta$. Equations (5)-(8) describe the working bias-variance model. Error independence and theoretical optimality of $\lambda=0.10$ are not assumed.
+
+The target was evaluated in three separate ways. First, within a common one-to-one ortholog universe, we calculated Pearson, Spearman, MSE, RMSE, and MAE against the human and mouse labels. Second, we compared the error in $T_{0.10}-H$ with study-to-study variability among no-Gejman human studies on the same z-scored label scale. Third, we performed cross-target evaluation. Models were trained on either human no-Gejman PC1 or $T_{0.10}$, then evaluated against the original human no-Gejman PC1. Both analyses used the same 12,307 genes, 1802 human-only `compact_all` features, 10 folds by 3 random seeds, and model parameters. A gene-level paired bootstrap provided a 95% CI for the difference in Pearson correlation. This design tests whether target shrinkage sacrifices predictability of the original human target.
+
+We fixed $\lambda=0.10$ for the primary analysis to limit the mouse contribution to 10%. It was not selected by maximizing prior-enhanced cross-validation. Sensitivity results for $\lambda=0.05$, 0.10, and 0.30 are reported in full in the supplement. Larger values produce higher predictability after alignment with mouse priors, but also a larger target displacement, and are therefore not used for the primary claim.
 
 ### 3.7 Sequence/regulatory feature construction and evaluation of the human-only baseline
 
@@ -186,11 +242,18 @@ Repeated 10-fold evaluation with three random states gave 0.748 ± 0.001 for hum
 
 Permutation control identified gene-prior correspondence as the source of the gain. In the primary 5-fold analysis, the real dual-prior model reached Pearson = 0.829 and R2 = 0.688, whereas fold-wise prior shuffling returned it to Pearson = 0.745 and R2 = 0.553, nearly matching the human-only baseline. Prior availability and high-confidence indicators were held fixed, so only the mapping between each gene and its prior value was disrupted. After averaging the three held-out predictions per gene, the real-prior and shuffled-prior correlations were 0.8324 and 0.7531, respectively, for a paired gain of 0.0794 (95% confidence interval, 0.0735-0.0855).
 
-Residual decomposition showed that the prior was strong but incomplete. On the 11,107 genes with both priors, prior-only RidgeCV achieved Pearson = 0.792 and R2 = 0.627, whereas human `compact_all` alone achieved Pearson = 0.739 and R2 = 0.544. Modeling the held-out residual after prior-only prediction increased the final result to Pearson = 0.826 and R2 = 0.675. Human features therefore explained 12.8% of the variance left unexplained by the prior under `(R2_final - R2_prior) / (1 - R2_prior)`. This subset analysis decomposes the signal and does not replace the 12,916-gene benchmark.
+Residual decomposition showed that the prior was strong but incomplete. On the 11,107 genes with both priors, prior-only RidgeCV achieved Pearson = 0.792 and $R^2=0.627$, whereas human `compact_all` alone achieved Pearson = 0.739 and $R^2=0.544$. Modeling the held-out residual after prior-only prediction increased the final result to Pearson = 0.826 and $R^2=0.675$. We quantified the fraction of residual variance explained by human features as
+
+```equation
+number: 9
+R_{\mathrm{remaining}}^2 = \frac{R_{\mathrm{final}}^2 - R_{\mathrm{prior}}^2}{1 - R_{\mathrm{prior}}^2}
+```
+
+Equation (9) gives 12.8%. This subset analysis decomposes the signal and does not replace the 12,916-gene benchmark.
 
 ### 4.4 Weak ortholog-informed target shrinkage remains human-dominant and preserves human-label predictability
 
-This analysis changed the target. Before shrinkage, human no-Gejman PC1 and locally reconstructed mouse PC1 correlated at 0.789 across 10,768 one-to-one orthologs, with RMSE = 0.663 and MAE = 0.512. After applying `λ = 0.10`, the target remained nearly identical to human no-Gejman PC1 (Pearson = 0.9982; 95% bootstrap confidence interval, 0.9981-0.9983; RMSE = 0.065; MAE = 0.050), whereas its correlation with mouse PC1 was 0.827. The operation therefore makes a small ortholog-informed adjustment to a predominantly human label. It is a target-construction step; no penalty is added to the prediction model.
+This analysis changed the target. Before shrinkage, human no-Gejman PC1 and locally reconstructed mouse PC1 correlated at 0.789 across 10,768 one-to-one orthologs, with RMSE = 0.663 and MAE = 0.512. After applying $\lambda=0.10$, the target remained nearly identical to human no-Gejman PC1 (Pearson = 0.9982; 95% bootstrap confidence interval, 0.9981-0.9983; RMSE = 0.065; MAE = 0.050), whereas its correlation with mouse PC1 was 0.827. The operation therefore makes a small ortholog-informed adjustment to a predominantly human label. It is a target-construction step; no penalty is added to the prediction model.
 
 **Table 3** Same-scale comparison of the 0.10 ortholog-informed shrinkage target with human/mouse labels and study-level noise. All error metrics are computed in z-scored label units. Study-level rows report medians.
 
@@ -218,15 +281,15 @@ The sample-size analysis refines the interpretation of `Gejman`. Its 15 samples 
 
 The fixed-target analyses make a second distinction between human representation and cross-species transfer. The compact model defines what can be obtained from the available human sequence/regulatory feature table, whereas the mouse priors add measured ortholog-level covariates. Their gain may reflect conserved determinants of transcript stability, shared measurement structure, or both; the present design does not assign a molecular mechanism. The permutation control does show that availability flags and feature count are insufficient: gene-specific correspondence is required. Residual analysis further shows that human features retain information after the strong mouse prior is modeled.
 
-The `λ = 0.10` analysis is a shrinkage estimator for a noisy cross-study target. It moves the human consensus slightly toward a correlated ortholog signal while preserving the predictable component of the original human label. We interpret the resulting score as an explicitly defined mammalian stability target. It is not a new experimental half-life measurement. The same analysis could extend to other multi-study molecular phenotypes with a correlated external signal. Such applications should report label displacement, cross-target performance, and input coverage together.
+The $\lambda=0.10$ analysis is a shrinkage estimator for a noisy cross-study target. It moves the human consensus slightly toward a correlated ortholog signal while preserving the predictable component of the original human label. We interpret the resulting score as an explicitly defined mammalian stability target. It is not a new experimental half-life measurement. The same analysis could extend to other multi-study molecular phenotypes with a correlated external signal. Such applications should report label displacement, cross-target performance, and input coverage together.
 
 ## 6. Limitations
 
-The study has three limitations. First, all label audits and principal benchmarks use one public compendium. The size-matched null controls sample count but removes independent samples rather than whole correlated pseudo-studies, and study balancing changes the geometric ranking; an independent half-life resource is therefore needed to test portability. Second, mouse priors are external to the human target but are not mechanistically independent measurements of every stability determinant. Cross-species transfer and 0.10 target shrinkage change input information and target definition, respectively, and cannot be placed on one leaderboard. The empirical choice `λ = 0.10` also requires independent calibration. Third, we did not retrain Saluki or other large sequence models, and the implementation is not a one-click predictor for arbitrary unannotated sequences because base-sequence, compact-regulatory, and prior-enhanced predictions require different input resources.
+The study has three limitations. First, all label audits and principal benchmarks use one public compendium. The size-matched null controls sample count but removes independent samples rather than whole correlated pseudo-studies, and study balancing changes the geometric ranking; an independent half-life resource is therefore needed to test portability. Second, mouse priors are external to the human target but are not mechanistically independent measurements of every stability determinant. Cross-species transfer and 0.10 target shrinkage change input information and target definition, respectively, and cannot be placed on one leaderboard. The empirical choice $\lambda=0.10$ also requires independent calibration. Third, we did not retrain Saluki or other large sequence models, and the implementation is not a one-click predictor for arbitrary unannotated sequences because base-sequence, compact-regulatory, and prior-enhanced predictions require different input resources.
 
 ## 7. Conclusion
 
-Study-aware auditing showed that `Gejman` has sample-count-sensitive leverage on human consensus-label geometry, while its positive Saluki and ortholog agreement gains were not reproduced by 500 size-matched removals. Under fixed Saluki human PC1, a compact human-only model provided a reproducible baseline and gene-specific mouse priors increased repeated 10-fold performance to Pearson = 0.830; permutation removed the gain. Ortholog-informed target shrinkage at `λ = 0.10` remained nearly identical to human no-Gejman PC1 and preserved its out-of-fold predictability. Together, these results provide an auditable framework for mammalian mRNA half-life benchmarking.
+Study-aware auditing showed that `Gejman` has sample-count-sensitive leverage on human consensus-label geometry, while its positive Saluki and ortholog agreement gains were not reproduced by 500 size-matched removals. Under fixed Saluki human PC1, a compact human-only model provided a reproducible baseline and gene-specific mouse priors increased repeated 10-fold performance to Pearson = 0.830; permutation removed the gain. Ortholog-informed target shrinkage at $\lambda=0.10$ remained nearly identical to human no-Gejman PC1 and preserved its out-of-fold predictability. Together, these results provide an auditable framework for mammalian mRNA half-life benchmarking.
 
 ## 8. Statements and Declarations
 

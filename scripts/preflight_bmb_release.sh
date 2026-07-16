@@ -12,6 +12,7 @@ python3 -m py_compile \
   scripts/audit_bmb_submission_package.py \
   scripts/audit_oof_integrity.py \
   scripts/check_bmb_cn_consistency.py \
+  scripts/equation_markup.py \
   scripts/redraw_bmb_human_pca_panel.py \
   scripts/redraw_bmb_supplementary_diagnostics.py \
   scripts/render_markdown_to_docx.py \

@@ -19,6 +19,8 @@ SUB = ROOT / "manuscript" / "bmb_submission"
 
 MAIN_EN = SUB / "bmb_main_manuscript_en.md"
 SUPP_EN = SUB / "bmb_supplementary_material_en.md"
+MAIN_CN = SUB / "bmb_main_manuscript_cn.md"
+SUPP_CN = SUB / "bmb_supplementary_material_cn.md"
 TITLE_EN = SUB / "bmb_title_page_en.md"
 COVER_EN = SUB / "bmb_cover_letter_en.md"
 DECL_EN = SUB / "bmb_statements_and_declarations_en.md"
@@ -181,6 +183,14 @@ def docx_has_page_field(path: Path) -> bool:
             if "PAGE" in zf.read(name).decode("utf-8", errors="ignore"):
                 return True
     return False
+
+
+def markdown_equation_numbers(path: Path) -> list[str]:
+    return re.findall(
+        r"```equation\s*\nnumber:\s*([^\s]+)\s*\n.+?```",
+        read_text(path),
+        flags=re.S,
+    )
 
 
 def image_refs(markdown_path: Path) -> list[Path]:
@@ -396,6 +406,47 @@ def check_docx() -> list[Check]:
             checks.append(Check("PASS", f"{path.name} has PAGE footer field"))
         else:
             checks.append(Check("FAIL", f"{path.name} lacks PAGE footer field"))
+
+    equation_specs = {
+        MAIN_EN: (MAIN_DOCX, [str(index) for index in range(1, 10)]),
+        MAIN_CN: (SUB / "bmb_main_manuscript_cn.docx", [str(index) for index in range(1, 10)]),
+        SUPP_EN: (SUPP_DOCX, ["S1", "S2"]),
+        SUPP_CN: (SUB / "bmb_supplementary_material_cn.docx", ["S1", "S2"]),
+    }
+    for markdown_path, (docx_path, expected_numbers) in equation_specs.items():
+        source_numbers = markdown_equation_numbers(markdown_path)
+        if source_numbers == expected_numbers:
+            checks.append(
+                Check("PASS", f"equation numbering is contiguous in {markdown_path.name}: {source_numbers}")
+            )
+        else:
+            checks.append(
+                Check(
+                    "FAIL",
+                    f"equation numbering mismatch in {markdown_path.name}: "
+                    f"expected {expected_numbers}, found {source_numbers}",
+                )
+            )
+
+        xml = docx_xml(docx_path, "word/document.xml")
+        math_count = xml.count("<m:oMath")
+        missing_labels = [number for number in source_numbers if f">({number})<" not in xml]
+        if math_count >= len(source_numbers) and not missing_labels and "number:" not in xml:
+            checks.append(
+                Check(
+                    "PASS",
+                    f"editable OMML equations present in {docx_path.name}: "
+                    f"{math_count} math objects, {len(source_numbers)} numbered",
+                )
+            )
+        else:
+            checks.append(
+                Check(
+                    "FAIL",
+                    f"editable-equation audit failed for {docx_path.name}: "
+                    f"math_objects={math_count}, missing_labels={missing_labels}",
+                )
+            )
     return checks
 
 

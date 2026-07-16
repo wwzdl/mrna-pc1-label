@@ -84,13 +84,14 @@ MOESM2/MOESM3 由脚本直接下载；`compact_all` 所需预计算 Saluki featu
 
 ## 当前预检状态
 
-- BMB DOCX-only 自动审计：`0 failure / 0 warning / 142 checks`
-- English abstract：`242 words`（目标 `150-250 words`）
+- BMB DOCX-only 自动审计：`0 failure / 1 warning / 158 checks`；唯一 warning 为当前打开文档产生的 WPS 临时锁文件
+- English abstract：`214 words`（目标 `150-250 words`）
 - keywords：`6`
 - 英文主文含 44 条参考文献，补充材料含 10 条；唯一并集为 45 条，其中 43 条带 DOI
 - 43 条 DOI 均已通过 Crossref 解析和题名/年份/卷核对；LightGBM 与 scikit-learn 两条无 DOI 记录已用 NeurIPS/JMLR 官方页面核对
 - BibTeX/RIS 均仅保留上述 45 条实际使用记录，可由脚本同步导出
 - 中英文 DOCX 均已从当前 Markdown 重建；英文主文含连续行号和页码字段，英文补充含页码字段
+- 中英文正文各含 9 个右侧编号的 Word 原生可编辑 OMML 公式，双语补充材料各含补充式（S1）-（S2）；行内数学同样以 OMML 输出，PDF 路径使用同源矢量 SVG 公式
 - 12 张 PNG 已完成整体验证，图号、panel label、图注、分辨率、边界和可读性未见阻断问题；Fig. 3 图例已重排并放大，Fig. 6-8 不再使用会夸大差异的截断柱状表达；最终 SI PDF 的逐页检查留到版本冻结后执行
 - GitHub 独立仓库已公开发布 `277` 个文件、`24.60 MiB`，最大单文件 `2.29 MB`；大矩阵、逐基因 OOF arrays、feature packages、DOCX、PDF 与 TIFF 投稿包继续忽略
 - 关键 OOF 完整性审计通过：9 个 global、3 个 cross-target、18 个 target-shrinkage 结果文件均覆盖规范基因宇宙、gene ID 唯一且预测无缺失；residual 11,107 genes 覆盖 folds 1-5

@@ -47,15 +47,15 @@ The prior-enhanced result is not information leakage under the declared estimand
 
 ### Passed checks
 
-- English abstract: 242 words; keywords: 6.
+- English abstract: 214 words; keywords: 6.
 - Author-year citations and unnumbered alphabetized reference lists match BMB style.
 - Main manuscript: 8 contiguous figures and 3 captioned tables.
 - Supplement: 4 contiguous figures and 16 captioned tables, with journal/title/authors/affiliations/corresponding-author metadata.
 - All 12 referenced PNGs report 600 dpi; all corresponding TIFFs report 600 dpi and lossless LZW compression. No duplicate main/SI image is referenced.
 - Current visual review found no cropping, omitted panel label, obvious overlap, unreadable annotation, or caption-image mismatch.
-- The English main DOCX contains continuous line numbering and page fields; the English Supplementary DOCX contains page fields. All Chinese/English DOCX files are newer than their Markdown and figure sources.
+- The English main DOCX contains continuous line numbering and page fields; the English Supplementary DOCX contains page fields. Main-text equations (1)-(9), Supplementary Eqs. (S1)-(S2), and inline mathematics are native editable OMML objects. All Chinese/English DOCX files are newer than their Markdown and figure sources.
 - Main reference list: 44 entries; Supplementary reference list: 10 entries; unique union: 45. The BibTeX and RIS libraries contain exactly these 45 records. All 43 DOI records resolved and matched basic bibliographic metadata; the two no-DOI records were checked against official proceedings/journal pages.
-- Automated package audit: 142 checks, 0 failures, 0 warnings in `BMB_SKIP_PDF=1` mode.
+- Automated package audit: 158 checks, 0 failures, and 1 warning in `BMB_SKIP_PDF=1` mode. The warning is limited to temporary WPS lock files from documents currently open for inspection.
 
 ## Reproducibility and GitHub audit
 

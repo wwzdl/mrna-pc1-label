@@ -3,8 +3,8 @@
 
 This script is intentionally lightweight but practical enough for internal
 submission packages. It supports headings, paragraphs, inline emphasis,
-unordered/ordered lists, fenced code blocks, images, and GitHub-style pipe
-tables. Tables are formatted as three-line tables in the generated DOCX.
+editable inline/display equations, lists, fenced code blocks, images, and
+GitHub-style pipe tables. Tables are formatted as three-line tables.
 """
 
 from __future__ import annotations
@@ -24,6 +24,8 @@ from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from docx.shared import Inches, Pt
 import markdown
+
+from equation_markup import equation_payload, omml_element, promote_inline_math
 
 
 EMU_PER_INCH = 914400
@@ -365,6 +367,10 @@ def add_runs(paragraph, node) -> None:
         paragraph.add_run("\n")
         return
 
+    if node.name == "span" and "inline-math" in node.get("class", []):
+        paragraph._p.append(omml_element(node.get("data-latex", "")))
+        return
+
     if node.name == "a":
         text = node.get_text(" ", strip=False)
         href = node.get("href", "")
@@ -406,6 +412,40 @@ def add_block_spacer(doc: Document, after_pt: float = 6) -> None:
     p.paragraph_format.space_before = Pt(0)
     p.paragraph_format.space_after = Pt(after_pt)
     p.paragraph_format.line_spacing = Pt(1)
+
+
+def add_equation(doc: Document, latex: str, number: str) -> None:
+    """Insert a centered editable OMML equation with a right-side number."""
+    table = doc.add_table(rows=1, cols=3)
+    table.alignment = WD_TABLE_ALIGNMENT.CENTER
+    table.autofit = False
+    widths = (0.48, 5.89, 0.48)
+    for cell, width in zip(table.rows[0].cells, widths):
+        cell.width = Inches(width)
+        clear_cell_borders(cell)
+        set_cell_margins(cell, top=20, start=0, bottom=20, end=0)
+        tc_width = cell._tc.get_or_add_tcPr().first_child_found_in("w:tcW")
+        if tc_width is None:
+            tc_width = OxmlElement("w:tcW")
+            cell._tc.get_or_add_tcPr().append(tc_width)
+        tc_width.set(qn("w:type"), "dxa")
+        tc_width.set(qn("w:w"), str(round(width * TWIPS_PER_INCH)))
+
+    formula_paragraph = table.cell(0, 1).paragraphs[0]
+    formula_paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    formula_paragraph.paragraph_format.space_before = Pt(3)
+    formula_paragraph.paragraph_format.space_after = Pt(3)
+    formula_paragraph._p.append(omml_element(latex))
+
+    number_paragraph = table.cell(0, 2).paragraphs[0]
+    number_paragraph.alignment = WD_ALIGN_PARAGRAPH.RIGHT
+    number_paragraph.paragraph_format.space_before = Pt(3)
+    number_paragraph.paragraph_format.space_after = Pt(3)
+    number_run = number_paragraph.add_run(f"({number})")
+    number_run.font.name = "Times New Roman"
+    number_run.font.size = Pt(11)
+
+    add_block_spacer(doc, after_pt=3)
 
 
 def add_image(doc: Document, src: str, base_dir: Path) -> None:
@@ -483,6 +523,7 @@ def render_markdown(markdown_text: str, output_path: Path, asset_base_dir: Path)
         output_format="html5",
     )
     soup = BeautifulSoup(html, "lxml")
+    promote_inline_math(soup)
     doc = Document()
     configure_document(
         doc,
@@ -518,11 +559,15 @@ def render_markdown(markdown_text: str, output_path: Path, asset_base_dir: Path)
             else:
                 paragraph_from_tag(doc, node)
         elif node.name == "pre":
-            p = doc.add_paragraph()
-            run = p.add_run(node.get_text())
-            run.font.name = "Courier New"
-            run.font.size = Pt(9)
-            run._element.rPr.rFonts.set(qn("w:eastAsia"), "Courier New")
+            payload = equation_payload(node)
+            if payload is not None:
+                add_equation(doc, *payload)
+            else:
+                p = doc.add_paragraph()
+                run = p.add_run(node.get_text())
+                run.font.name = "Courier New"
+                run.font.size = Pt(9)
+                run._element.rPr.rFonts.set(qn("w:eastAsia"), "Courier New")
         elif node.name == "ul":
             handle_list(doc, node, ordered=False)
         elif node.name == "ol":
