@@ -10,7 +10,7 @@ Leave-one-study-out PC1 stability 在普通 sample-weighted 分析中将 `Gejman
 
 本文建立了审计 study influence、评估 cross-species priors 和量化 target shrinkage 所引入变化的定量方法。其重点是透明的统计验证和可复现的生物学预测，与 *Bulletin of Mathematical Biology* 的定位契合。
 
-本稿件为原创工作，未曾发表，也未同时投往其他期刊。两位作者均已参与当前稿件内容的整理与审阅，并将在正式投稿前完成最终确认。作者为 Wenzhuo Wang 和 Ying Shao；通讯作者为 Ying Shao。本研究未获得专项资助。作者声明不存在任何已知的、可能对本文所报告工作产生影响的竞争性经济利益或个人关系。代码、结果表、图件生成脚本和复现说明已通过版本化仓库 [wwzdl/mrna-pc1-label](https://github.com/wwzdl/mrna-pc1-label) 公开。两位作者的 ORCID 尚未提供。
+本稿件为原创工作，未曾发表，也未同时投往其他期刊。两位作者均已参与当前稿件内容的整理与审阅，并将在正式投稿前完成最终确认。作者为 Wenzhuo Wang 和 Ying Shao；通讯作者为 Ying Shao。本研究未获得专项资助。作者声明不存在任何已知的、可能对本文所报告工作产生影响的竞争性经济利益或个人关系。代码、结果表、图件生成脚本和复现说明已通过版本化仓库 [wwzdl/mrna-pc1-label](https://github.com/wwzdl/mrna-pc1-label) 公开。Ying Shao 的 ORCID 为 https://orcid.org/0000-0002-4056-5757；Wenzhuo Wang 的 ORCID 尚待确认。
 
 感谢您的审阅与考虑。
 

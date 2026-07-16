@@ -103,7 +103,7 @@ MOESM2/MOESM3 由脚本直接下载；`compact_all` 所需预计算 Saluki featu
 
 ## 仍需作者确认
 
-1. 补充 Ying Shao 的通讯作者邮箱，并确认 Wenzhuo Wang 和 Ying Shao 的 ORCID（如无 ORCID，可不填）。
+1. 补充 Ying Shao 的通讯作者邮箱，并确认 Wenzhuo Wang 的 ORCID（如无 ORCID，可不填）；Ying Shao 的 ORCID 已确认为 `0000-0002-4056-5757`。
 2. 两位作者确认 Author Contributions、作者顺序、no-funding statement 与正式英文单位名。
 3. 选择软件许可证；当前已提供 `CITATION.cff`，但尚未替作者决定法律许可条款。
 4. 生成最终英文 Online Resource 1 PDF，逐页检查后再组装上传目录和最终 ZIP。

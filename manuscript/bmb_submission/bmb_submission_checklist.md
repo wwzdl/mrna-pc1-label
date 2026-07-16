@@ -31,7 +31,7 @@
 - [x] no-funding statement 已写入，旧基金编号已删除
 - [x] competing interests 已写入
 - [ ] Wenzhuo Wang ORCID 最终核对
-- [ ] Ying Shao ORCID 最终核对
+- [x] Ying Shao ORCID 已核对：`0000-0002-4056-5757`
 
 ## References
 

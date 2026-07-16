@@ -23,7 +23,7 @@ This directory contains the current English upload-candidate files for
 
 ## Final author-side checks before upload
 
-- Add Ying Shao's corresponding-author email and confirm Wenzhuo Wang and Ying Shao ORCID status.
+- Add Ying Shao's corresponding-author email and confirm Wenzhuo Wang's ORCID status. Ying Shao's ORCID is `0000-0002-4056-5757`.
 - Confirm author contributions, the no-funding statement, and the shared affiliation with both authors.
 - Confirm that the cited public repository and release tag still resolve from a signed-out browser.
 - Confirm that the generative-AI use statement already included in Methods remains complete under the journal policy in force on the submission date.

@@ -70,7 +70,7 @@ The prior-enhanced result is not information leakage under the declared estimand
 
 ## Required release gates
 
-1. Add Ying Shao's corresponding-author email; confirm Wenzhuo Wang and Ying Shao's ORCID status and approve the final Author Contributions, author order, no-funding statement, and shared affiliation.
+1. Add Ying Shao's corresponding-author email; confirm Wenzhuo Wang's ORCID status and approve the final Author Contributions, author order, no-funding statement, and shared affiliation. Ying Shao's ORCID is confirmed as `0000-0002-4056-5757`.
 2. Select and add a software license.
 3. Generate the frozen English Online Resource 1 PDF, inspect every page, assemble the upload candidate, and create one final ZIP with integrity and SHA-256 checks.
 

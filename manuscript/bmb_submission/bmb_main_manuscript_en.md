@@ -4,6 +4,7 @@
 **Authors:** Wenzhuo Wang<sup>1</sup>, Ying Shao*<sup>1</sup>  
 **Affiliation:** <sup>1</sup> School of Science, Dalian Maritime University, Dalian 116026, China  
 **Corresponding author:** Ying Shao; Email:  
+**ORCID:** Ying Shao: https://orcid.org/0000-0002-4056-5757<br>
 **Funding:** No specific funding was received for this work.  
 **Keywords:** mRNA half-life; study heterogeneity; label audit; target shrinkage; cross-species transfer; XGBoost
 

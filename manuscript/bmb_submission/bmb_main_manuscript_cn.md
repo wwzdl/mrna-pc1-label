@@ -4,6 +4,7 @@
 **作者：** Wenzhuo Wang<sup>1</sup>，Ying Shao*<sup>1</sup>  
 **单位：** <sup>1</sup> 大连海事大学理学院，辽宁大连 116026  
 **通讯作者：** Ying Shao；邮箱：  
+**ORCID：** Ying Shao：https://orcid.org/0000-0002-4056-5757<br>
 **基金：** 本研究未获得专项资助。  
 **关键词：** mRNA half-life；study heterogeneity；label audit；target shrinkage；cross-species transfer；XGBoost
 

@@ -22,6 +22,7 @@ SUPP_EN = SUB / "bmb_supplementary_material_en.md"
 TITLE_EN = SUB / "bmb_title_page_en.md"
 COVER_EN = SUB / "bmb_cover_letter_en.md"
 DECL_EN = SUB / "bmb_statements_and_declarations_en.md"
+CITATION = ROOT / "CITATION.cff"
 BIB = SUB / "references" / "bmb_references.bib"
 RIS = SUB / "references" / "bmb_references_for_endnote.ris"
 
@@ -470,6 +471,13 @@ def check_metadata_and_reference_files() -> list[Check]:
             checks.append(Check("FAIL", f"author metadata missing from {path.name}: {missing}"))
         else:
             checks.append(Check("PASS", f"both author names are present in {path.name}"))
+
+    ying_shao_orcid = "0000-0002-4056-5757"
+    for path in (MAIN_EN, SUPP_EN, TITLE_EN, DECL_EN, CITATION):
+        if ying_shao_orcid in read_text(path):
+            checks.append(Check("PASS", f"Ying Shao ORCID matches in {path.name}"))
+        else:
+            checks.append(Check("FAIL", f"Ying Shao ORCID missing from {path.name}"))
 
     for path in (MAIN_EN, SUPP_EN, TITLE_EN):
         text = read_text(path)

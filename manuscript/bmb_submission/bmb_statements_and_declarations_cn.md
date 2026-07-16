@@ -52,7 +52,7 @@
 
 ## 9. ORCID
 
-Wenzhuo Wang 与 Ying Shao 的 ORCID 尚未提供。
+Ying Shao：https://orcid.org/0000-0002-4056-5757。Wenzhuo Wang 的 ORCID 尚待确认。
 
 ## 10. 生成式 AI 使用说明（如需披露时再启用）
 
