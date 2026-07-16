@@ -4,7 +4,7 @@
 **Article title:** Study-aware label auditing, cross-species transfer, and ortholog-informed target shrinkage for mammalian mRNA half-life prediction  
 **Authors:** Wenzhuo Wang, Ying Shao  
 **Affiliation:** School of Science, Dalian Maritime University, Dalian 116026, China  
-**Corresponding author:** Ying Shao; Email:
+**Corresponding author:** Ying Shao; Email: yshao@dlmu.edu.cn
 **ORCID:** Ying Shao: https://orcid.org/0000-0002-4056-5757
 
 ## S1. Supplementary overview

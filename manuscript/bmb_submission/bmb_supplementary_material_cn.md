@@ -4,7 +4,7 @@
 **论文题名：** Study-aware label auditing, cross-species transfer, and ortholog-informed target shrinkage for mammalian mRNA half-life prediction  
 **作者：** Wenzhuo Wang，Ying Shao  
 **单位：** 大连海事大学理学院，辽宁大连 116026  
-**通讯作者：** Ying Shao；邮箱：
+**通讯作者：** Ying Shao；邮箱：yshao@dlmu.edu.cn
 **ORCID：** Ying Shao：https://orcid.org/0000-0002-4056-5757
 
 ## S1. 补充说明

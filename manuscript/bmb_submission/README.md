@@ -72,7 +72,7 @@
 - `figures/`
   - 当前 PNG/SVG 图件及本地 600 dpi TIFF 投稿图件；表格以 Markdown 和结果 TSV 为可编辑源
 
-当前目录已经保留英文主文、英文补充材料、英文 title page、英文 cover letter 和英文 declarations。作者已统一为 Wenzhuo Wang 与通讯作者 Ying Shao，两人均使用 School of Science, Dalian Maritime University；Ying Shao 的 ORCID 已确认为 `0000-0002-4056-5757`，邮箱暂留空。最终补充材料上传名将使用 `Online_Resource_1_supplementary_material.pdf`；当前 PDF、上传候选目录和 ZIP 按作者要求推迟到版本冻结后一次生成。生成式 AI 使用说明已按 BMB 要求写入方法部分。GitHub 公开版本已完成；最终系统上传前仍需补充通讯作者邮箱，并由两位作者确认 Wenzhuo Wang 的 ORCID、Author Contributions 与软件许可。
+当前目录已经保留英文主文、英文补充材料、英文 title page、英文 cover letter 和英文 declarations。作者已统一为 Wenzhuo Wang 与通讯作者 Ying Shao，两人均使用 School of Science, Dalian Maritime University；Ying Shao 的邮箱 `yshao@dlmu.edu.cn` 和 ORCID `0000-0002-4056-5757` 均已确认。最终补充材料上传名将使用 `Online_Resource_1_supplementary_material.pdf`；当前 PDF、上传候选目录和 ZIP 按作者要求推迟到版本冻结后一次生成。生成式 AI 使用说明已按 BMB 要求写入方法部分。GitHub 公开版本已完成；最终系统上传前仍需由两位作者确认 Wenzhuo Wang 的 ORCID、Author Contributions 与软件许可。
 
 ## 最新内容更新
 
@@ -140,7 +140,6 @@ bash scripts/assemble_bmb_upload_candidate.sh
 ## 仍需作者侧最终确认的项目
 
 - Wenzhuo Wang 的 ORCID（Ying Shao 已确认为 `0000-0002-4056-5757`）
-- Ying Shao 的通讯作者邮箱
 - 两位作者最终确认 `Author contributions` 表述
 - 选择并加入软件许可证；当前尚未替作者决定法律许可条款
 - 冻结后生成并逐页检查英文 `Online Resource 1` PDF，再组装上传目录和最终 ZIP

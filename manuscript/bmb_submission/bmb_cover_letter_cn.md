@@ -18,4 +18,5 @@ Leave-one-study-out PC1 stability 在普通 sample-weighted 分析中将 `Gejman
 敬礼
 
 Ying Shao  
-通讯作者
+通讯作者<br>
+邮箱：yshao@dlmu.edu.cn

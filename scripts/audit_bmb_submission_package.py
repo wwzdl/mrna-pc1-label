@@ -479,14 +479,15 @@ def check_metadata_and_reference_files() -> list[Check]:
         else:
             checks.append(Check("FAIL", f"Ying Shao ORCID missing from {path.name}"))
 
-    for path in (MAIN_EN, SUPP_EN, TITLE_EN):
+    corresponding_author_email = "yshao@dlmu.edu.cn"
+    for path in (MAIN_EN, SUPP_EN, TITLE_EN, COVER_EN, DECL_EN, CITATION):
         text = read_text(path)
-        if "Ying Shao" not in text:
-            checks.append(Check("FAIL", f"corresponding-author name missing from {path.name}: Ying Shao"))
-        elif any(email in text for email in ("myc@lnnu.edu.cn", "dlzhang@dicp.ac.cn")):
+        if any(email in text for email in ("myc@lnnu.edu.cn", "dlzhang@dicp.ac.cn")):
             checks.append(Check("FAIL", f"superseded corresponding-author email remains in {path.name}"))
+        elif corresponding_author_email not in text:
+            checks.append(Check("FAIL", f"Ying Shao email missing from {path.name}"))
         else:
-            checks.append(Check("PASS", f"corresponding author is Ying Shao; email intentionally blank in {path.name}"))
+            checks.append(Check("PASS", f"Ying Shao email matches in {path.name}"))
 
     funding_statement = "No specific funding was received for this work."
     for path in (MAIN_EN, TITLE_EN, DECL_EN):

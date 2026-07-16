@@ -16,7 +16,7 @@ Wenzhuo Wang<sup>1</sup>，Ying Shao*<sup>1</sup>
 
 ## 3. 通讯作者
 
-- Ying Shao，邮箱：
+- Ying Shao，邮箱：yshao@dlmu.edu.cn
 
 ## 4. 基金
 
@@ -43,5 +43,5 @@ mRNA half-life；study heterogeneity；label audit；target shrinkage；cross-sp
 ## 9. 使用提醒
 
 - 本文件用于后续英文 `title page` 重建。
-- 正式投稿前，需补充通讯作者邮箱，并核对 Wenzhuo Wang 的 ORCID。
+- 正式投稿前，需核对 Wenzhuo Wang 的 ORCID；Ying Shao 的通讯邮箱和 ORCID 已确认。
 - 若投稿系统要求单独上传 `title page`，建议以本文件为唯一中文源稿。

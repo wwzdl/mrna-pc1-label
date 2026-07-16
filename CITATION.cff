@@ -11,6 +11,7 @@ authors:
   - family-names: Shao
     given-names: Ying
     affiliation: "School of Science, Dalian Maritime University"
+    email: "yshao@dlmu.edu.cn"
     orcid: "https://orcid.org/0000-0002-4056-5757"
 repository-code: "https://github.com/wwzdl/mrna-pc1-label"
 abstract: >-

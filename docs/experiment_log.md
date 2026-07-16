@@ -1384,3 +1384,13 @@ PYTHONPATH=paper_pca/src python -m mrna_half_life_paper.study_noise_vs_orthoreg_
   - 已同步中英文正文、补充材料、title page、declarations、中文 cover letter、投稿清单、仓库说明和 `CITATION.cff`。
   - 自动投稿审计新增该 ORCID 在英文主稿、补充材料、title page、declarations 与 `CITATION.cff` 中的一致性检查。
   - Wenzhuo Wang 的 ORCID 与 Ying Shao 的通讯作者邮箱仍待最终确认。
+
+### Ying Shao corresponding-author email confirmation
+
+- 时间：
+  - `2026-07-16 CST`
+- 更新：
+  - Ying Shao 的通讯作者邮箱确认为 `yshao@dlmu.edu.cn`，ORCID 保持为 `0000-0002-4056-5757`。
+  - 已同步中英文正文、补充材料、title page、cover letter、declarations、投稿清单和 `CITATION.cff`。
+  - 自动投稿审计改为要求英文活动稿件与仓库引用元数据中的邮箱精确匹配，不再允许通讯邮箱留空。
+  - 作者元数据目前仅剩 Wenzhuo Wang 的 ORCID 待确认。

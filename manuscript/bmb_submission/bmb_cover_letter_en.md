@@ -17,4 +17,5 @@ Thank you for considering our manuscript.
 Sincerely,
 
 Ying Shao  
-Corresponding author
+Corresponding author<br>
+Email: yshao@dlmu.edu.cn

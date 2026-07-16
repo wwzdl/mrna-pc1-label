@@ -27,7 +27,7 @@
 ## Title page / author metadata
 
 - [x] 作者顺序、单位和通讯作者身份已写入
-- [ ] Ying Shao 通讯作者邮箱待补充
+- [x] Ying Shao 通讯作者邮箱已核对：`yshao@dlmu.edu.cn`
 - [x] no-funding statement 已写入，旧基金编号已删除
 - [x] competing interests 已写入
 - [ ] Wenzhuo Wang ORCID 最终核对
