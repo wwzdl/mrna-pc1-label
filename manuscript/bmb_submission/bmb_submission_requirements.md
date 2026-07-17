@@ -1,6 +1,6 @@
 # Bulletin of Mathematical Biology 投稿要求摘要
 
-更新时间：2026-07-14
+更新时间：2026-07-17
 
 以下要求以 Springer 期刊官网为准：
 
@@ -95,5 +95,5 @@
   - 4-6 个关键词
   - title page / declarations / cover letter 对齐
   - supplementary file 与 Springer 口径对齐
-- 当前英文摘要自动审计为 `238` 词，已经落在要求范围内。
+- 当前英文摘要自动审计为 `232` 词，已经落在要求范围内。
 - 当前 figures 已有 `PNG/TIFF` 双版本，分辨率路线基本够用。

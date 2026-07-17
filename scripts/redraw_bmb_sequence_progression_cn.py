@@ -64,14 +64,19 @@ def save_all(fig: plt.Figure, out_no_ext: Path) -> None:
     )
     if os.environ.get("BMB_SKIP_PDF") != "1":
         fig.savefig(out_no_ext.with_suffix(".pdf"), bbox_inches="tight")
-    fig.savefig(out_no_ext.with_suffix(".svg"), bbox_inches="tight")
+    svg_path = out_no_ext.with_suffix(".svg")
+    fig.savefig(svg_path, bbox_inches="tight")
+    svg_path.write_text(
+        "\n".join(line.rstrip() for line in svg_path.read_text(encoding="utf-8").splitlines()) + "\n",
+        encoding="utf-8",
+    )
     plt.close(fig)
 
 
 def add_panel_label(ax: plt.Axes, label: str) -> None:
     ax.text(
         -0.14,
-        1.08,
+        1.14,
         label,
         transform=ax.transAxes,
         fontsize=12,
@@ -154,7 +159,13 @@ def draw_panel_a(ax: plt.Axes) -> None:
         palette,
         value_offset=0.0022,
     )
-    ax.set_title("Algorithm and feature comparison", fontsize=10.5, color=COLOR["ink"], pad=6)
+    ax.set_title(
+        "Algorithm and feature comparison\nN = 12,916; matched 5-fold",
+        fontsize=9.4,
+        color=COLOR["ink"],
+        pad=6,
+        linespacing=1.25,
+    )
     ax.set_xlabel("")
     ax.set_ylabel("Pearson r")
     ax.set_ylim(0.67, 0.75)
@@ -185,7 +196,13 @@ def draw_panel_b(ax: plt.Axes) -> None:
         palette,
         value_offset=0.0008,
     )
-    ax.set_title("Regulatory-block comparison", fontsize=10.5, color=COLOR["ink"], pad=6)
+    ax.set_title(
+        "Regulatory-block comparison\nN = 13,532; 5-fold",
+        fontsize=9.4,
+        color=COLOR["ink"],
+        pad=6,
+        linespacing=1.25,
+    )
     ax.set_xlabel("")
     ax.set_ylabel("Pearson r")
     ax.set_ylim(0.705, 0.73)
@@ -214,7 +231,13 @@ def draw_panel_c(ax: plt.Axes) -> None:
         palette,
         value_offset=0.0015,
     )
-    ax.set_title("Label-definition sensitivity", fontsize=10.5, color=COLOR["ink"], pad=6)
+    ax.set_title(
+        "Label-definition sensitivity\nN = 12,916; matched 5-fold",
+        fontsize=9.4,
+        color=COLOR["ink"],
+        pad=6,
+        linespacing=1.25,
+    )
     ax.set_xlabel("")
     ax.set_ylabel("Pearson r")
     ax.set_ylim(0.70, 0.75)
@@ -245,7 +268,13 @@ def draw_panel_d(ax: plt.Axes) -> None:
     values = keep["pearson"].astype(float).to_numpy()
     ax.scatter(values, y, s=52, color=COLOR["purple"], edgecolor="white", linewidth=0.8, zorder=3)
     ax.set_yticks(y, keep["label"].astype(str).tolist())
-    ax.set_title("Gene-subset sensitivity", fontsize=10.5, color=COLOR["ink"], pad=6)
+    ax.set_title(
+        "Gene-subset sensitivity\n3-fold",
+        fontsize=9.4,
+        color=COLOR["ink"],
+        pad=6,
+        linespacing=1.25,
+    )
     ax.set_xlabel("Pearson r")
     ax.set_ylabel("")
     ax.set_xlim(0.70, 0.745)
@@ -267,7 +296,7 @@ def main() -> None:
     setup_style()
     sns.set_style("whitegrid", {"grid.color": COLOR["light_grid"], "grid.linewidth": 0.6})
 
-    fig, axes = plt.subplots(2, 2, figsize=(7.15, 6.05))
+    fig, axes = plt.subplots(2, 2, figsize=(7.15, 6.35))
     draw_panel_a(axes[0, 0])
     draw_panel_b(axes[0, 1])
     draw_panel_c(axes[1, 0])
@@ -276,7 +305,7 @@ def main() -> None:
     for label, ax in zip(["a", "b", "c", "d"], axes.flatten()):
         add_panel_label(ax, label)
 
-    fig.tight_layout(w_pad=1.5, h_pad=2.8)
+    fig.tight_layout(w_pad=1.5, h_pad=3.2)
     out = FIG_MAIN / "Fig06_sequence_progression_cn"
     save_all(fig, out)
     print(f"Wrote {out}")

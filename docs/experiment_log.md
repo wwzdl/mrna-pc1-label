@@ -1407,3 +1407,23 @@ PYTHONPATH=paper_pca/src python -m mrna_half_life_paper.study_noise_vs_orthoreg_
   - `render_markdown_to_pdf.py` 使用同一 LaTeX 源生成矢量 SVG 公式，避免 WeasyPrint 对 MathML 分数、上下标的降级。
   - 新增公式渲染单元测试和自动审计：英文/中文正文分别检测到 44/46 个 OMML math objects，其中各 9 个编号公式；英文/中文补充分别检测到 22/24 个 OMML math objects，其中各 2 个编号公式。
   - DOCX-only preflight 为 `158 checks, 0 failures, 1 warning`；warning 仅来自打开文档产生的 WPS 临时锁文件。
+
+### Final BMB cross-consistency and reference audit
+
+- 时间：
+  - `2026-07-17 CST`
+- 稿件与统计口径：
+  - 将 12,307-gene 完整 target universe 的 `r=0.9982` 与 10,768 mapped one-to-one orthologs 的 `r=0.9979`、`RMSE=0.065`、`MAE=0.050` 明确分开，避免跨 universe 拼接数值。
+  - 区分图 4 dynamic-coverage 的 `+0.0349` 与正文 fixed 13,265-gene bootstrap estimate `+0.0314`。
+  - 明确 residual analysis 的两阶段 outer-fold 流程；held-out human target 不进入 RidgeCV residual 构建或 XGBoost 训练。
+  - Cross-target 结果统一为“未检出下降”，并说明未预设等效界值，不能视为形式等效性证明。
+- 图表、公式与引用：
+  - 修正图 5d 图注，使其同时覆盖 Pearson 和 Spearman gains；图 6 各 panel 补充 N 与 fold 口径并重画。
+  - 主文公式（1）-（9）和补充式（S1）-（S2）连续且与脚本定义一致。
+  - Ensembl 更新为 Dyer et al. 2025；CWCS、SeqWeaver、DeepRiPe 分别引用对应方法文献。活动引用并集为 47 条，其中 45 条 DOI 全部解析成功。
+- 作者与发布：
+  - 中英文作者、通讯邮箱、ORCID、单位、基金和贡献声明完成交叉核对；内部 CRediT 表与正式声明对齐。
+  - 计划以 `mRNA-PC1-label-v1.3` 冻结本轮审计状态。
+- 验证：
+  - DOCX-only preflight：`158 checks, 0 failures, 1 warning`；warning 仅为 WPS 打开英文主文和补充材料形成的临时锁文件。
+  - 详细审计记录：`docs/bmb_final_presubmission_audit_2026-07-17.md`。

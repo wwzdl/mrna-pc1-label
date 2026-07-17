@@ -6,7 +6,7 @@
 
 本文关注哺乳动物 mRNA 半衰期预测中的一个基础 benchmark 问题。常用监督标签是由异质 multi-study measurements 构建的共识分数。我们审计 study 组成如何影响这些标签，评估加入外部 mouse ortholog covariates 后的固定目标预测，并考察弱同源基因信息目标收缩。
 
-Leave-one-study-out PC1 stability 在普通 sample-weighted 分析中将 `Gejman` 识别为最大影响来源。同样本量零分布表明，删除 15 个样本解释了较大部分几何位移，但随机删除不能复制对 Saluki 已发布处理选择的恢复或 human-mouse ortholog concordance 的正向变化（两项比较的单侧经验均为 `p=0.002`）。在固定 Saluki human PC1 时，外部 mouse ortholog priors 将重复 10-fold Pearson 从 0.748 提高到 0.830；fold 内打乱 gene-prior mapping 后增益消失。`λ = 0.10` 同源基因目标收缩仍与 human no-Gejman PC1 几乎一致，cross-target evaluation 未检测到原 human 标签可预测性下降。该目标分析与固定目标比较分开报告。
+Leave-one-study-out PC1 stability 在普通 sample-weighted 分析中将 `Gejman` 识别为最大影响来源。同样本量零分布表明，删除 15 个样本解释了较大部分几何位移，但随机删除不能复制对 Saluki 已发布处理选择的恢复或 human-mouse ortholog concordance 的正向变化（两项比较的单侧经验均为 `p=0.002`）。在固定 Saluki human PC1 时，外部 mouse ortholog priors 将重复 10-fold Pearson 从 0.748 提高到 0.830；fold 内打乱 gene-prior mapping 后增益消失。`λ = 0.10` 同源基因目标收缩仍与 human no-Gejman PC1 几乎一致，cross-target evaluation 未检测到原 human 标签可预测性下降，但不构成正式等效性检验。该目标分析与固定目标比较分开报告。
 
 本文建立了审计 study influence、评估 cross-species priors 和量化 target shrinkage 所引入变化的定量方法。其重点是透明的统计验证和可复现的生物学预测，与 *Bulletin of Mathematical Biology* 的定位契合。
 

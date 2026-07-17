@@ -8,7 +8,7 @@ The active reference-manager library is deliberately limited to references that 
 - Entries with DOI: 43
 - Entries without DOI: 2 (`ke2017lightgbm`, `pedregosa2011sklearn`)
 
-On 2026-07-14, all 43 DOI records resolved through Crossref and matched the recorded title, year, and volume. The two records without DOI were checked against the official NeurIPS proceedings page and the Journal of Machine Learning Research article page. `bmb_references.bib` is the source of truth; regenerate the EndNote-compatible RIS file with:
+On 2026-07-17, all 45 DOI records resolved through Crossref. Forty-four records passed automated title/year/volume comparison; the XGBoost record was checked manually against the ACM record because Crossref returns only the abbreviated title "XGBoost." The two records without DOI were checked against the official NeurIPS proceedings page and the Journal of Machine Learning Research article page. `bmb_references.bib` is the source of truth; regenerate the EndNote-compatible RIS file with:
 
 ```bash
 python scripts/export_bib_to_ris.py \

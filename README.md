@@ -12,7 +12,7 @@ The active manuscript targets *Bulletin of Mathematical Biology*. English files 
 
 - A Saluki-label-independent leave-one-study-out screen ranks `Gejman` first in the primary sample-weighted analysis. Its geometric displacement is compatible with a 15-sample random-removal null and its rank falls to third under study balancing, but its positive Saluki-agreement and ortholog-concordance gains are not reproduced by 500 size-matched removals (`p = 0.002` for each).
 - On 12,916 human genes, the repeated 10-fold by 3-seed human-only model reaches Pearson `0.748 +/- 0.001`; cross-species transfer with two mouse ortholog priors reaches `0.830 +/- 0.001`; fold-wise prior permutation returns to `0.748 +/- 0.001`.
-- The `0.10 ortholog-informed shrinkage target` remains nearly identical to human no-Gejman PC1 (`r = 0.9982`, `RMSE = 0.065`) and shows no detectable loss of original-human-label predictability in cross-target evaluation.
+- Across the complete 12,307-gene universe, the `0.10 ortholog-informed shrinkage target` remains nearly identical to human no-Gejman PC1 (`r = 0.9982`); within 10,768 mapped one-to-one orthologs, its shift RMSE is `0.065`. Cross-target evaluation detects no reduction in original-human-label predictability but is not a formal equivalence test.
 
 See `docs/status_report.md` for the current claim boundaries and complete key values.
 
@@ -134,6 +134,6 @@ All active main figures (Fig. 1-8) and supplementary figures (S1-S4) are generat
 
 ## Release
 
-The public source repository is [wwzdl/mrna-pc1-label](https://github.com/wwzdl/mrna-pc1-label). The two-author manuscript-reviewed state is tagged as `mRNA-PC1-label-v1.2`; run the release preflight before deriving any later submission package from a newer commit.
+The public source repository is [wwzdl/mrna-pc1-label](https://github.com/wwzdl/mrna-pc1-label). The audited two-author manuscript state is tagged as `mRNA-PC1-label-v1.3`; run the release preflight before deriving any later submission package from a newer commit.
 
 中文说明：本 README 采用英文以便审稿人与读者直接复现；中文定稿状态和术语说明见 `docs/status_report.md`。

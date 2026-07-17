@@ -58,7 +58,7 @@ def _ris_lines(entry: dict[str, str]) -> list[str]:
     if pages:
         lines.extend(f"{field}  - {value}" for field, value in _page_fields(pages))
 
-    lines.extend((f"ID  - {entry['ID']}", "ER  - ", ""))
+    lines.extend((f"ID  - {entry['ID']}", "ER  -", ""))
     return lines
 
 

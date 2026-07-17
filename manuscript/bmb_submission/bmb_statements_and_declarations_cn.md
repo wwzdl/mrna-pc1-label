@@ -18,7 +18,7 @@
 
 建议口径：
 
-> 代码、图件生成脚本和结果复现流程已通过 [wwzdl/mrna-pc1-label](https://github.com/wwzdl/mrna-pc1-label) 公开；与当前两作者稿件对应的审阅版本标记为 `mRNA-PC1-label-v1.2`。
+> 代码、图件生成脚本和结果复现流程已通过 [wwzdl/mrna-pc1-label](https://github.com/wwzdl/mrna-pc1-label) 公开；与当前两作者稿件对应的审计版本标记为 `mRNA-PC1-label-v1.3`。
 
 ## 4. Competing Interests
 

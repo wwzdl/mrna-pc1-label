@@ -10,7 +10,7 @@ VL  - 4
 DO  - 10.7554/eLife.05005
 SP  - e05005
 ID  - agarwal2015mirna
-ER  - 
+ER  -
 
 TY  - JOUR
 AU  - Agarwal, Vikram
@@ -23,7 +23,7 @@ IS  - 1
 DO  - 10.1186/s13059-022-02811-x
 SP  - 245
 ID  - agarwal2022saluki
-ER  - 
+ER  -
 
 TY  - JOUR
 AU  - Alipanahi, Babak
@@ -38,7 +38,7 @@ DO  - 10.1038/nbt.3300
 SP  - 831
 EP  - 838
 ID  - alipanahi2015deepbind
-ER  - 
+ER  -
 
 TY  - JOUR
 AU  - Avsec, Ziga
@@ -59,7 +59,7 @@ DO  - 10.1038/s41592-021-01252-x
 SP  - 1196
 EP  - 1203
 ID  - avsec2021enformer
-ER  - 
+ER  -
 
 TY  - JOUR
 AU  - Bolstad, Benjamin M.
@@ -75,7 +75,7 @@ DO  - 10.1093/bioinformatics/19.2.185
 SP  - 185
 EP  - 193
 ID  - bolstad2003normalization
-ER  - 
+ER  -
 
 TY  - JOUR
 AU  - Breiman, Leo
@@ -87,7 +87,7 @@ DO  - 10.1023/A:1010933404324
 SP  - 5
 EP  - 32
 ID  - breiman2001random
-ER  - 
+ER  -
 
 TY  - JOUR
 AU  - Cetnar, Daniel P.
@@ -101,7 +101,7 @@ VL  - 15
 DO  - 10.1038/s41467-024-54059-7
 SP  - 9601
 ID  - cetnar2024synthetic
-ER  - 
+ER  -
 
 TY  - JOUR
 AU  - Chen, Tianqi
@@ -113,7 +113,7 @@ DO  - 10.1145/2939672.2939785
 SP  - 785
 EP  - 794
 ID  - chen2016xgboost
-ER  - 
+ER  -
 
 TY  - JOUR
 AU  - Duan, Jubao
@@ -133,7 +133,7 @@ VL  - 3
 DO  - 10.1038/srep01318
 SP  - 1318
 ID  - duan2013rna
-ER  - 
+ER  -
 
 TY  - JOUR
 AU  - Duffy, Erin E.
@@ -151,7 +151,26 @@ DO  - 10.1016/j.molcel.2015.07.023
 SP  - 858
 EP  - 866
 ID  - duffy2015tracking
-ER  - 
+ER  -
+
+TY  - JOUR
+AU  - Dyer, Sarah C.
+AU  - Austine-Orimoloye, Oluwatosin
+AU  - Azov, Andrey G.
+AU  - Barba, Matthieu
+AU  - Barnes, If
+AU  - Barrera-Enriquez, Valeria P.
+AU  - others
+TI  - Ensembl 2025
+JO  - Nucleic Acids Research
+PY  - 2025
+VL  - 53
+IS  - D1
+DO  - 10.1093/nar/gkae1071
+SP  - D948
+EP  - D957
+ID  - dyer2025ensembl
+ER  -
 
 TY  - JOUR
 AU  - Friedel, Caroline C.
@@ -167,7 +186,7 @@ IS  - 17
 DO  - 10.1093/nar/gkp542
 SP  - e115
 ID  - friedel2009conserved
-ER  - 
+ER  -
 
 TY  - JOUR
 AU  - Friedman, Jerome H.
@@ -180,7 +199,7 @@ DO  - 10.1214/aos/1013203451
 SP  - 1189
 EP  - 1232
 ID  - friedman2001greedy
-ER  - 
+ER  -
 
 TY  - JOUR
 AU  - Gabaldón, Toni
@@ -194,7 +213,7 @@ DO  - 10.1038/nrg3456
 SP  - 360
 EP  - 366
 ID  - gabaldon2013orthology
-ER  - 
+ER  -
 
 TY  - JOUR
 AU  - Garneau, Nicole L.
@@ -208,7 +227,21 @@ DO  - 10.1038/nrm2104
 SP  - 113
 EP  - 126
 ID  - garneau2007decay
-ER  - 
+ER  -
+
+TY  - JOUR
+AU  - Ghanbari, Mahsa
+AU  - Ohler, Uwe
+TI  - Deep neural networks for interpreting RNA-binding protein target preferences
+JO  - Genome Research
+PY  - 2020
+VL  - 30
+IS  - 2
+DO  - 10.1101/gr.247494.118
+SP  - 214
+EP  - 226
+ID  - ghanbari2020deepripe
+ER  -
 
 TY  - JOUR
 AU  - Grimson, Andrew
@@ -226,7 +259,7 @@ DO  - 10.1016/j.molcel.2007.06.017
 SP  - 91
 EP  - 105
 ID  - grimson2007mirna
-ER  - 
+ER  -
 
 TY  - JOUR
 AU  - Herzog, Veronika A.
@@ -247,7 +280,7 @@ DO  - 10.1038/nmeth.4435
 SP  - 1198
 EP  - 1204
 ID  - herzog2017timelapse
-ER  - 
+ER  -
 
 TY  - JOUR
 AU  - Hia, Fabian
@@ -271,7 +304,7 @@ IS  - 11
 DO  - 10.15252/embr.201948220
 SP  - e48220
 ID  - hia2019codon
-ER  - 
+ER  -
 
 TY  - JOUR
 AU  - Ji, Yanrong
@@ -287,7 +320,7 @@ DO  - 10.1093/bioinformatics/btab083
 SP  - 2112
 EP  - 2120
 ID  - ji2021dnabert
-ER  - 
+ER  -
 
 TY  - JOUR
 AU  - Johnson, W. Evan
@@ -302,7 +335,7 @@ DO  - 10.1093/biostatistics/kxj037
 SP  - 118
 EP  - 127
 ID  - johnson2007batch
-ER  - 
+ER  -
 
 TY  - CPAPER
 AU  - Ke, Guolin
@@ -320,7 +353,7 @@ VL  - 30
 PB  - Curran Associates, Inc.
 UR  - https://proceedings.neurips.cc/paper_files/paper/2017/hash/6449f44a102fde848669bdd9eb6b76fa-Abstract.html
 ID  - ke2017lightgbm
-ER  - 
+ER  -
 
 TY  - JOUR
 AU  - Kelley, David R.
@@ -332,7 +365,7 @@ IS  - 7
 DO  - 10.1371/journal.pcbi.1008050
 SP  - e1008050
 ID  - kelley2020cross
-ER  - 
+ER  -
 
 TY  - JOUR
 AU  - Koonin, Eugene V.
@@ -344,7 +377,7 @@ DO  - 10.1146/annurev.genet.39.073003.114725
 SP  - 309
 EP  - 338
 ID  - koonin2005orthologs
-ER  - 
+ER  -
 
 TY  - JOUR
 AU  - Leek, Jeffrey T.
@@ -365,7 +398,7 @@ DO  - 10.1038/nrg2825
 SP  - 733
 EP  - 739
 ID  - leek2010batch
-ER  - 
+ER  -
 
 TY  - JOUR
 AU  - Leppek, Kathrin
@@ -386,30 +419,7 @@ VL  - 13
 DO  - 10.1038/s41467-022-28776-w
 SP  - 1536
 ID  - leppek2022combinatorial
-ER  - 
-
-TY  - JOUR
-AU  - Martin, Fergal J.
-AU  - Amode, M. Ridwan
-AU  - Aneja, Anmol
-AU  - Austine-Orimoloye, Oluwatosin
-AU  - Azov, Andrey G.
-AU  - Barnes, If
-AU  - Becker, Anna
-AU  - Bennett, Ruth
-AU  - Berry, Anthony
-AU  - Bhai, Jyothish
-AU  - others
-TI  - Ensembl 2023
-JO  - Nucleic Acids Research
-PY  - 2023
-VL  - 51
-IS  - D1
-DO  - 10.1093/nar/gkac958
-SP  - D933
-EP  - D941
-ID  - martin2023ensembl
-ER  - 
+ER  -
 
 TY  - JOUR
 AU  - Mauger, David M.
@@ -432,7 +442,7 @@ DO  - 10.1073/pnas.1908052116
 SP  - 24075
 EP  - 24083
 ID  - mauger2019structure
-ER  - 
+ER  -
 
 TY  - JOUR
 AU  - Mayr, Christine
@@ -444,7 +454,7 @@ DO  - 10.1146/annurev-genet-120116-024704
 SP  - 171
 EP  - 194
 ID  - mayr2017utr
-ER  - 
+ER  -
 
 TY  - JOUR
 AU  - Meyer, Kate D.
@@ -462,7 +472,7 @@ DO  - 10.1016/j.cell.2012.05.003
 SP  - 1635
 EP  - 1646
 ID  - meyer2012m6a
-ER  - 
+ER  -
 
 TY  - JOUR
 AU  - Muhar, Matthias
@@ -485,7 +495,7 @@ DO  - 10.1126/science.aao2793
 SP  - 800
 EP  - 805
 ID  - muhar2018slamseq
-ER  - 
+ER  -
 
 TY  - JOUR
 AU  - Musaev, Damir
@@ -503,7 +513,25 @@ VL  - 43
 DO  - 10.1016/j.celrep.2024.114074
 SP  - 114074
 ID  - musaev2024upf1
-ER  - 
+ER  -
+
+TY  - JOUR
+AU  - Park, Christopher Y.
+AU  - Zhou, Jian
+AU  - Wong, Andrew K.
+AU  - Chen, Kevin M.
+AU  - Theesfeld, Chandra L.
+AU  - Darnell, Robert B.
+AU  - others
+TI  - Genome-wide landscape of RNA-binding protein target site dysregulation reveals a major impact on psychiatric disorder risk
+JO  - Nature Genetics
+PY  - 2021
+VL  - 53
+DO  - 10.1038/s41588-020-00761-3
+SP  - 166
+EP  - 173
+ID  - park2021seqweaver
+ER  -
 
 TY  - JOUR
 AU  - Pedregosa, Fabian
@@ -525,7 +553,7 @@ UR  - https://jmlr.org/papers/v12/pedregosa11a.html
 SP  - 2825
 EP  - 2830
 ID  - pedregosa2011sklearn
-ER  - 
+ER  -
 
 TY  - JOUR
 AU  - Presnyak, Vladimir
@@ -548,7 +576,7 @@ DO  - 10.1016/j.cell.2015.02.029
 SP  - 1111
 EP  - 1124
 ID  - presnyak2015codon
-ER  - 
+ER  -
 
 TY  - JOUR
 AU  - Rabani, Michal
@@ -571,7 +599,7 @@ DO  - 10.1038/nbt.1861
 SP  - 436
 EP  - 442
 ID  - rabani2011metabolic
-ER  - 
+ER  -
 
 TY  - JOUR
 AU  - Rambout, Xavier
@@ -584,7 +612,7 @@ DO  - 10.1038/s41576-024-00712-2
 SP  - 679
 EP  - 697
 ID  - rambout2024nuclear
-ER  - 
+ER  -
 
 TY  - JOUR
 AU  - Ross, Jeffrey
@@ -597,7 +625,7 @@ DO  - 10.1128/mr.59.3.423-450.1995
 SP  - 423
 EP  - 450
 ID  - ross1995mrna
-ER  - 
+ER  -
 
 TY  - JOUR
 AU  - Sample, Paul J.
@@ -615,7 +643,7 @@ DO  - 10.1038/s41587-019-0164-5
 SP  - 803
 EP  - 809
 ID  - sample2019utr
-ER  - 
+ER  -
 
 TY  - JOUR
 AU  - Schoenberg, Daniel R.
@@ -629,7 +657,7 @@ DO  - 10.1038/nrg3160
 SP  - 246
 EP  - 259
 ID  - schoenberg2012cytoplasmic
-ER  - 
+ER  -
 
 TY  - JOUR
 AU  - Schofield, Jeremy A.
@@ -646,7 +674,7 @@ DO  - 10.1038/nmeth.4582
 SP  - 221
 EP  - 225
 ID  - schofield2018timelapse
-ER  - 
+ER  -
 
 TY  - JOUR
 AU  - Schwalb, Bjorn
@@ -666,7 +694,7 @@ DO  - 10.1093/bioinformatics/bts052
 SP  - 884
 EP  - 885
 ID  - schwalb2012dta
-ER  - 
+ER  -
 
 TY  - JOUR
 AU  - Schwanhausser, Bjorn
@@ -685,7 +713,7 @@ DO  - 10.1038/nature10098
 SP  - 337
 EP  - 342
 ID  - schwanhausser2011global
-ER  - 
+ER  -
 
 TY  - JOUR
 AU  - Tani, Hidenori
@@ -706,7 +734,7 @@ DO  - 10.1101/gr.130559.111
 SP  - 947
 EP  - 956
 ID  - tani2012stability
-ER  - 
+ER  -
 
 TY  - JOUR
 AU  - Tipping, Michael E.
@@ -720,7 +748,7 @@ DO  - 10.1111/1467-9868.00196
 SP  - 611
 EP  - 622
 ID  - tipping1999ppca
-ER  - 
+ER  -
 
 TY  - JOUR
 AU  - Troyanskaya, Olga
@@ -740,7 +768,7 @@ DO  - 10.1093/bioinformatics/17.6.520
 SP  - 520
 EP  - 525
 ID  - troyanskaya2001missing
-ER  - 
+ER  -
 
 TY  - JOUR
 AU  - Wang, Xiao
@@ -762,7 +790,7 @@ DO  - 10.1038/nature12730
 SP  - 117
 EP  - 120
 ID  - wang2014m6a
-ER  - 
+ER  -
 
 TY  - JOUR
 AU  - Wu, Qi
@@ -780,4 +808,4 @@ VL  - 8
 DO  - 10.7554/eLife.45396
 SP  - e45396
 ID  - wu2019translation
-ER  - 
+ER  -
