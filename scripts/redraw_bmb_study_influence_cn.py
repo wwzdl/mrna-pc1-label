@@ -15,7 +15,7 @@ import matplotlib.patheffects as pe
 
 ROOT = Path(__file__).resolve().parents[1]
 RESULTS = ROOT / "results"
-FIG_MAIN = ROOT / "manuscript" / "bmb_submission" / "figures" / "main"
+FIG_MAIN = ROOT / "figures" / "paper" / "main"
 DPI = 600
 
 COLOR = {

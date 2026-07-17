@@ -13,7 +13,7 @@ Usage: bash scripts/reproduce_bmb_key_results.sh <labels|models|figures|all>
            and study-noise results.
   models   Reproduce fixed-target and target-shrinkage OOF benchmarks.
            This stage requires the Saluki datapack and a CUDA-capable XGBoost setup.
-  figures  Rebuild all active BMB figures, DOCX/PDF files, and run preflight checks.
+  figures  Rebuild publication figures and run public-repository checks.
   all      Run labels, models, and figures in that order.
 
 Set MRNA_BMB_DEVICE=cpu only for modules that expose a CPU device option. The
@@ -128,7 +128,7 @@ run_models() {
 }
 
 run_figures() {
-  echo "[reproduce] active BMB figures and documents"
+  echo "[reproduce] publication figures"
   python scripts/redraw_bmb_flow_figures.py
   python scripts/redraw_bmb_dataset_summary_cn.py
   python scripts/redraw_bmb_human_pca_panel.py
@@ -138,7 +138,7 @@ run_figures() {
   python scripts/redraw_bmb_sequence_progression_cn.py
   python scripts/redraw_bmb_prior_summary_cn.py
   python scripts/redraw_bmb_supplementary_diagnostics.py
-  bash scripts/preflight_bmb_release.sh
+  bash scripts/preflight_public_release.sh
 }
 
 case "${STAGE}" in

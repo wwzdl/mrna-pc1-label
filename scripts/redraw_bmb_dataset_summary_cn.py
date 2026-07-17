@@ -14,7 +14,7 @@ import seaborn as sns
 
 
 ROOT = Path(__file__).resolve().parents[1]
-FIG_MAIN = ROOT / "manuscript" / "bmb_submission" / "figures" / "main"
+FIG_MAIN = ROOT / "figures" / "paper" / "main"
 UNIVERSE_LEDGER = ROOT / "results" / "bmb_analysis_universe_ledger.tsv"
 DPI = 600
 

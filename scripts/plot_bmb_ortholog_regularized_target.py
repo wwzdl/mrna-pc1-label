@@ -20,7 +20,7 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
 RESULTS = ROOT / "results"
-OUT_DIR = ROOT / "manuscript" / "bmb_submission" / "figures" / "main"
+OUT_DIR = ROOT / "figures" / "paper" / "main"
 OUT_BASENAME = "Fig08_ortholog_regularized_target_cn"
 
 PALETTE = {

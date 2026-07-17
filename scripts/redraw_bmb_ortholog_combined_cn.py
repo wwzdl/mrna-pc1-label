@@ -16,7 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 RESULTS = ROOT / "results" / "ortholog_analysis"
 PAIRS = RESULTS / "common_ortholog_pairs.tsv"
 SUMMARY = RESULTS / "ortholog_correlation_summary.tsv"
-OUT = ROOT / "manuscript" / "bmb_submission" / "figures" / "main" / "Fig05_ortholog_summary_cn"
+OUT = ROOT / "figures" / "paper" / "main" / "Fig05_ortholog_summary_cn"
 DPI = 600
 
 BLUE = "#4C72C9"

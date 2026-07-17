@@ -14,10 +14,10 @@ from matplotlib.patches import FancyArrowPatch, FancyBboxPatch
 
 ROOT = Path(__file__).resolve().parents[1]
 RESULTS = ROOT / "results"
-SUBMISSION = ROOT / "manuscript" / "bmb_submission"
-MAIN_OUT = SUBMISSION / "figures" / "main" / "Fig01_workflow"
-SUPP_OUT = SUBMISSION / "figures" / "supplement" / "FigS01_prediction_boundary_flow"
-MAIN_DATA = SUBMISSION / "figures" / "data" / "Fig01_panel_data.tsv"
+SUBMISSION = ROOT / "figures" / "paper"
+MAIN_OUT = SUBMISSION / "main" / "Fig01_workflow"
+SUPP_OUT = SUBMISSION / "supplement" / "FigS01_prediction_boundary_flow"
+MAIN_DATA = SUBMISSION / "data" / "Fig01_panel_data.tsv"
 
 BLUE = "#356AC3"
 BLUE_LIGHT = "#F3F7FE"

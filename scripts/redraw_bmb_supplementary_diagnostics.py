@@ -17,7 +17,7 @@ import seaborn as sns
 
 ROOT = Path(__file__).resolve().parents[1]
 RESULTS = ROOT / "results"
-OUT = ROOT / "manuscript" / "bmb_submission" / "figures" / "supplement"
+OUT = ROOT / "figures" / "paper" / "supplement"
 DPI = 600
 
 BLUE = "#315fb0"
@@ -329,7 +329,7 @@ def draw_study_influence_sensitivity() -> None:
         ignore_index=True,
         sort=False,
     )
-    data_out = ROOT / "manuscript" / "bmb_submission" / "figures" / "data"
+    data_out = ROOT / "figures" / "paper" / "data"
     data_out.mkdir(parents=True, exist_ok=True)
     panel_data.to_csv(
         data_out / "FigS04_panel_data.tsv",

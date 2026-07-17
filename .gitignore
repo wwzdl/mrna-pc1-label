@@ -3,23 +3,36 @@ __pycache__/
 scripts/__pycache__/
 *.pyc
 .venv/
+.pytest_cache/
 
 # Office temp files
 ~$*.docx
 ~$*.pptx
 
-# Reproducible submission exports and local QA artifacts
-manuscript/bmb_submission/*.docx
-manuscript/bmb_submission/bmb_*supplementary_material*.pdf
-manuscript/bmb_submission/upload_candidate/
-manuscript/bmb_submission/qa_*/
-manuscript/bmb_submission/bmb_upload_candidate_*.zip
-manuscript/bmb_submission/bmb_upload_candidate_*.zip.sha256
-manuscript/bmb_submission_*/
+# Local writing, submission, review, and intellectual-property work products.
+# These remain available in the author workspace but are not part of the
+# lightweight public code/reproducibility repository.
+manuscript/
+docs/
+intellectual_property/
 
-# Historical manuscript branches not part of the active BMB source-of-truth chain
-manuscript/bk/
-manuscript/tcbb_submission/
+# Generated scientific figures are rebuilt from scripts and compact result
+# tables. They are intentionally not versioned in the public source tree.
+figures/
+
+# Local journal-document tooling retained for author-side submission work.
+scripts/assemble_bmb_upload_candidate.sh
+scripts/audit_bmb_submission_package.py
+scripts/check_bmb_cn_consistency.py
+scripts/convert_numeric_citations_to_author_year.py
+scripts/equation_markup.py
+scripts/export_bib_to_ris.py
+scripts/preflight_bmb_release.sh
+scripts/render_bmb_markdown_with_references.py
+scripts/render_bmb_submission_bundle.sh
+scripts/render_markdown_to_docx.py
+scripts/render_markdown_to_pdf.py
+tests/test_docx_equations.py
 
 # Large local inputs and caches; keep outside the lightweight GitHub source repo
 backups/
@@ -53,10 +66,3 @@ results/**/*blend*.tsv
 results/**/*.png
 results/**/*.pdf
 results/moesm3_saluki_matrix_check/**/*_pc1.tsv
-
-# Submission-grade TIFF bundles and deferred figure PDFs are kept locally;
-# current PNG/SVG assets remain trackable in the lightweight source release.
-figures/**/*.pdf
-manuscript/bmb_submission/figures/**/*.tiff
-manuscript/bmb_submission/figures/**/*.pdf
-manuscript/bmb_submission/supplementary_figures/tiff_600dpi/
