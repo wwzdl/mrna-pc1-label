@@ -161,7 +161,7 @@ These results also clarify the method boundary. Supervised labels for held-out h
 
 This analysis changes the **supervised target**, whereas the global prior benchmark changes **input information**; the two settings must remain separate. The 0.10 ortholog-informed shrinkage target combines 90% human no-Gejman z-scored label with 10% mapped reconstructed-mouse z-scored label, while genes without an ortholog signal retain the human label. It is not a direct experimental half-life value, but a human-dominant mammalian stability score derived from a multi-study compendium.
 
-Label geometry supports human dominance. Across the complete 12,307-gene target universe, the shrinkage target correlates with human no-Gejman PC1 at 0.9982 (95% bootstrap CI, 0.9981-0.9983). Within the 10,768 mapped one-to-one orthologs, human no-Gejman PC1 and locally reconstructed mouse PC1 have Pearson = 0.789, RMSE = 0.663, and MAE = 0.512 before shrinkage. After shrinkage, the target correlates with human no-Gejman PC1 at 0.9979 (RMSE = 0.065; MAE = 0.050) and with mouse PC1 at 0.827. Its displacement is also much smaller than ordinary study-to-study differences (Section S9 and Supplementary Table S13).
+Label geometry supports human dominance. Across the 12,307 model-eligible genes, the shrinkage target correlates with human no-Gejman PC1 at 0.9982 (95% bootstrap CI, 0.9981-0.9983). In the separately defined 10,768-pair mapped set, human no-Gejman PC1 and locally reconstructed mouse PC1 have Pearson = 0.789, RMSE = 0.663, and MAE = 0.512 before shrinkage. After shrinkage, the target correlates with human no-Gejman PC1 at 0.9979 (RMSE = 0.065; MAE = 0.050) and with mouse PC1 at 0.827. Its displacement is also much smaller than ordinary study-to-study differences (Section S9 and Supplementary Table S13).
 
 Sensitivity analysis explains the choice of $\lambda=0.10$. In matched 5-fold evaluations across three random seeds, $\lambda=0.05$, 0.10, and 0.30 gave target-versus-Saluki correlations of 0.988, 0.987, and 0.975; target-versus-mapped-mouse correlations of 0.809, 0.827, and 0.895; and prior-enhanced target-prediction correlations of 0.842, 0.854, and 0.896, respectively. The largest weight therefore produced the highest prediction score but also shifted the target more strongly toward mouse. We use 0.10 as a conservative operating point that limits cross-species contribution, not as the weight that maximizes cross-validation performance. Full results are provided in `results/ortholog_regularized_label_multiseed/summary_by_label.tsv`.
 
@@ -171,7 +171,7 @@ With explicit mouse priors, prediction of the shrinkage target reaches 0.855 ± 
 
 ## S9. Scale comparison between the $\lambda=0.10$ label shift and study-level noise
 
-The main text provides the corresponding evidence in Fig. 8c and Table 3 that the label shift induced by shrinkage is much smaller than study-level noise. This section records the exact calculation protocol. Two concepts must first be separated. `human no-Gejman PC1` is a consensus label integrated across many studies, whereas a `study mean label` is a single-study proxy obtained by averaging the samples within one study. The latter naturally carries much stronger study-specific measurement noise, so pairwise correlations between study mean labels should not be misread as the stability of the final consensus label.
+The main text provides the corresponding evidence in Fig. 8c and Table 4 that the label shift induced by shrinkage is much smaller than study-level noise. This section records the exact calculation protocol. Two concepts must first be separated. `human no-Gejman PC1` is a consensus label integrated across many studies, whereas a `study mean label` is a single-study proxy obtained by averaging the samples within one study. The latter naturally carries much stronger study-specific measurement noise, so pairwise correlations between study mean labels should not be misread as the stability of the final consensus label.
 
 The calculation proceeds in three steps. First, within the one-to-one-ortholog human gene universe, we apply sample-wise z-score to the `MOESM2` human samples so that samples with different original scales are not mixed directly. Second, samples are averaged within each study to obtain a study mean label, and then each study mean label is z-scored so that it lies on the same standardized label scale as the $\lambda=0.10$ target and human no-Gejman PC1. Third, only sign alignment is applied: if the Pearson correlation between a study label and the reference label is negative, the study label is multiplied by $-1$. No linear fit, no slope recalibration, and no downstream model predictions are used. The 18 no-Gejman studies yield $\binom{18}{2}=153$ distinct study pairs. In the main analysis, the sign-alignment reference is human no-Gejman PC1. If the reference is changed directly to the $\lambda=0.10$ target, the median Pearson, RMSE, and MAE across these pairs do not change, because the $\lambda=0.10$ target is itself almost perfectly aligned with human no-Gejman PC1 (Pearson = 0.9979).
 
@@ -187,17 +187,34 @@ The third tier is cross-species prior-enhanced prediction for human genes with m
 
 The prior-missingness stratified analysis supports this usage boundary. Across all 12,916 genes, the real both-prior model reaches Pearson = 0.8300 ± 0.0007, and the coverage-aware fallback reaches 0.8318 ± 0.0008. Among the 11,107 genes for which both mouse priors are available, the real both-prior model reaches Pearson = 0.8433 ± 0.0010, whereas the human-only model reaches 0.7456 ± 0.0014. By contrast, among the 1,347 genes for which both mouse priors are missing, the real both-prior model reaches Pearson = 0.7555 ± 0.0013, lower than the human-only value of 0.7695 ± 0.0006. The appropriate practical description is therefore that the model supports feature-based gene-level prediction; its highest performance depends on regulatory feature blocks and mouse ortholog priors; and for new sequences with only 5'UTR / CDS / 3'UTR information, the supported claim should be limited to base-sequence human-only prediction.
 
-### Supplementary Table S6. Training universes, prior-availability subsets, and label-comparison sets
+### Supplementary Table S6. Complete analysis-universe ledger and set relationships
 
-All prediction benchmarks use genes as modeling units. The `both-priors` and one-to-one ortholog sets are analysis subsets with different purposes, not replacements for the main training universe.
+The active manuscript uses 12 fixed-definition core sets arranged in three analysis branches. Eight additional sets are derived only for coverage accounting or sensitivity analysis, giving 20 named fixed rows in the machine-readable ledger. These sets are not successive exclusions from one master cohort. Gene sets are used for label construction or modeling, whereas ortholog-pair sets are used for paired cross-species comparisons. Dynamic leave-one-study-out analysis forms an additional family of per-removal intersections rather than one fixed universe: for `Gejman`, the primary dynamic calculation uses 15,788 genes for PC1 stability, 13,265 for Saluki agreement, and 12,592 ortholog pairs.
 
-| Set | N | Definition | Main use |
-| --- | ---: | --- | --- |
-| `global prediction universe` | 12,916 genes | Common human genes with both human `compact_all` features and Saluki human PC1 target | Main fixed-target human-only and prior-enhanced OOF training/evaluation universe |
-| `both-priors` subset | 11,107 genes | Genes in the global prediction universe with both `mouse_pc1` and the released Saluki mouse PC1 available | Prior-coverage interpretation, prior-only/residual decomposition, and prior-complete stratified analysis |
-| missing both priors | 1,347 genes | Genes in the global prediction universe with neither mouse prior available | Coverage-aware fallback and usage-boundary assessment |
-| 0.10 target-shrinkage universe | 12,307 genes | Separate human gene universe used for weak ortholog-informed target shrinkage | Evaluation of the 90:10 shrinkage target |
-| one-to-one ortholog label-distance set | 10,768 pairs | Pairs with human label, mouse label, and Ensembl one-to-one ortholog mapping | Correlation and error comparison between the shrinkage target and human/mouse labels |
+| ID | Track and set | N and unit | Eligibility rule | Main use |
+| --- | --- | ---: | --- | --- |
+| L1 | Human full reconstruction | 16,444 genes | `MOESM2` human genes observed in at least 3 of 54 samples | Full-human PC1, sample PCA, and starting label for human LOO auditing |
+| L2 | Mouse full reconstruction | 16,951 genes | `MOESM2` mouse genes observed in at least 3 of 27 samples | Mouse PC1, mouse PCA/LOO, and reconstructed mouse-prior source |
+| L3 | Human no-Gejman reconstruction | 15,788 genes | Human genes observed in at least 3 of the 39 non-Gejman samples | No-Gejman PC1 and primary dynamic-coverage Gejman comparison |
+| A1 | Fixed-LOO sensitivity universe | 14,244 genes | Genes passing the 3-sample rule in the full data and after every human study removal | Fixed-universe LOO sensitivity only |
+| A2 | Fixed human-Saluki comparison | 13,265 genes | Intersection of human full PC1, human no-Gejman PC1, and Saluki human PC1 | Fixed-gene Saluki agreement and paired bootstrap |
+| A3 | Human-mouse ortholog concordance | 12,592 ortholog pairs | Ensembl one-to-one pairs with L1, L3, and reconstructed mouse PC1 | Cross-species audit of the Gejman-related label change |
+| P1 | Broad feature-target universe | 13,532 genes | Intersection of the human sequence-feature table and Saluki human PC1 | Regulatory-block ablation and `MOESM3`-derived-label controls |
+| P2 | Global prediction universe | 12,916 genes | P1 genes also present in both L1 and L3 | Primary fixed-target human-only, transfer, permutation, and repeated-CV benchmark |
+| P3 | Both-priors subset | 11,107 genes | P2 genes with both reconstructed mouse PC1 and released Saluki mouse PC1 | Prior-complete coverage analysis and two-stage residual decomposition |
+| S1 | Shrinkage target-construction universe | 12,644 genes | Human no-Gejman genes retained under the Saluki-like 10-sample coverage rule | Construction of the 0.10 ortholog-informed target |
+| S2 | Shrinkage prediction universe | 12,307 genes | S1 genes with human compact features and Saluki human PC1 | Human-only/prior target prediction, ablation, and cross-target evaluation |
+| S3 | Shrinkage mapped-pair set | 10,768 ortholog pairs | S1 human genes with an Ensembl one-to-one reconstructed-mouse-PC1 match | Human-mouse label distance, target geometry, and study-noise comparison |
+| D1 | High-confidence ortholog audit | 12,376 ortholog pairs | A3 pairs with Ensembl `is_high_confidence = 1` | Ortholog-confidence sensitivity |
+| D2 | Fixed-target reconstructed-prior subset | 11,569 genes | P2 genes with a reconstructed mouse ortholog prior | Prior coverage and all-ortholog subset sensitivity |
+| D3 | Fixed-target high-confidence subset | 11,389 genes | P2 genes with a high-confidence reconstructed ortholog | High-confidence subset sensitivity |
+| D4 | Fixed-target top-regulatory-33 subset | 4,262 genes | Top third of P2 by regulatory score | Regulatory subset sensitivity in Fig. 6d |
+| D5 | Only reconstructed mouse prior | 462 genes | D2 genes outside P3 | Prior-availability accounting |
+| D6 | Missing both mouse priors | 1,347 genes | P2 genes outside D2 and P3 | Coverage-aware fallback and deployment boundary |
+| D7 | Shrinkage prediction-mapping overlap | 10,682 genes | Human-gene intersection of S2 and S3 | Set accounting; S2 and S3 are not nested |
+| D8 | High-confidence shrinkage pairs | 10,626 ortholog pairs | S3 pairs with Ensembl `is_high_confidence = 1` | Label-distance sensitivity in Supplementary Table S12 |
+
+The fixed-target coverage groups partition P2: 11,107 genes have both priors, 462 have only the reconstructed mouse prior, none have only the released Saluki mouse prior, and 1,347 have neither. In the shrinkage branch, 10,682 genes occur in both S2 and S3. The remaining 1,625 S2 genes lack a reconstructed mouse mapping and retain the human label, whereas 86 S3 genes lack the complete prediction inputs and are excluded from S2. This 10,682-gene S2/S3 overlap was not imposed on all analyses because doing so would condition every task on mouse mapping and remove 2,234 genes (17.3%) from P2. Comparisons are instead matched within each task, using identical gene identifiers and folds.
 
 ## S11. Control experiments with MOESM3-derived supervision labels
 
@@ -337,7 +354,7 @@ All tables in this supplement are currently stored as compact Markdown tables fo
 
 ## S15. Reproducibility entry points and table notes
 
-Table 1 in the main text summarizes only the logical inputs, core operations, and validation roles of the method modules and does not list local absolute paths. Concrete result files, script entry points, and reproduction commands are documented in this section and in the public versioned repository: `https://github.com/wwzdl/mrna-pc1-label`. All paths below are repository-relative so that reviewers and readers can reproduce the analysis across environments.
+Tables 1 and 2 in the main text summarize the method modules and analysis universes without listing local absolute paths. Concrete result files, script entry points, and reproduction commands are documented in this section and in the public versioned repository: `https://github.com/wwzdl/mrna-pc1-label`. All paths below are repository-relative so that reviewers and readers can reproduce the analysis across environments.
 
 From the repository root, the staged reproduction entry points are:
 
@@ -355,10 +372,11 @@ The `labels` stage downloads MOESM2/MOESM3 and runs label reconstruction, study 
 
 | Category | Path or entry point | Purpose |
 |:--|:--|:--|
-| Public repository | `https://github.com/wwzdl/mrna-pc1-label` | Provides code, result tables, figure scripts, and environment notes; audited two-author manuscript tag: `mRNA-PC1-label-v1.3` |
+| Public repository | `https://github.com/wwzdl/mrna-pc1-label` | Provides code, result tables, figure scripts, and environment notes; audited two-author manuscript tag: `mRNA-PC1-label-v1.4` |
 | Staged reproduction driver | `scripts/reproduce_bmb_key_results.sh` | Runs the `labels`, `models`, and `figures` stages with the active result paths |
 | Environment and input integrity | `requirements.txt`, `environment.yml`, `requirements-validated.txt`, `scripts/fetch_real_data.sh` | Records portable and validated dependencies and verifies the public supplementary inputs by checksum |
 | OOF integrity audit | `scripts/audit_oof_integrity.py` | Checks canonical gene counts, unique IDs, shared universes across settings/seeds, fold coverage, and complete predictions |
+| Analysis-universe ledger | `scripts/audit_analysis_universes.py`, `results/bmb_analysis_universe_ledger.tsv` | Recomputes the twelve core sets and derived overlaps from source/result tables and verifies their set relationships |
 | Main and supplementary manuscripts | `manuscript/bmb_submission/` | Stores the Chinese/English main text, supplementary material, DOCX drafts, and submission figures |
 | Sample-level PCA imputation reproducibility | `scripts/run_sample_pca_imputation_reproducibility.sh`, `scripts/reproduce_sample_pca_imputation.py` | Reproduces low-rank imputation, coordinates, parameter JSON, and diagnostic figures for raw/processed sample PCA |
 | Human-only benchmark | `results/human_compact_oof_models.tsv` | Summarizes out-of-fold results for base-sequence and compact-feature models |
@@ -374,7 +392,7 @@ The `labels` stage downloads MOESM2/MOESM3 and runs label reconstruction, study 
 | Label auditing and ortholog concordance | `results/study_influence/**/*.tsv`, `results/ortholog_analysis/*.tsv` | Stores leave-one-study-out, Saluki-label agreement, and human-mouse consistency results |
 | Usage-boundary analysis | `results/prior_missingness_analysis/summary_by_coverage.tsv`, `docs/prior_residual_analysis.md` | Documents the performance boundary under missing priors and the residual-analysis implementation |
 
-The main figure and manuscript-generation scripts include `scripts/redraw_bmb_dataset_summary_cn.py`, `scripts/redraw_bmb_human_pca_panel.py`, `scripts/redraw_bmb_study_influence_cn.py`, `scripts/redraw_bmb_ortholog_combined_cn.py`, `scripts/plot_bmb_ortholog_regularized_target.py`, `scripts/redraw_bmb_sequence_progression_cn.py`, `scripts/redraw_bmb_prior_summary_cn.py`, `scripts/redraw_bmb_flow_figures.py`, `scripts/redraw_bmb_supplementary_diagnostics.py`, `scripts/render_markdown_to_docx.py`, and `scripts/render_markdown_to_pdf.py`. The flow and diagnostic scripts use native matplotlib vector objects and do not crop or embed AI-generated artwork. Figures are exported as editable SVG/PDF and 600-dpi PNG/TIFF. `ortholog_regularized_cross_target.py` and `bootstrap_bmb_key_claims.py` generate the cross-target and paired-bootstrap results, respectively. Markdown tables are retained as the version-controlled source and rendered in compact DOCX/PDF submission formats.
+The main figure and manuscript-generation scripts include `scripts/redraw_bmb_dataset_summary_cn.py`, `scripts/redraw_bmb_human_pca_panel.py`, `scripts/redraw_bmb_study_influence_cn.py`, `scripts/redraw_bmb_ortholog_combined_cn.py`, `scripts/plot_bmb_ortholog_regularized_target.py`, `scripts/redraw_bmb_sequence_progression_cn.py`, `scripts/redraw_bmb_prior_summary_cn.py`, `scripts/redraw_bmb_flow_figures.py`, `scripts/redraw_bmb_supplementary_diagnostics.py`, `scripts/render_markdown_to_docx.py`, and `scripts/render_markdown_to_pdf.py`. `scripts/audit_analysis_universes.py` rebuilds the machine-readable universe ledger and checks the core/derived set relationships used in the text. The flow and diagnostic scripts use native matplotlib vector objects and do not crop or embed AI-generated artwork. Figures are exported as editable SVG/PDF and 600-dpi PNG/TIFF. `ortholog_regularized_cross_target.py` and `bootstrap_bmb_key_claims.py` generate the cross-target and paired-bootstrap results, respectively. Markdown tables are retained as the version-controlled source and rendered in compact DOCX/PDF submission formats.
 
 ## S16. References
 

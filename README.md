@@ -12,21 +12,24 @@ The active manuscript targets *Bulletin of Mathematical Biology*. English files 
 
 - A Saluki-label-independent leave-one-study-out screen ranks `Gejman` first in the primary sample-weighted analysis. Its geometric displacement is compatible with a 15-sample random-removal null and its rank falls to third under study balancing, but its positive Saluki-agreement and ortholog-concordance gains are not reproduced by 500 size-matched removals (`p = 0.002` for each).
 - On 12,916 human genes, the repeated 10-fold by 3-seed human-only model reaches Pearson `0.748 +/- 0.001`; cross-species transfer with two mouse ortholog priors reaches `0.830 +/- 0.001`; fold-wise prior permutation returns to `0.748 +/- 0.001`.
-- Across the complete 12,307-gene universe, the `0.10 ortholog-informed shrinkage target` remains nearly identical to human no-Gejman PC1 (`r = 0.9982`); within 10,768 mapped one-to-one orthologs, its shift RMSE is `0.065`. Cross-target evaluation detects no reduction in original-human-label predictability but is not a formal equivalence test.
+- Across the 12,307 model-eligible genes, the `0.10 ortholog-informed shrinkage target` remains nearly identical to human no-Gejman PC1 (`r = 0.9982`); in a separately defined set of 10,768 mapped one-to-one ortholog pairs, its shift RMSE is `0.065`. Cross-target evaluation detects no reduction in original-human-label predictability but is not a formal equivalence test.
 
 See `docs/status_report.md` for the current claim boundaries and complete key values.
 
 ## Analysis Universes
 
+The manuscript uses 12 fixed-definition core sets in three branches, plus eight derived coverage/sensitivity sets. They are task-specific eligibility sets, not successive attrition from one cohort. The two primary model training/evaluation sets are P2 (fixed-target, 12,916 genes) and S2 (shrinkage target, 12,307 genes).
+
 | Analysis | Size | Role |
 |:--|--:|:--|
 | Global fixed-target training/evaluation | 12,916 human genes | Main human-only and cross-species-transfer benchmark |
 | Both-priors subset | 11,107 human genes | Prior coverage and residual decomposition only |
-| Ortholog-informed shrinkage target | 12,307 human genes | Shrinkage-target training/evaluation |
+| Shrinkage target construction | 12,644 human genes | Defines the 0.10 ortholog-informed target before model eligibility filters |
+| Ortholog-informed shrinkage prediction | 12,307 human genes | Shrinkage-target training/evaluation |
 | One-to-one label geometry | 10,768 ortholog pairs | Human/mouse target-distance analysis |
 | Ortholog concordance | 12,592 ortholog pairs | Cross-species label comparison |
 
-The 11,107-gene both-priors subset is not the global training universe.
+The 11,107-gene both-priors subset is not the global training universe. The 12,307-gene prediction set and 10,768-pair geometry set overlap at 10,682 human genes but are not nested. The complete 12-core/8-derived definition is in Supplementary Table S6; `results/bmb_analysis_universe_ledger.tsv` is the machine-readable ledger, and `python3 scripts/audit_analysis_universes.py --check` validates it from the source/result tables.
 
 ## Repository Layout
 
@@ -92,7 +95,7 @@ bash scripts/reproduce_bmb_key_results.sh all
 
 The `labels` stage also reproduces the dynamic/fixed-universe leave-one-study-out analyses, the 500-replicate size-matched null, preprocessing sensitivity, and two study-balanced estimators. The `models` stage builds the human sequence feature table from Ensembl release 115 when it is absent, then reproduces the global prior benchmark, 10-fold robustness, missing-prior analysis, two-stage residual decomposition, `lambda = 0.10` target benchmark, lambda sensitivity, prior ablation, cross-target evaluation, and paired-bootstrap summaries. Both stages write to the result paths used by the manuscripts.
 
-After model reproduction, `scripts/audit_oof_integrity.py` verifies the expected evaluation-universe size, unique gene coverage, shared gene order across settings/seeds, fold coverage, and absence of missing predictions.
+After model reproduction, `scripts/audit_oof_integrity.py` verifies the expected evaluation-universe size, unique gene coverage, shared gene order across settings/seeds, fold coverage, and absence of missing predictions. `scripts/audit_analysis_universes.py --check` independently verifies the named core sets, derived coverage subsets, and the 10,682-gene S2/S3 overlap.
 
 ## Rebuild Submission Files
 
@@ -134,6 +137,6 @@ All active main figures (Fig. 1-8) and supplementary figures (S1-S4) are generat
 
 ## Release
 
-The public source repository is [wwzdl/mrna-pc1-label](https://github.com/wwzdl/mrna-pc1-label). The audited two-author manuscript state is tagged as `mRNA-PC1-label-v1.3`; run the release preflight before deriving any later submission package from a newer commit.
+The public source repository is [wwzdl/mrna-pc1-label](https://github.com/wwzdl/mrna-pc1-label). The audited two-author manuscript state is tagged as `mRNA-PC1-label-v1.4`; run the release preflight before deriving any later submission package from a newer commit.
 
 中文说明：本 README 采用英文以便审稿人与读者直接复现；中文定稿状态和术语说明见 `docs/status_report.md`。

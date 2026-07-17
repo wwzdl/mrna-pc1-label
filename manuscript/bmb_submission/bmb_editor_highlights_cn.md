@@ -12,7 +12,7 @@
 2. **高影响 study 先由 Saluki-label-independent 稳定性筛查。** Leave-one-study-out PC1 stability 在不使用 Saluki 标签或下游模型分数时将 `Gejman` 排为 primary sample-weighted analysis 的第一位；size-matched null 与 study balancing 限定几何解释，Saluki agreement 与 ortholog concordance 随后检查改变方向。
 3. **human-only 与 prior-enhanced 明确分账。** Mouse-side priors 独立于 human target 构建；加入后属于 cross-species transfer setting，与 fixed-target human-only benchmark 分开解释。
 4. **prior 增益有控制实验支撑。** Permutation control 和 residual analysis 共同支持：提升来自 gene-specific cross-species signal，而非“多几列特征”或简单复述 prior。
-5. **0.10 弱同源正则化是有边界的核心标签结果。** 在完整 12,307-gene target universe 上，该 target 与 human no-Gejman PC1 的 `r=0.9982`；在 10,768 个 mapped one-to-one orthologs 上，shift RMSE 为 `0.065`。Cross-target evaluation 的 Pearson 变化为 `+0.0003`（95% CI `-0.0006` 至 `0.0012`），未检出原 human 标签可预测性下降，但因未预设等效界值，不构成正式等效性证明。
+5. **0.10 弱同源正则化是有边界的核心标签结果。** 在 12,307 个 model-eligible prediction genes 上，该 target 与 human no-Gejman PC1 的 `r=0.9982`；在单独定义的 10,768 个 mapped one-to-one ortholog pairs 上，shift RMSE 为 `0.065`。Cross-target evaluation 的 Pearson 变化为 `+0.0003`（95% CI `-0.0006` 至 `0.0012`），未检出原 human 标签可预测性下降，但因未预设等效界值，不构成正式等效性证明。
 
 ## 3. 推荐 claim 边界
 

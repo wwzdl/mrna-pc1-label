@@ -13,7 +13,7 @@
 ## Main manuscript
 
 - [x] 主稿已切到 BMB 标题与投稿口径
-- [x] abstract 控制在 `150-250` 词范围内（当前自动审计为 `232` 词）
+- [x] abstract 控制在 `150-250` 词范围内（当前自动审计为 `233` 词）
 - [x] keywords 收敛到 `6` 个
 - [x] 英文主稿和英文补充材料文内引文已改为作者-年份制
 - [x] `Statements and Declarations` 已补入主稿结构
@@ -78,6 +78,6 @@
 - [x] README 已整理
 - [ ] 英文 Online Resource 1 PDF 冻结后重建 `upload_candidate/`
 - [ ] 最终英文上传候选 ZIP 仅在全部作者信息、PDF 和 GitHub 版本冻结后生成一次，并执行 `unzip -t` 与 SHA-256 校验
-- [x] GitHub 仓库 `wwzdl/mrna-pc1-label` 已公开，Data/Code Availability 已改为当前时态；本轮预投稿审计版本标记为 `mRNA-PC1-label-v1.3`
+- [x] GitHub 仓库 `wwzdl/mrna-pc1-label` 已公开，Data/Code Availability 已改为当前时态；本轮分析宇宙账本修订版本标记为 `mRNA-PC1-label-v1.4`
 - [ ] 选择并加入适合软件公开发布的许可证
 - [ ] 上传系统前由两位作者确认作者顺序、Author Contributions、no-funding statement 和英文单位名

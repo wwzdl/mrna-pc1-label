@@ -1413,7 +1413,7 @@ PYTHONPATH=paper_pca/src python -m mrna_half_life_paper.study_noise_vs_orthoreg_
 - 时间：
   - `2026-07-17 CST`
 - 稿件与统计口径：
-  - 将 12,307-gene 完整 target universe 的 `r=0.9982` 与 10,768 mapped one-to-one orthologs 的 `r=0.9979`、`RMSE=0.065`、`MAE=0.050` 明确分开，避免跨 universe 拼接数值。
+  - 将 12,307-gene model-eligible prediction universe 的 `r=0.9982` 与单独筛选的 10,768 mapped one-to-one ortholog pairs 的 `r=0.9979`、`RMSE=0.065`、`MAE=0.050` 明确分开，避免跨 universe 拼接数值。
   - 区分图 4 dynamic-coverage 的 `+0.0349` 与正文 fixed 13,265-gene bootstrap estimate `+0.0314`。
   - 明确 residual analysis 的两阶段 outer-fold 流程；held-out human target 不进入 RidgeCV residual 构建或 XGBoost 训练。
   - Cross-target 结果统一为“未检出下降”，并说明未预设等效界值，不能视为形式等效性证明。
@@ -1427,3 +1427,19 @@ PYTHONPATH=paper_pca/src python -m mrna_half_life_paper.study_noise_vs_orthoreg_
 - 验证：
   - DOCX-only preflight：`158 checks, 0 failures, 1 warning`；warning 仅为 WPS 打开英文主文和补充材料形成的临时锁文件。
   - 详细审计记录：`docs/bmb_final_presubmission_audit_2026-07-17.md`。
+
+### Analysis-universe ledger and reader-facing set map
+
+- 时间：
+  - `2026-07-17 CST`
+- 集合核算：
+  - 将全文集合整理为 12 个核心集合（L1-L3、A1-A3、P1-P3、S1-S3）和 8 个派生 coverage/sensitivity subsets（D1-D8）。
+  - 明确 P2（12,916 genes）与 S2（12,307 genes）是两条预测任务的主训练/评估集合；P3（11,107 genes）只用于 prior coverage 与 residual analysis。
+  - 明确 S2 与 S3（10,768 pairs）不互相包含，交集为 10,682 human genes；若将该 overlap 强制用于 P2，会删除 2,234 genes（17.3%）并以 mouse mapping 筛选 human-only estimand。
+- 稿件与图件：
+  - 中英文主文新增逐集合表 2；中英文补充表 S6 扩展为完整逐行账本。
+  - 图 2c 使用 A3/P1/P2/S2/S3 ID 与单位，避免把不同任务误读为同一 attrition chain。
+  - `scripts/audit_analysis_universes.py` 从真实源表和 OOF 结果重算集合，并生成 `results/bmb_analysis_universe_ledger.tsv`。
+- 验证与发布：
+  - 机器账本共 20 行；中英文一致性、3 个单元测试和 DOCX-only preflight 均通过。
+  - 本轮集合账本修订计划冻结为 `mRNA-PC1-label-v1.4`；正式 SI PDF 与 ZIP 继续留到最终作者确认后生成。

@@ -299,7 +299,21 @@ def check_main_markdown() -> list[Check]:
             )
         )
 
-    required_universes = ["12,916", "11,107", "12,307", "10,768"]
+    required_universes = [
+        "16,444",
+        "16,951",
+        "15,788",
+        "14,244",
+        "13,265",
+        "12,592",
+        "13,532",
+        "12,916",
+        "11,107",
+        "12,644",
+        "12,307",
+        "10,768",
+        "10,682",
+    ]
     missing_universes = [value for value in required_universes if value not in body]
     if missing_universes:
         checks.append(Check("FAIL", f"canonical analysis-universe counts missing from main text: {missing_universes}"))

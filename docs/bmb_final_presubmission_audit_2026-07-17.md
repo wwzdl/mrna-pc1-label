@@ -8,7 +8,8 @@ The active English manuscript, supplementary information, title page, cover lett
 
 ## Corrections made in this audit
 
-- Separated the complete 12,307-gene shrinkage-target universe from the 10,768 mapped one-to-one-ortholog universe. The former supports `r = 0.9982`; the latter supports `r = 0.9979`, `RMSE = 0.065`, and `MAE = 0.050`.
+- Separated the 12,307 model-eligible shrinkage-prediction universe from the independently filtered 10,768 mapped one-to-one-ortholog pairs. The former supports `r = 0.9982`; the latter supports `r = 0.9979`, `RMSE = 0.065`, and `MAE = 0.050`.
+- Replaced the ambiguous single-cohort wording with a twelve-set analysis-universe ledger. The main text now identifies P2 (12,916 genes) and S2 (12,307 genes) as the two primary modeling universes and records the non-nested S2/S3 overlap of 10,682 genes.
 - Distinguished the dynamic-coverage Fig. 4 agreement gain (`+0.0349`) from the fixed 13,265-gene paired estimate used for bootstrap inference (`+0.0314`).
 - Rewrote the two-stage residual procedure to state explicitly that both RidgeCV and XGBoost are trained within each outer fold and that no held-out human target enters residual construction.
 - Corrected Fig. 5d captions to describe both Pearson and Spearman gains.
@@ -24,10 +25,10 @@ The active English manuscript, supplementary information, title page, cover lett
 - Full preflight: `158 checks`, `0 failures`, `1 warning`.
 - Unit tests: `3 passed`.
 - OOF integrity: nine global fixed-target files cover 12,916 genes; three cross-target files and 18 shrinkage-target files cover 12,307 genes; residual outputs cover 11,107 genes across folds 1-5.
-- English abstract: 232 words; six keywords.
+- English abstract: 233 words; six keywords.
 - Main figures: Fig. 1-8; supplementary figures: S1-S4. All referenced PNG files report 600 dpi, and matching lossless 600-dpi TIFF files are present.
 - Main equations: (1)-(9); supplementary equations: (S1)-(S2). All are rendered as editable OMML in DOCX.
-- Main tables: 1-3; supplementary tables: S1-S16.
+- Main tables: 1-4; supplementary tables: S1-S16.
 - Active references: 46 in the main manuscript, 11 in the supplement, 47 unique records in the BibTeX/RIS union. All 45 DOI records resolve through Crossref; the XGBoost full title was checked against the ACM record because Crossref returns an abbreviated title. The two no-DOI records were checked against the official NeurIPS and JMLR pages.
 - Quantitative claims for label audit, ortholog concordance, prior permutation, cross-target evaluation, shrinkage geometry, residual decomposition, and study-influence sensitivity match the versioned result tables.
 
@@ -40,4 +41,4 @@ The active English manuscript, supplementary information, title page, cover lett
 
 ## Release state
 
-The intended immutable repository tag for this audited state is `mRNA-PC1-label-v1.3`. PDF and ZIP generation remain intentionally deferred until the final author-controlled submission freeze.
+The intended immutable repository tag for this audited state is `mRNA-PC1-label-v1.4`. PDF and ZIP generation remain intentionally deferred until the final author-controlled submission freeze.

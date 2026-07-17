@@ -15,6 +15,7 @@ import seaborn as sns
 
 ROOT = Path(__file__).resolve().parents[1]
 FIG_MAIN = ROOT / "manuscript" / "bmb_submission" / "figures" / "main"
+UNIVERSE_LEDGER = ROOT / "results" / "bmb_analysis_universe_ledger.tsv"
 DPI = 600
 
 COLOR = {
@@ -142,6 +143,13 @@ def draw_arrow(ax: plt.Axes, start: tuple[float, float], end: tuple[float, float
     ax.annotate("", xy=end, xytext=start, arrowprops=dict(arrowstyle="->", lw=1.2, color=color))
 
 
+def load_universe_counts() -> dict[str, int]:
+    ledger = pd.read_csv(UNIVERSE_LEDGER, sep="\t")
+    if ledger["set_id"].duplicated().any():
+        raise ValueError(f"Duplicate set_id values in {UNIVERSE_LEDGER}")
+    return ledger.set_index("set_id")["n"].astype(int).to_dict()
+
+
 def panel_a(ax: plt.Axes) -> None:
     data = pd.DataFrame(
         {
@@ -174,10 +182,11 @@ def panel_a(ax: plt.Axes) -> None:
 
 
 def panel_b(ax: plt.Axes) -> None:
+    counts = load_universe_counts()
     data = pd.DataFrame(
         {
             "Set": ["Human", "Mouse", "No-Gejman\nhuman"],
-            "Processed genes": [16444, 16951, 15788],
+            "Processed genes": [counts["L1"], counts["L2"], counts["L3"]],
         }
     )
     sns.barplot(
@@ -199,13 +208,14 @@ def panel_b(ax: plt.Axes) -> None:
 
 
 def panel_c(ax: plt.Axes) -> None:
+    counts = load_universe_counts()
     data = pd.DataFrame(
         [
-            ("MOESM3 control\ngenes", 13532, "Gene universe"),
-            ("Global prior\ncommon genes", 12916, "Gene universe"),
-            ("Ortholog concordance\npairs", 12592, "Ortholog pairs"),
-            ("0.10 shrinkage target\ngenes", 12307, "Gene universe"),
-            ("0.10 target ortholog\npairs", 10768, "Ortholog pairs"),
+            ("P1  Broad feature-target\ngenes", counts["P1"], "Gene universe"),
+            ("P2  Global prediction\ngenes", counts["P2"], "Gene universe"),
+            ("A3  Ortholog audit\npairs", counts["A3"], "Ortholog pairs"),
+            ("S2  Shrinkage prediction\ngenes", counts["S2"], "Gene universe"),
+            ("S3  Shrinkage mapped\npairs", counts["S3"], "Ortholog pairs"),
         ],
         columns=["Universe", "Count", "Type"],
     )

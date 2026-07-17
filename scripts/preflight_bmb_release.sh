@@ -9,10 +9,12 @@ source scripts/activate_env.sh
 echo "[preflight] py_compile"
 python3 -m py_compile \
   src/mrna_half_life_paper/study_influence_sensitivity.py \
+  scripts/audit_analysis_universes.py \
   scripts/audit_bmb_submission_package.py \
   scripts/audit_oof_integrity.py \
   scripts/check_bmb_cn_consistency.py \
   scripts/equation_markup.py \
+  scripts/redraw_bmb_dataset_summary_cn.py \
   scripts/redraw_bmb_human_pca_panel.py \
   scripts/redraw_bmb_supplementary_diagnostics.py \
   scripts/render_markdown_to_docx.py \
@@ -26,6 +28,9 @@ python3 -m pytest -q
 
 echo "[preflight] OOF integrity"
 python3 scripts/audit_oof_integrity.py
+
+echo "[preflight] analysis universes"
+python3 scripts/audit_analysis_universes.py --check
 
 echo "[preflight] manuscript consistency"
 python3 scripts/check_bmb_cn_consistency.py --lang both

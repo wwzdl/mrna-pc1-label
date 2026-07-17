@@ -1,0 +1,21 @@
+set_id	track	level	set_name	n	unit	eligibility_rule	main_use
+L1	label reconstruction	core	human full reconstruction	16444	genes	MOESM2 human genes observed in at least 3 of 54 samples	Full-human PC1, sample PCA, and the starting point for human LOO auditing
+L2	label reconstruction	core	mouse full reconstruction	16951	genes	MOESM2 mouse genes observed in at least 3 of 27 samples	Mouse PC1, mouse PCA/LOO, and the reconstructed mouse prior source
+L3	label reconstruction	core	human no-Gejman reconstruction	15788	genes	MOESM2 human genes observed in at least 3 of the 39 non-Gejman samples	No-Gejman PC1 and the primary dynamic-coverage Gejman comparison
+A1	label audit	core sensitivity	fixed LOO sensitivity universe	14244	genes	Genes meeting the 3-sample coverage rule in the full data and after every human study removal	Fixed-universe LOO sensitivity analysis only
+A2	label audit	core comparison	fixed human-Saluki comparison	13265	genes	Intersection of human full PC1, human no-Gejman PC1, and Saluki human PC1	Fixed-gene Saluki-agreement estimate and paired bootstrap
+A3	label audit	core comparison	human-mouse ortholog concordance	12592	ortholog pairs	Ensembl one-to-one pairs with human full/no-Gejman PC1 and reconstructed mouse PC1	Cross-species audit of the Gejman-related label change
+P1	fixed-target prediction	core secondary	broad feature-target universe	13532	genes	Intersection of human sequence features and Saluki human PC1	Regulatory-block ablation and MOESM3-derived-label controls
+P2	fixed-target prediction	core primary	global prediction universe	12916	genes	P1 genes also present in human full and no-Gejman reconstructions	Primary human-only, cross-species transfer, permutation, and repeated-CV benchmark
+P3	fixed-target prediction	core subset	both-priors subset	11107	genes	P2 genes with both reconstructed and Saluki mouse prior values	Prior-complete coverage analysis and two-stage residual decomposition
+S1	target shrinkage	core construction	shrinkage target-construction universe	12644	genes	Human no-Gejman genes retained under the Saluki-like 10-sample coverage rule	Construction of the 0.10 ortholog-informed target
+S2	target shrinkage	core primary	shrinkage prediction universe	12307	genes	S1 genes with human compact features and Saluki human PC1	Human-only/prior target prediction, ablation, and cross-target evaluation
+S3	target shrinkage	core comparison	shrinkage mapped-pair set	10768	ortholog pairs	S1 human genes with an Ensembl one-to-one reconstructed-mouse-PC1 match	Human-mouse label distance, target geometry, and study-noise comparison
+D1	derived subsets	secondary	high-confidence ortholog audit	12376	ortholog pairs	A3 pairs with Ensembl is_high_confidence = 1	High-confidence ortholog sensitivity
+D2	derived subsets	secondary	fixed-target reconstructed-prior subset	11569	genes	P2 genes present in A3	Prior coverage and ortholog-subset sensitivity
+D3	derived subsets	secondary	fixed-target high-confidence subset	11389	genes	P2 genes present in D1	High-confidence gene-subset sensitivity
+D4	derived subsets	secondary	fixed-target top-regulatory-33 subset	4262	genes	Top third of P2 by regulatory score	Gene-subset sensitivity in Fig. 6d
+D5	derived subsets	secondary	only reconstructed mouse prior	462	genes	P2 genes in D2 but not P3	Prior-availability accounting
+D6	derived subsets	secondary	missing both mouse priors	1347	genes	P2 genes absent from D2 and P3	Coverage-aware fallback and deployment boundary
+D7	derived subsets	secondary overlap	shrinkage prediction/mapped overlap	10682	genes	Intersection of S2 prediction genes and S3 mapped human genes	Set accounting; S2 and S3 are not nested
+D8	derived subsets	secondary	high-confidence shrinkage pairs	10626	ortholog pairs	S3 pairs with Ensembl is_high_confidence = 1	Label-distance sensitivity in Supplementary Table S12
