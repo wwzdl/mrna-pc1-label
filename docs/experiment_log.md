@@ -1501,3 +1501,4 @@ PYTHONPATH=paper_pca/src python -m mrna_half_life_paper.study_noise_vs_orthoreg_
 - 将 study-balanced 权重从等价的根式改写为 $n_s^{-1/2}$，降低 WPS 显示风险；投稿审计新增 Markdown 公式源与 DOCX OMML 完整内容逐式匹配。
 - Cover letter 将 exact-vector 结果改写为 matched ablation 的观测增量，避免因果归因过强；作者资格、no-funding 与公开 Git 身份保留为作者控制的最终确认项。
 - DOCX-only 完整预检通过 `177 checks / 0 failures / 0 warnings`，4 个单元测试全部通过；本轮冻结标签更新为 `mRNA-PC1-label-v1.4.5`。
+- 完整项目快照保存为 `../workspace_archive/mrna-pc1-label_paper_pca_presubmission_20260717_v1.4.5.tar.zst`，并配套 SHA-256 边车文件与完整解包列表测试。

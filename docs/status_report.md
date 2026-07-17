@@ -111,7 +111,7 @@ MOESM2/MOESM3 由脚本直接下载；`compact_all` 所需预计算 Saluki featu
 
 - 2026-07-13 的旧 SI PDF、上传候选目录、ZIP 和图件 PDF 已移入 `../workspace_archive/2026-07-14_presubmission_stale_exports/`，不再作为活动投稿版本。
 - 当前活动 DOCX 已重建；最终英文 SI PDF、上传候选目录和 ZIP 尚未生成，避免在作者信息与 GitHub 版本冻结前反复打包。
-- 最终源码冻结后的完整项目备份固定为 `../workspace_archive/mrna-pc1-label_paper_pca_presubmission_20260715.tar.zst`，其 SHA-256 保存在同名 `.sha256` 边车文件；完整性结果在项目源码冻结后记录。
+- `v1.4.5` 稿件冻结后的完整项目备份为 `../workspace_archive/mrna-pc1-label_paper_pca_presubmission_20260717_v1.4.5.tar.zst`；SHA-256 保存在同名 `.sha256` 边车文件，并已通过完整解包列表测试。
 
 ## 仍需作者确认
 
