@@ -93,7 +93,7 @@ MOESM2/MOESM3 由脚本直接下载；`compact_all` 所需预计算 Saluki featu
 
 ## 当前预检状态
 
-- BMB DOCX-only 自动审计：`0 failure / 1 warning / 160 checks`；唯一 warning 为当前打开的英文主文与补充材料产生的 WPS 临时锁文件
+- BMB DOCX-only 自动审计：`0 failure / 0 warning / 160 checks`
 - English abstract：`233 words`（目标 `150-250 words`）
 - keywords：`6`
 - 英文主文含 46 条参考文献，补充材料含 11 条；唯一并集为 47 条，其中 45 条带 DOI
@@ -118,7 +118,7 @@ MOESM2/MOESM3 由脚本直接下载；`compact_all` 所需预计算 Saluki featu
 3. 选择软件许可证；当前已提供 `CITATION.cff`，但尚未替作者决定法律许可条款。
 4. 生成最终英文 Online Resource 1 PDF，逐页检查后再组装上传目录和最终 ZIP。
 
-GitHub 仓库 [wwzdl/mrna-pc1-label](https://github.com/wwzdl/mrna-pc1-label) 已公开，Data/Code Availability 已改为当前时态；分析宇宙账本与补充表可读性修订版本标记为 `mRNA-PC1-label-v1.4.1`。
+GitHub 仓库 [wwzdl/mrna-pc1-label](https://github.com/wwzdl/mrna-pc1-label) 已公开，Data/Code Availability 已改为当前时态；分析宇宙账本与补充表可读性修订版本标记为 `mRNA-PC1-label-v1.4.2`。
 
 ## 科学局限
 

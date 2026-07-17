@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 import matplotlib as mpl
@@ -54,8 +55,14 @@ def save_all(fig: plt.Figure) -> None:
         facecolor="white",
         pil_kwargs={"compression": "tiff_lzw"},
     )
-    fig.savefig(OUT.with_suffix(".pdf"), bbox_inches="tight", facecolor="white")
-    fig.savefig(OUT.with_suffix(".svg"), bbox_inches="tight", facecolor="white")
+    if os.environ.get("BMB_SKIP_PDF") != "1":
+        fig.savefig(OUT.with_suffix(".pdf"), bbox_inches="tight", facecolor="white")
+    svg_path = OUT.with_suffix(".svg")
+    fig.savefig(svg_path, bbox_inches="tight", facecolor="white")
+    svg_path.write_text(
+        "\n".join(line.rstrip() for line in svg_path.read_text(encoding="utf-8").splitlines()) + "\n",
+        encoding="utf-8",
+    )
 
 
 def panel_label(ax: plt.Axes, label: str) -> None:
@@ -139,7 +146,7 @@ def main() -> None:
     ax_c.set_title("Correlation summary", pad=5)
     ax_c.set_ylabel("Correlation")
     ax_c.set_xticks(x, labels)
-    ax_c.set_ylim(0.72, 0.765)
+    ax_c.set_ylim(0.70, 0.80)
     ax_c.legend(frameon=False, loc="upper left")
     ax_c.bar_label(bars_p, fmt="%.3f", padding=2, fontsize=8)
     ax_c.bar_label(bars_s, fmt="%.3f", padding=2, fontsize=8)
@@ -169,7 +176,8 @@ def main() -> None:
 
     save_all(fig)
     plt.close(fig)
-    print(f"Wrote {OUT}.[png|tiff|pdf|svg]")
+    formats = "png|tiff|svg" if os.environ.get("BMB_SKIP_PDF") == "1" else "png|tiff|pdf|svg"
+    print(f"Wrote {OUT}.[{formats}]")
 
 
 if __name__ == "__main__":

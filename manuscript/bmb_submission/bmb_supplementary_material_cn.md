@@ -15,19 +15,19 @@
 
 ## S2. 数据提取、预处理与 ortholog 定义
 
-本节只补充主文 3.1 未展开的字段、参数和定义口径。源数据仍来自 Saluki 论文公开 supplement 中的 `MOESM2` 与 `MOESM3` 表格(Agarwal and Kelley 2022)。其中，`MOESM2` 是 human 与 mouse 的 transformed mRNA half-life gene × sample 矩阵，前两列为 Ensembl gene ID 和 gene name，后续列为不同 study、实验方法、细胞类型和重复样本的 transformed values；这是本文标签重建与留一研究影响分析的主输入。`MOESM3` 是 Saluki 发布的进一步处理矩阵，第三列为 `half-life (PC1)` summary label，后续列为 processed sample values。本文将 human 侧发布标签记为 Saluki human PC1；将 mouse 侧发布 PC1 经 one-to-one ortholog 映射到 human genes 后作为外部小鼠协变量时，记为 Saluki mouse PC1。代码字段 `mouse_pc1` 则专指我们由 `MOESM2` 本地重建的 mouse prior。`MOESM3` 的 human 工作表说明 Saluki human PC1 基于剔除 `Gejman` 后的数据集，mouse 工作表基于全部 mouse 数据集，因此它在本文中主要充当参照与控制，而不是替代主线重建流程的训练标签来源。由于 `MOESM2` 已经是 transformed values，本研究中的再分析不再重复执行 log 变换，而是从 sample-wise z-score 开始，再执行 iterative PCA 缺失值插补和 quantile normalization(Tipping and Bishop 1999; Troyanskaya et al. 2001; Bolstad et al. 2003)。
+本节只补充主文 3.1 未展开的字段、参数和定义口径。源数据仍来自 Saluki 论文公开 supplement 中的 MOESM2 与 MOESM3 表格(Agarwal and Kelley 2022)。其中，MOESM2 是 human 与 mouse 的 transformed mRNA half-life gene × sample 矩阵，前两列为 Ensembl gene ID 和 gene name，后续列为不同 study、实验方法、细胞类型和重复样本的 transformed values；这是本文标签重建与留一研究影响分析的主输入。MOESM3 是 Saluki 发布的进一步处理矩阵，第三列为 “half-life (PC1)” summary label，后续列为 processed sample values。本文将 human 侧发布标签记为 Saluki human PC1，并将其固定为 fixed-target benchmark 的监督目标；将 mouse 侧发布 PC1 经 one-to-one ortholog 映射到 human genes 后作为外部小鼠协变量时，记为 Saluki mouse PC1。代码字段 `mouse_pc1` 则专指我们由 MOESM2 本地重建的 mouse prior。MOESM3 的 human 工作表说明 Saluki human PC1 基于剔除 Gejman 后的数据集，mouse 工作表基于全部 mouse 数据集。发布的 PC1 列因此用于定义固定监督目标和 Saluki 处理口径参照，processed sample columns 仅用于次级控制；二者均不参与从 MOESM2 开始的本地标签重建。由于 MOESM2 已经是 transformed values，本研究中的再分析不再重复执行 log 变换，而是从 sample-wise z-score 开始，再执行 iterative PCA 缺失值插补和 quantile normalization(Tipping and Bishop 1999; Troyanskaya et al. 2001; Bolstad et al. 2003)。
 
 `compact_all` 使用的预计算 sequence/regulatory feature blocks 来自配套公开 Saluki 数据集（DOI：[10.5281/zenodo.6326409](https://doi.org/10.5281/zenodo.6326409)）。
 
 Ortholog 映射来自 Ensembl Compara release 115 的 mouse-human homology 表(Dyer et al. 2025)。我们只保留 `homology_type = ortholog_one2one` 且 `homology_species = homo_sapiens` 的记录；orthology 的解释沿用既有 evolutionary-genomics 定义(Gabaldon and Koonin 2013)。High-confidence ortholog 也不是本文重新设阈值得到的子集，而是直接采用 Ensembl 二元字段 `is_high_confidence`。按照 Ensembl orthology QC 文档，该发布标记在可用时根据序列一致性及 gene-order conservation 或 whole-genome alignment 阈值赋值，否则使用系统树合规性作为后备判据。本文不重建上游 QC，仅用 `is_high_confidence == 1` 定义更严格的敏感性子集。
 
-主文已报告本地重建标签与 Saluki 标签的总体一致性；这里仅记录该流程对 baseline consensus label 的复现是可信的：human 全量重建 PC1 与 Saluki human PC1 的 Pearson 为 0.948，mouse 为 0.958。具体参数口径见补充表 S1，模型输入边界见补充表 S2。
+主文已报告本地重建标签与 Saluki 标签的总体一致性。在 full human 重建标签与 Saluki human PC1 共同覆盖的 13,921 个基因上，Pearson 为 0.948；mouse 对应值为 0.958。用于 Gejman 配对推断的固定 A2 集合还要求同时具有 no-Gejman 标签，因此包含 13,265 个基因，其 full-label baseline 为 0.9515。具体参数口径见补充表 S1，模型输入边界见补充表 S2。
 
 ### 补充表 S1. 标签重建和留一研究影响分析的复现参数
 
 | 步骤 | 参数/口径 | 输出 | 说明 |
 |:--|:--|:--|:--|
-| 输入矩阵 | `MOESM2` transformed human/mouse half-life matrix | species-specific gene × sample matrix | 不重复 log transform；从 transformed values 开始 |
+| 输入矩阵 | MOESM2 transformed human/mouse half-life matrix | species-specific gene × sample matrix | 不重复 log transform；从 transformed values 开始 |
 | 元信息整理 | `study`、`method`、`cell type`、`replicate`、`species` | standardized sample metadata | 样本名解析后手工核对，用于 study-level leave-one-out |
 | Coverage filter | 主线重建 `min_observed_per_gene=3` | retained genes | 用于可复现的全量标签审计和留一研究影响分析 |
 | Saluki-like coverage | human `min_observed_per_gene=10`；mouse `min_observed_per_gene=5` | 本地重建的、采用 Saluki-like coverage 口径的 human/mouse labels | 用于 0.10 同源基因信息目标收缩 |
@@ -45,7 +45,7 @@ Ortholog 映射来自 Ensembl Compara release 115 的 mouse-human homology 表(D
 | Compact human-only model | Saluki datapack 中的 Ensembl `gene_id` + base features + CWCS/SeqWeaver/DeepRiPe 预计算 blocks | 仅在重新生成 regulatory blocks 后可以 | pure human sequence/regulatory benchmark | 主文应把它写成透明 human-only 基线，而不是 sequence-only 胜出声明 |
 | Global prior-enhanced model | `compact_all` + 两个 mouse prior 数值 + 可用性/高置信 0/1 指示列 | 需要可映射 mouse ortholog prior | 使用独立于 human target 构建的 mouse-side covariates 进行 cross-species transfer | 不能写成 sequence-only 或 raw-sequence end-to-end |
 | Coverage-aware fallback | prior coverage status + human-only prediction | 适用于部署分层 | 有 prior 时用 prior-enhanced；无 prior 时退回 human-only | 不能对 missing-prior genes 外推 prior-enhanced 结论 |
-| 0.10 同源基因信息目标收缩 | human no-Gejman PC1 + mapped mouse PC1 + `λ` | 不是单独的新序列预测器 | human-dominant mammalian stability target | 不能写成新的直接 human half-life ground truth，也不能与固定目标结果混排 |
+| 0.10 同源基因信息目标收缩 | human no-Gejman PC1 + mapped mouse PC1 + $\lambda$ | 不是单独的新序列预测器 | human-dominant mammalian stability target | 不能写成新的直接 human half-life ground truth，也不能与固定目标结果混排 |
 
 ![](figures/supplement/FigS01_prediction_boundary_flow.png)
 
@@ -55,7 +55,7 @@ Ortholog 映射来自 Ensembl Compara release 115 的 mouse-human homology 表(D
 
 样本 PCA 是留一研究影响分析之前最直观的可视化诊断。正文图 3 已保留 human raw/processed PCA 作为主证据，这里不再重复放置相同图件，而是补充算法口径与 mouse 侧结果。human 原始矩阵的 sample PCA 显示，样本主要按 study 与 method 聚类，而不是按 cell type 聚类，这与原始论文的核心观察一致(Agarwal and Kelley 2022)。预处理改变了 PC 几何结构，但仍保留 study-of-origin 结构。Mouse 视图也保留该结构。由于 human 和 mouse 面板的 PCA 轴分别拟合且数值尺度不同，本文不比较两物种的绝对离散程度。
 
-这里的 sample-level PCA 只用于可视化诊断，不用于构建监督标签，也不参与下游模型训练。Raw view 与 processed view 的差别在于：raw view 尽量保留 `MOESM2` transformed matrix 的原始尺度，只为了解决 PCA 不能处理缺失值的问题而填补 missing entries；processed view 则使用与标签重建相同的预处理流程，用于观察标准化和分布对齐之后 study/method structure 是否仍然存在。低秩 PCA 插补不是利用 Saluki human PC1 或任何下游预测标签监督完成的，而是只在 gene × sample 矩阵内部利用低秩结构重建缺失位置。
+这里的 sample-level PCA 只用于可视化诊断，不用于构建监督标签，也不参与下游模型训练。Raw view 与 processed view 的差别在于：raw view 尽量保留 MOESM2 transformed matrix 的原始尺度，只为了解决 PCA 不能处理缺失值的问题而填补 missing entries；processed view 则使用与标签重建相同的预处理流程，用于观察标准化和分布对齐之后 study/method structure 是否仍然存在。低秩 PCA 插补不是利用 Saluki human PC1 或任何下游预测标签监督完成的，而是只在 gene × sample 矩阵内部利用低秩结构重建缺失位置。
 
 具体插补算法如下。设输入矩阵为 $X$，行为 genes、列为 samples，并以 $\mathcal{M}$ 表示原始缺失位置集合；首先保留至少有 3 个 observed samples 的基因。第一步，用每个 sample 列的均值初始化该列缺失值；如果某一列全缺失，则初始化为 0（实际数据中未出现这种情况）。第二步，在当前填补矩阵上执行 `sklearn.decomposition.PCA(svd_solver="full", random_state=0)`，得到 rank-$k$ 低秩表示并用 `inverse_transform` 重构矩阵。第三步，只把 $\mathcal{M}$ 中的值替换为低秩重构值，原始 observed entries 在整个迭代过程中保持不变。第 $t$ 轮的收敛量定义为
 
@@ -78,8 +78,8 @@ bash scripts/run_sample_pca_imputation_reproducibility.sh --species both
 
 | PCA 视图 | 输入矩阵 | 缺失值处理 | 额外预处理 | PCA 计算方式 | 用途与边界 |
 |:--|:--|:--|:--|:--|:--|
-| Raw transformed view | `MOESM2` transformed gene × sample matrix after `min_observed_per_gene=3` coverage filter | 仅为可视化填补缺失值；iterative low-rank PCA imputation，`n_components=5`、`max_iter=10`、`tol=1e-5` | 不执行 sample-wise z-score，不执行 quantile normalization，不提取 PC1 标签 | 将填补后的矩阵转置为 sample × gene 后计算前两个 PCs | 展示 transformed matrix 中的 study/method 结构；不作为监督标签或模型输入 |
-| Processed view | 同一 coverage-filtered `MOESM2` matrix | 使用标签重建流程中的 iterative PCA imputation；默认 `max_iter=30`、`tol=1e-6` | `apply_log=False`；sample-wise z-score 与 quantile normalization | 将 processed gene × sample matrix 转置为 sample × gene 后计算前两个 PCs | 评估标准化、插补和分布对齐后是否仍保留 study/method 结构；用于决定是否需要 leave-one-study-out 审计 |
+| Raw transformed view | MOESM2 transformed gene × sample matrix after `min_observed_per_gene=3` coverage filter | 仅为可视化填补缺失值；iterative low-rank PCA imputation，`n_components=5`、`max_iter=10`、`tol=1e-5` | 不执行 sample-wise z-score，不执行 quantile normalization，不提取 PC1 标签 | 将填补后的矩阵转置为 sample × gene 后计算前两个 PCs | 展示 transformed matrix 中的 study/method 结构；不作为监督标签或模型输入 |
+| Processed view | 同一 coverage-filtered MOESM2 matrix | 使用标签重建流程中的 iterative PCA imputation；默认 `max_iter=30`、`tol=1e-6` | `apply_log=False`；sample-wise z-score 与 quantile normalization | 将 processed gene × sample matrix 转置为 sample × gene 后计算前两个 PCs | 评估标准化、插补和分布对齐后是否仍保留 study/method 结构；用于决定是否需要 leave-one-study-out 审计 |
 
 ![](figures/supplement/FigS_mouse_pca_panel.png)
 
@@ -87,49 +87,49 @@ bash scripts/run_sample_pca_imputation_reproducibility.sh --species both
 
 ## S4. 留一研究影响的补充排序与结果路径
 
-正文图 4 展示的是 sample-weighted human leave-one-study-out 主分析，因此补充材料不重复该图，只保留 mouse 全排序。完整 human 与 mouse 数值分别保存在 `results/study_influence/human/study_influence.tsv` 和 `results/study_influence/mouse/study_influence.tsv`。在主分析中，`PC1 stability` 不使用 Saluki PC1，并将 `Gejman` 排为第一；`Saluki-PC1 agreement gain` 随后量化对已发布处理选择的恢复，ortholog concordance 再提供跨物种比较。同样本量、固定基因宇宙和预处理敏感性见 S5。任何下游 human-only、cross-species transfer 或 target-shrinkage 模型分数都不参与该判断。Mouse 中，移除 `Hanna` 虽会显著改变 full-label geometry，却不会提高与 Saluki mouse PC1 的一致性，因此不作与 human 相同的解释。
+正文图 4 展示的是 sample-weighted human leave-one-study-out 主分析，因此补充材料不重复该图，只保留 mouse 全排序。完整 human 与 mouse 数值分别保存在 `results/study_influence/human/study_influence.tsv` 和 `results/study_influence/mouse/study_influence.tsv`。在主分析中，PC1 stability 不使用 Saluki PC1，并将 Gejman 排为第一；Saluki-PC1 agreement gain 随后量化对已发布处理选择的恢复，ortholog concordance 再提供跨物种比较。同样本量、固定基因宇宙和预处理敏感性见 S5。任何下游 human-only、cross-species transfer 或 target-shrinkage 模型分数都不参与该判断。Mouse 中，移除 Hanna 虽会显著改变 full-label geometry，却不会提高与 Saluki mouse PC1 的一致性，因此不作与 human 相同的解释。
 
 这种 human/mouse 非对称性表明，几何 influence 高不自动等于应删除。Human 主分析的几何排序受样本数影响，但同样本量随机删除不能重现 Saluki agreement 和 ortholog concordance 的正向改善。因此，本文将结果解释为叠加在样本数杠杆上的方向性 study effect，而不是声称该 study 在所有生物学分析中都无效。Mouse 侧缺少同样的多证据一致性，因此保留原始 compendium 结构。
 
 ![](figures/supplement/FigS_mouse_study_influence.png)
 
-**补充图 S3** Mouse leave-one-study-out full ranking。a，圆点表示每个 leave-one-study-out PC1 与 full mouse PC1 的相关系数；数值越低，说明该 study 对共识标签几何影响越大，虚线表示 `r = 1`。b，条形表示移除每个 study 后与 Saluki mouse PC1 的一致性变化。`Hanna` 的 stability 最低，但 agreement change 为负，因此 mouse 未出现正文图 4 中 human `Gejman` 的多证据一致性。
+**补充图 S3** Mouse leave-one-study-out full ranking。a，圆点表示每个 leave-one-study-out PC1 与 full mouse PC1 的相关系数；数值越低，说明该 study 对共识标签几何影响越大，虚线表示 $r = 1$。b，条形表示移除每个 study 后与 Saluki mouse PC1 的一致性变化。Hanna 的 stability 最低，但 agreement change 为负，因此 mouse 未出现正文图 4 中 human Gejman 的多证据一致性。
 
 ## S5. Human study influence 的样本数、基因宇宙与预处理敏感性
 
-主分析的 leave-one-study-out estimator 对每个样本赋予相同权重。由于 `Gejman` 占 54 个 human 样本中的 15 个，删除该 study 比删除多数其他 study 移除更多样本。为量化这一影响，我们从其余 39 个非 Gejman 样本中无放回随机抽取 15 个样本，完整重跑标签重建流程，共重复 500 次。Gejman 的观测 stability 为 0.955；随机删除零分布中位数为 0.944，95% 区间为 0.932-0.956，单侧经验 `p=0.964`。因此，仅凭 PC1 几何变化不能把 Gejman 解释为经样本量校正后的异常 study。
+主分析的 leave-one-study-out estimator 对每个样本赋予相同权重。由于 Gejman 占 54 个 human 样本中的 15 个，删除该 study 比删除多数其他 study 移除更多样本。为量化这一影响，我们从其余 39 个非 Gejman 样本中无放回随机抽取 15 个样本，完整重跑标签重建流程，共重复 500 次。Gejman 的观测 stability 为 0.955；随机删除零分布中位数为 0.944，95% 区间为 0.932-0.956，单侧经验 $p = 0.964$。因此，仅凭 PC1 几何变化不能把 Gejman 解释为经样本量校正后的异常 study。
 
-两条方向性比较指标呈现不同结果。移除 Gejman 后，Saluki agreement 增益为 +0.0314，而随机删除零分布中位数为 -0.0926（95% 区间 -0.1151 至 -0.0713）；ortholog concordance 增益为 +0.0147，而随机删除零分布中位数为 -0.0616（95% 区间 -0.0800 至 -0.0476）。500 次随机删除均未达到这两个观测增益，对应单侧经验 `p=0.002`。因此，证据不支持“样本量校正后的几何异常”，但支持同样本量删除无法产生的 study-specific 改善方向。
+两条方向性比较指标呈现不同结果。移除 Gejman 后，Saluki agreement 增益为 +0.0314，而随机删除零分布中位数为 -0.0926（95% 区间 -0.1151 至 -0.0713）；ortholog concordance 增益为 +0.0147，而随机删除零分布中位数为 -0.0616（95% 区间 -0.0800 至 -0.0476）。500 次随机删除均未达到这两个观测增益，对应单侧经验 $p = 0.002$。因此，证据不支持“样本量校正后的几何异常”，但支持同样本量删除无法产生的 study-specific 改善方向。
 
-基因宇宙和预处理敏感性提供了互补证据。在 dynamic/fixed coverage、coverage threshold、PCA 插补 rank 以及 iterative-PCA/sample-median 插补的 12 种设置中，`Gejman` 均排第一，且两条比较增益均为正。相反，当以 $1/\sqrt{n_s}$ 对 study 样本进行 PCA 加权，或先将每个 study 压缩为一个均值 profile 时，`Gejman` 的几何影响排序均由第一降为第三。这些结果明确了可稳健支持的结论：主分析排序对常见预处理选择稳定，但对 study 权重敏感；Saluki 处理参照与 ortholog 比较增益的方向保持稳定。
+基因宇宙和预处理敏感性提供了互补证据。在 dynamic/fixed coverage、coverage threshold、PCA 插补 rank 以及 iterative-PCA/sample-median 插补的 12 种设置中，Gejman 均排第一，且两条比较增益均为正。相反，当以 $1/\sqrt{n_s}$ 对 study 样本进行 PCA 加权，或先将每个 study 压缩为一个均值 profile 时，Gejman 的几何影响排序均由第一降为第三。这些结果明确了可稳健支持的结论：主分析排序对常见预处理选择稳定，但对 study 权重敏感；Saluki 处理参照与 ortholog 比较增益的方向保持稳定。
 
 ![](figures/supplement/FigS_study_influence_sensitivity.png)
 
-**补充图 S4** Human study influence 的样本量与流程敏感性。a，删除 15 个非 Gejman 样本并完整重跑流程 500 次所得 PC1 stability 零分布；数值越低表示几何变化越大，Gejman 观测值在下尾并不极端。b，Saluki agreement 与 ortholog concordance 增益的零分布；橙色点为 Gejman 观测增益，均超过 500 次随机删除结果。c，在 12 种 dynamic/fixed gene universe、coverage、rank 与 imputation 设置下，两条比较增益始终为正，且 `Gejman` 在 primary-style 设置中均排第一。d，采用两种 study-balanced estimator 后，几何排序均由第一变为第三。Panel source data 保存在 `manuscript/bmb_submission/figures/data/FigS04_panel_data.tsv`。
+**补充图 S4** Human study influence 的样本量与流程敏感性。a，删除 15 个非 Gejman 样本并完整重跑流程 500 次所得 PC1 stability 零分布；数值越低表示几何变化越大，Gejman 观测值在下尾并不极端。b，Saluki agreement 与 ortholog concordance 增益的零分布；橙色点为 Gejman 观测增益，均超过 500 次随机删除结果。c，在 12 种 dynamic/fixed gene universe、coverage、rank 与 imputation 设置下，两条比较增益始终为正，且 Gejman 在 primary-style 设置中均排第一。d，采用两种 study-balanced estimator 后，几何排序均由第一变为第三。Panel source data 保存在 `manuscript/bmb_submission/figures/data/FigS04_panel_data.tsv`。
 
 ### 补充表 S4. Gejman study-influence 结果的样本数与流程敏感性
 
 | 分析 | Gejman 结果 | 对照 | 经验 p 值或排序 | 解释 |
 |:--|:--|:--|:--|:--|
-| Primary sample-weighted geometry | stability 0.9550 | 同样本量零分布中位数 0.9438；95% 区间 0.9319-0.9561 | 单侧 `p=0.964` | 匹配删除样本数后，几何变化不极端 |
-| Saluki agreement gain | +0.0314 | 零分布中位数 -0.0926；95% 区间 -0.1151 至 -0.0713 | 单侧 `p=0.002` | 随机删除不能重现方向性增益 |
-| Ortholog concordance gain | +0.0147 | 零分布中位数 -0.0616；95% 区间 -0.0800 至 -0.0476 | 单侧 `p=0.002` | 随机删除不能重现跨物种增益 |
+| Primary sample-weighted geometry | stability 0.9550 | 同样本量零分布中位数 0.9438；95% 区间 0.9319-0.9561 | 单侧 $p = 0.964$ | 匹配删除样本数后，几何变化不极端 |
+| Saluki agreement gain | +0.0314 | 零分布中位数 -0.0926；95% 区间 -0.1151 至 -0.0713 | 单侧 $p = 0.002$ | 随机删除不能重现方向性增益 |
+| Ortholog concordance gain | +0.0147 | 零分布中位数 -0.0616；95% 区间 -0.0800 至 -0.0476 | 单侧 $p = 0.002$ | 随机删除不能重现跨物种增益 |
 | Fixed gene universe，主预处理 | stability 0.9527；Saluki gain +0.0319；ortholog gain +0.0153 | 14,244 个 fixed-universe genes | rank 1/19 | Dynamic coverage 不产生方向性结果 |
 | Preprocessing sensitivity | 12 种设置中两条增益均为正 | minimum observed samples 3/5/10；PCA rank 3/5/10；iterative PCA 或 sample median | 所有设置 rank 1/19 | 主排序对预处理选择稳定 |
-| Equal-study PCA weighting | stability 0.9796 | 最低为 `Dieterich`，stability 0.9653 | rank 3/19 | 样本数影响主分析几何排序 |
-| Study-mean collapse | stability 0.9776 | 最低为 `Dieterich`，stability 0.9634 | rank 3/19 | 独立 study balancing 得出相同限定 |
+| Equal-study PCA weighting | stability 0.9796 | 最低为 Dieterich，stability 0.9653 | rank 3/19 | 样本数影响主分析几何排序 |
+| Study-mean collapse | stability 0.9776 | 最低为 Dieterich，stability 0.9634 | rank 3/19 | 独立 study balancing 得出相同限定 |
 
 ## S6. 置换对照的补充解释
 
 主文报告了最核心的 permutation 结果：真实双 prior global 模型的 Pearson 为 0.829，而 prior 被打乱后回到 0.745。这里最关键的不是“分数掉了多少”，而是**到底什么被打乱了**。第一，这个打乱是 fold-aware 的，因此不会把训练折的 prior 顺序错误地泄露回测试折。第二，打乱只发生在原本有 prior 数值的基因之间；哪些基因没有 prior、对应的可用性 0/1 指示列、以及 high-confidence 0/1 指示列都保持不变，因此“缺哪些值”这一结构本身并没有被破坏。第三，真实 prior 相对 shuffled prior 的 Pearson 提升约为 +0.085，R2 提升约为 +0.135，说明真正起作用的是 prior 数值与基因身份之间的对应关系，而不是“额外多了几列”。
 
-在三组独立随机划分的 10-fold OOF 评估中，真实双 prior global 模型为 Pearson 0.830±0.001，shuffled-prior control 为 0.748±0.001，human-only `compact_all` 也为 0.748±0.001；`coverage-aware fallback` 为 0.832±0.001。这里的 `±` 是 across-seed SD。三组 OOF predictions 合并后的 paired bootstrap 显示，real prior 相对 shuffled prior 的增益为 0.0794（95% CI 0.0735-0.0855），相对 human-only 的增益为 0.0799（95% CI 0.0740-0.0862）。因此，split sensitivity 与 gene-level uncertainty 都支持同一结论。
+在三组独立随机划分的 10-fold OOF 评估中，真实双 prior global 模型为 Pearson 0.830±0.001，shuffled-prior control 为 0.748±0.001，human-only `compact_all` 也为 0.748±0.001；coverage-aware fallback 为 0.832±0.001。这里的 ± 是 across-seed SD。三组 OOF predictions 合并后的 paired bootstrap 显示，real prior 相对 shuffled prior 的增益为 0.0794（95% CI 0.0735-0.0855），相对 human-only 的增益为 0.0799（95% CI 0.0740-0.0862）。因此，split sensitivity 与 gene-level uncertainty 都支持同一结论。
 
 ## S7. 残差分解的补充解释
 
 残差分解的目的，是把 prior 信号和 human feature 信号分解开来看。直接相关分析已经表明，`mouse_pc1` 与 Saluki human PC1 的相关接近 0.78，因此 prior 本身就是强信号。为了避免把“prior 很强”误解成“prior-enhanced model 只是复制 prior”，我们把预测显式拆成两阶段 out-of-fold decomposition，而不是把 prior 和 human features 一起丢进同一个黑箱后再回头解释。
 
-具体实现如下。第一，只保留同时具有 `mouse_pc1` 与 Saluki mouse PC1 的 `both_priors_available` genes（N=11,107），因为 prior-only 分解需要每个 gene 同时具备两类 mouse-side prior。第二，在每个 5-fold outer split 中，RidgeCV 仅使用 outer-training genes 的两列 prior 拟合。该模型对 outer-training genes 的拟合值用于定义 residual target，即 `Saluki human PC1 - fitted prior value`；对 held-out genes 则单独生成 RidgeCV prediction。第三，XGBoost/CUDA 只用 outer-training 的 human `compact_all` features 与 residuals 训练。第四，held-out genes 的最终预测为 `held-out prior prediction + held-out compact residual prediction`。Held-out human target 不进入任一训练阶段，因此整个分解仍为 OOF。
+具体实现如下。第一，只保留同时具有 `mouse_pc1` 与 Saluki mouse PC1 的 `both_priors_available` genes（N=11,107），因为 prior-only 分解需要每个 gene 同时具备两类 mouse-side prior。第二，在每个 5-fold outer split 中，RidgeCV 仅使用 outer-training genes 的两列 prior 拟合。该模型对 outer-training genes 的拟合值用于定义 residual target，即 Saluki human PC1 减去 fitted prior value；对 held-out genes 则单独生成 RidgeCV prediction。第三，XGBoost/CUDA 只用 outer-training 的 human `compact_all` features 与 residuals 训练。第四，held-out genes 的最终预测为 held-out prior prediction 与 held-out compact-residual prediction 之和。Held-out human target 不进入任一训练阶段，因此整个分解仍为 OOF。
 
 复现命令如下：
 
@@ -167,11 +167,11 @@ $\lambda$ 敏感性结果进一步说明为何主分析采用 0.10。相同 5-fo
 
 Cross-target evaluation 进一步检查“改 target 是否损害原 human 标签”。在同一 12,307-gene universe、同一 1802 human-only features、同一 10-fold × 3 seeds 和相同模型参数下，以 human no-Gejman PC1 训练后在该目标上评估得到 r=0.7476±0.0010；改用 shrinkage target 训练、仍在原 human target 上评估得到 r=0.7480±0.0010。三组 OOF prediction 合并后的 paired difference 为 +0.0003（95% CI -0.0006 至 0.0012）。该区间跨过 0，因此未检测到下降；但由于没有预先设定等效界值，不能据此宣称形式等效。
 
-使用显式 mouse priors 预测 shrinkage target 时可达到 0.855±0.001，而 fixed Saluki human PC1 的同宇宙 prior-enhanced baseline 为 0.839±0.001。这一差异反映 shrinkage target 与 conserved ortholog covariates 更一致，不能解释成 pure human sequence-only 能力提高。移除构造目标时使用的本地重建 `mouse PC1`、仅保留 Saluki mouse PC1 及指示列后仍为 0.852±0.001；只保留 missingness/high-confidence indicators 则回到 0.753±0.001。$\lambda=0.10$ 因而是有边界的核心标签构建结果，不是固定 human target 的替代排行榜。
+使用显式 mouse priors 预测 shrinkage target 时可达到 0.855±0.001，而 fixed Saluki human PC1 的同宇宙 prior-enhanced baseline 为 0.839±0.001。这一差异反映 shrinkage target 与 conserved ortholog covariates 更一致，不能解释成 pure human sequence-only 能力提高。移除构造目标时使用的本地重建 mouse PC1、仅保留 Saluki mouse PC1 及指示列后仍为 0.852±0.001；只保留 missingness/high-confidence indicators 则回到 0.753±0.001。$\lambda=0.10$ 因而是有边界的核心标签构建结果，不是固定 human target 的替代排行榜。
 
 ## S9. $\lambda=0.10$ 标签偏移与 study-level 噪音的尺度比较
 
-主文图 8c 和表 4 已给出“正则化引入的标签偏移远小于 study-level noise”的对应证据；本节只记录这一比较的精确计算口径。这里需要先区分两个概念：`human no-Gejman PC1` 是多个 study 综合后的 consensus label，而 `study mean label` 是把单个 study 内样本取均值后得到的 single-study proxy。后者天然带有更强的 study-specific measurement noise，因此其两两相关不应被误读为最终 consensus label 的稳定性。
+主文图 8c 和表 4 已给出“正则化引入的标签偏移远小于 study-level noise”的对应证据；本节只记录这一比较的精确计算口径。这里需要先区分两个概念：human no-Gejman PC1 是多个 study 综合后的 consensus label，而 study mean label 是把单个 study 内样本取均值后得到的 single-study proxy。后者天然带有更强的 study-specific measurement noise，因此其两两相关不应被误读为最终 consensus label 的稳定性。
 
 具体计算分三步。第一，在 one-to-one ortholog human gene universe 上，对 MOESM2 human 样本执行 sample-wise z-score，避免不同样本量纲直接混合。第二，对每个 study 内样本取均值，得到 study mean label；随后每个 study mean label 自身再做 z-score，使其与 $\lambda=0.10$ target、human no-Gejman PC1 处在同一标准化标签尺度。第三，只进行方向对齐，即若某个 study label 与参考标签的 Pearson 为负，则乘以 $-1$；不执行线性拟合、不重标定斜率，也不使用下游模型预测值。18 个 no-Gejman studies 共形成 $\binom{18}{2}=153$ 个不重复 study pairs。主分析中方向对齐参考为 human no-Gejman PC1；直接改为对齐 $\lambda=0.10$ target 后，这些配对的中位 Pearson、RMSE 和 MAE 不变，因为 $\lambda=0.10$ target 与 human no-Gejman PC1 本身几乎同向（Pearson=0.9979）。
 
@@ -189,17 +189,17 @@ prior-missingness 分层分析支持这一使用边界。在全部 12,916 个基
 
 ### 补充表 S6. 完整分析宇宙账本与集合关系
 
-当前稿件包含 12 个固定定义的核心集合，分属三条分析支路；另有 8 个只用于 coverage accounting 或 sensitivity analysis 的派生集合，因此机器可读账本共有 20 个固定行。它们不是同一母集合连续筛减的结果。Gene sets 用于标签构建或建模，ortholog-pair sets 用于配对的跨物种比较。Dynamic leave-one-study-out 另形成按每次移除重新求交的集合族，而非单一固定 universe：对 `Gejman` 而言，primary dynamic calculation 的 PC1 stability 使用 15,788 个 genes，Saluki agreement 使用 13,265 个 genes，ortholog comparison 使用 12,592 pairs。
+当前稿件包含 12 个固定定义的核心集合，分属三条分析支路；另有 8 个只用于 coverage accounting 或 sensitivity analysis 的派生集合，因此机器可读账本共有 20 个固定行。它们不是同一母集合连续筛减的结果。Gene sets 用于标签构建或建模，ortholog-pair sets 用于配对的跨物种比较。Dynamic leave-one-study-out 另形成按每次移除重新求交的集合族，而非单一固定 universe：对 Gejman 而言，primary dynamic calculation 的 PC1 stability 使用 15,788 个 genes，Saluki agreement 使用 13,265 个 genes，ortholog comparison 使用 12,592 pairs。
 
 | ID | 支路与集合 | N 与单位 | 纳入规则 | 主要用途 |
 | --- | --- | ---: | --- | --- |
-| L1 | Human full reconstruction | 16,444 genes | `MOESM2` human genes 在 54 个样本中至少 3 个有观测 | Full-human PC1、sample PCA 和 human LOO 的起始标签 |
-| L2 | Mouse full reconstruction | 16,951 genes | `MOESM2` mouse genes 在 27 个样本中至少 3 个有观测 | Mouse PC1、mouse PCA/LOO 和 reconstructed mouse prior 来源 |
+| L1 | Human full reconstruction | 16,444 genes | MOESM2 human genes 在 54 个样本中至少 3 个有观测 | Full-human PC1、sample PCA 和 human LOO 的起始标签 |
+| L2 | Mouse full reconstruction | 16,951 genes | MOESM2 mouse genes 在 27 个样本中至少 3 个有观测 | Mouse PC1、mouse PCA/LOO 和 reconstructed mouse prior 来源 |
 | L3 | Human no-Gejman reconstruction | 15,788 genes | Human genes 在 39 个 non-Gejman 样本中至少 3 个有观测 | No-Gejman PC1 和 primary dynamic-coverage Gejman comparison |
 | A1 | Fixed-LOO sensitivity universe | 14,244 genes | 在全数据及每次 human study 移除后均满足 3-sample coverage rule | 仅用于 fixed-universe LOO sensitivity |
 | A2 | Fixed human-Saluki comparison | 13,265 genes | Human full PC1、human no-Gejman PC1 与 Saluki human PC1 的交集 | 固定基因 Saluki agreement 与 paired bootstrap |
 | A3 | Human-mouse ortholog concordance | 12,592 ortholog pairs | 同时具有 L1、L3、reconstructed mouse PC1 的 Ensembl one-to-one pairs | 审计 Gejman 相关标签改变的跨物种方向 |
-| P1 | Broad feature-target universe | 13,532 genes | Human sequence-feature table 与 Saluki human PC1 的交集 | Regulatory-block ablation 与 `MOESM3` 派生标签控制 |
+| P1 | Broad feature-target universe | 13,532 genes | Human sequence-feature table 与 Saluki human PC1 的交集 | Regulatory-block ablation 与 MOESM3 派生标签控制 |
 | P2 | Global prediction universe | 12,916 genes | P1 中同时存在于 L1 和 L3 的 genes | 主线 fixed-target human-only、transfer、permutation 与 repeated-CV benchmark |
 | P3 | Both-priors subset | 11,107 genes | P2 中同时具有 reconstructed mouse PC1 和 Saluki mouse PC1 的 genes | Prior-complete coverage analysis 与 two-stage residual decomposition |
 | S1 | Shrinkage target-construction universe | 12,644 genes | Saluki-like 10-sample coverage rule 保留的 human no-Gejman genes | 构建 0.10 ortholog-informed target |
@@ -218,11 +218,11 @@ Fixed-target coverage groups 将 P2 完整划分为：11,107 个 genes 同时有
 
 ## S11. MOESM3 派生监督标签控制实验
 
-`MOESM3` 控制实验回答的是一个非常具体的问题：既然 Saluki 原文已经给出了 processed matrix 和 `half-life (PC1)` summary label，那我们是否应该直接用 `MOESM3` 上重新派生的标签来替代 Saluki human PC1 作为主监督目标？补充表 S7 的答案是否定的。保留 human `MOESM3` 全部样本、包括 `Gejman` 时，派生标签对 Saluki human PC1 的恢复能力整体下降；去掉 `Gejman` 后，`as_is_pc1` 基本只是回到与 Saluki human PC1 等价的水平；只有 `no_gejman_rerun_pipeline_pc1` 在 human-only 下带来极小增益，幅度大约在 `+0.001` 量级。
+MOESM3 控制实验回答的是一个非常具体的问题：既然 Saluki 原文已经给出了 processed matrix 和 “half-life (PC1)” summary label，那我们是否应该直接用 MOESM3 上重新派生的标签来替代 Saluki human PC1 作为主监督目标？补充表 S7 的答案是否定的。保留 human MOESM3 全部样本、包括 Gejman 时，派生标签对 Saluki human PC1 的恢复能力整体下降；去掉 Gejman 后，`as_is_pc1` 基本只是回到与 Saluki human PC1 等价的水平；只有 `no_gejman_rerun_pipeline_pc1` 在 human-only 下带来极小增益，幅度大约在 +0.001 量级。
 
-这组结果的意义不在于制造一个新的主标签，而在于解释为什么主线不直接改成 `MOESM3` 派生标签。它说明 `MOESM3` 更适合作为 Saluki 处理口径的控制和诊断资源，而不是更好的主任务标签来源。
+这组结果的意义不在于制造一个新的主标签，而在于解释为什么主线不直接改成 MOESM3 派生标签。它说明 MOESM3 更适合作为 Saluki 处理口径的控制和诊断资源，而不是更好的主任务标签来源。
 
-### 补充表 S7. `MOESM3` 派生监督标签的下游 benchmark
+### 补充表 S7. MOESM3 派生监督标签的下游 benchmark
 
 | 特征集 | 目标标签 | 基因数 | 标签与 Saluki human PC1 的 Pearson | 对训练标签的 Pearson | 对 Saluki human PC1 的 Pearson | 对 Saluki human PC1 的 R² |
 |:--|:--|--:|--:|--:|--:|--:|
@@ -245,11 +245,11 @@ Fixed-target coverage groups 将 P2 完整划分为：11,107 个 genes 同时有
 
 ## S12. MOESM3 派生监督标签在 mouse prior 设定下的针对性控制
 
-更严格的检验是：如果允许加入 `mouse prior`，这些 `MOESM3` 派生标签会不会突然比直接训练 Saluki human PC1 更优？补充表 S8 表明，答案仍然是否定的。在 focused prior benchmark 中，Saluki human PC1（代码字段 `Saluki_human_PC1`）加 `compact_all_plus_both_mouse_priors_global` 的 Pearson 为 `0.815917`，而最好的替代标签 `moesm3_no_gejman_rerun_pipeline_pc1 + compact_all_plus_both_mouse_priors_global` 为 `0.815588`，仍然略低。
+更严格的检验是：如果允许加入 mouse prior，这些 MOESM3 派生标签会不会突然比直接训练 Saluki human PC1 更优？补充表 S8 表明，答案仍然是否定的。在 focused prior benchmark 中，Saluki human PC1（代码字段 `Saluki_human_PC1`）加 `compact_all_plus_both_mouse_priors_global` 的 Pearson 为 0.815917，而最好的替代标签 `moesm3_no_gejman_rerun_pipeline_pc1 + compact_all_plus_both_mouse_priors_global` 为 0.815588，仍然略低。
 
-因此，这两组控制实验共同支持一个更稳的投稿说法：`MOESM3` 派生标签可以作为对 Saluki 标签流程的解释性控制，但即使在 cross-species transfer setting 下，它们也不足以替代 Saluki human PC1 作为主监督目标。
+因此，这两组控制实验共同支持一个更稳的投稿说法：MOESM3 派生标签可以作为对 Saluki 标签流程的解释性控制，但即使在 cross-species transfer setting 下，它们也不足以替代 Saluki human PC1 作为主监督目标。
 
-### 补充表 S8. `MOESM3` 派生监督标签在 prior 设定下的针对性 benchmark
+### 补充表 S8. MOESM3 派生监督标签在 prior 设定下的针对性 benchmark
 
 | 监督标签 | 特征设定 | 基因数 | 有重建 prior | 有 Saluki prior | 标签-Saluki r | OOF r（训练目标） | OOF r（Saluki 目标） | OOF R²（Saluki 目标） |
 |:--|:--|--:|--:|--:|--:|--:|--:|--:|
@@ -314,7 +314,7 @@ Fixed-target coverage groups 将 P2 完整划分为：11,107 个 genes 同时有
 
 | 比较 | Cohort | 比较数 | Pearson r 中位数 | Residual r 中位数 | RMSE 中位数 | MAE 中位数 |
 |:--|:--|--:|--:|--:|--:|--:|
-| `λ = 0.10` target vs human no-Gejman PC1 | all one-to-one ortholog genes | 1 | 0.9979 | NA | 0.0646 | 0.0501 |
+| $\lambda = 0.10$ target vs human no-Gejman PC1 | all one-to-one ortholog genes | 1 | 0.9979 | NA | 0.0646 | 0.0501 |
 | study mean label pairs | no-Gejman studies | 153 | 0.5303 | NA | 0.9540 | 0.7203 |
 | study-specific residual pairs | no-Gejman studies | 153 | NA | 0.0796 | 0.9540 | 0.7203 |
 | study labels vs human no-Gejman PC1 | no-Gejman studies | 18 | 0.7420 | NA | 0.7145 | 0.5429 |
@@ -325,16 +325,16 @@ Fixed-target coverage groups 将 P2 完整划分为：11,107 个 genes 同时有
 
 ### 补充表 S14. 0.10 同源基因信息收缩目标的 human-only cross-target evaluation
 
-两类模型使用相同的 12,307 个 genes、1802 维 human-only `compact_all` 特征、10 folds、3 random seeds 和相同超参数。`mean ± SD` 中的 SD 表示 across-seed split sensitivity。
+两类模型使用相同的 12,307 个 genes、1802 维 human-only `compact_all` 特征、10 folds、3 random seeds 和相同超参数。mean ± SD 中的 SD 表示 across-seed split sensitivity。
 
 | 训练目标 | 评估目标 | 基因数 | Pearson r（均值 ± SD） | R²（均值 ± SD） | RMSE（均值 ± SD） | MAE（均值 ± SD） |
 |:--|:--|--:|:--|:--|:--|:--|
-| human no-Gejman PC1 | human no-Gejman PC1 | 12307 | 0.7476 ± 0.0010 | 0.5572 ± 0.0015 | 0.6687 ± 0.0012 | 0.5260 ± 0.0013 |
-| 0.10 同源基因信息收缩目标 | human no-Gejman PC1 | 12307 | 0.7480 ± 0.0010 | 0.5582 ± 0.0014 | 0.6680 ± 0.0011 | 0.5248 ± 0.0009 |
-| human no-Gejman PC1 | 0.10 同源基因信息收缩目标 | 12307 | 0.7532 ± 0.0010 | 0.5651 ± 0.0015 | 0.6627 ± 0.0012 | 0.5215 ± 0.0014 |
-| 0.10 同源基因信息收缩目标 | 0.10 同源基因信息收缩目标 | 12307 | 0.7538 ± 0.0010 | 0.5664 ± 0.0014 | 0.6617 ± 0.0010 | 0.5201 ± 0.0009 |
-| human no-Gejman PC1 | Saluki human PC1 | 12307 | 0.7529 ± 0.0014 | 0.5638 ± 0.0021 | 0.6723 ± 0.0016 | 0.5273 ± 0.0017 |
-| 0.10 同源基因信息收缩目标 | Saluki human PC1 | 12307 | 0.7533 ± 0.0013 | 0.5650 ± 0.0019 | 0.6714 ± 0.0015 | 0.5261 ± 0.0014 |
+| human no-Gejman PC1 | human no-Gejman PC1 | 12,307 | 0.7476 ± 0.0010 | 0.5572 ± 0.0015 | 0.6687 ± 0.0012 | 0.5260 ± 0.0013 |
+| 0.10 同源基因信息收缩目标 | human no-Gejman PC1 | 12,307 | 0.7480 ± 0.0010 | 0.5582 ± 0.0014 | 0.6680 ± 0.0011 | 0.5248 ± 0.0009 |
+| human no-Gejman PC1 | 0.10 同源基因信息收缩目标 | 12,307 | 0.7532 ± 0.0010 | 0.5651 ± 0.0015 | 0.6627 ± 0.0012 | 0.5215 ± 0.0014 |
+| 0.10 同源基因信息收缩目标 | 0.10 同源基因信息收缩目标 | 12,307 | 0.7538 ± 0.0010 | 0.5664 ± 0.0014 | 0.6617 ± 0.0010 | 0.5201 ± 0.0009 |
+| human no-Gejman PC1 | Saluki human PC1 | 12,307 | 0.7529 ± 0.0014 | 0.5638 ± 0.0021 | 0.6723 ± 0.0016 | 0.5273 ± 0.0017 |
+| 0.10 同源基因信息收缩目标 | Saluki human PC1 | 12,307 | 0.7533 ± 0.0013 | 0.5650 ± 0.0019 | 0.6714 ± 0.0015 | 0.5261 ± 0.0014 |
 
 在原 human no-Gejman PC1 上，每个 gene 的三组 OOF predictions 取平均后，Pearson 分别为 0.75233（human-target training）和 0.75259（shrinkage-target training）。Paired difference 为 +0.00026，2,000 次 gene bootstrap 的 95% CI 为 -0.00061 至 0.00118。该平均只用于汇总 split sensitivity，不构成额外的模型融合。置信区间跨越 0，说明当前分辨率下没有证据表明目标收缩训练降低或提高了原 human 标签的可预测性；本文不把这一结果表述为未经预设界值的统计等效性检验。
 
@@ -344,19 +344,17 @@ Fixed-target coverage groups 将 P2 完整划分为：11,107 个 genes 同时有
 
 | claim | N | candidate A Pearson | candidate B Pearson | A - B | 95% CI for difference |
 |:--|--:|--:|--:|--:|:--|
-| Saluki agreement: no-Gejman vs full human PC1 | 13265 | 0.98294 | 0.95152 | 0.03142 | 0.02978 to 0.03303 |
-| Ortholog concordance: no-Gejman vs full, all one-to-one | 12592 | 0.75528 | 0.74062 | 0.01466 | 0.01110 to 0.01814 |
-| Ortholog concordance: no-Gejman vs full, high confidence | 12376 | 0.75829 | 0.74366 | 0.01463 | 0.01099 to 0.01811 |
-| Real prior vs human-only seed-averaged OOF prediction | 12916 | 0.83244 | 0.75253 | 0.07991 | 0.07398 to 0.08617 |
-| Real prior vs shuffled-prior seed-averaged OOF prediction | 12916 | 0.83244 | 0.75306 | 0.07938 | 0.07348 to 0.08554 |
+| Saluki agreement: no-Gejman vs full human PC1 | 13,265 | 0.98294 | 0.95152 | 0.03142 | 0.02978 to 0.03303 |
+| Ortholog concordance: no-Gejman vs full, all one-to-one | 12,592 | 0.75528 | 0.74062 | 0.01466 | 0.01110 to 0.01814 |
+| Ortholog concordance: no-Gejman vs full, high confidence | 12,376 | 0.75829 | 0.74366 | 0.01463 | 0.01099 to 0.01811 |
+| Real prior vs human-only seed-averaged OOF prediction | 12,916 | 0.83244 | 0.75253 | 0.07991 | 0.07398 to 0.08617 |
+| Real prior vs shuffled-prior seed-averaged OOF prediction | 12,916 | 0.83244 | 0.75306 | 0.07938 | 0.07348 to 0.08554 |
 
-## S14. 投稿口径边界与表格格式说明
+## S14. 投稿口径边界
 
 主文和补充材料采用四项解释规则。第一，pure human 路线是透明的 human-only fixed-target benchmark。第二，更高的 fixed-target 性能限定在 cross-species transfer setting，因为输入显式包含 mouse ortholog priors。第三，0.10 同源基因信息目标收缩是核心标签构建结果，但其 0.855 只表示 shrinkage target 在显式跨物种输入下的可预测性；cross-target test 未检出 human-label predictability 下降。由于未预设等效界值且置信区间跨越零，该结果不构成正式等效性证明。第四，完整 compact/prior-enhanced 预测依赖预计算调控特征和可用 mouse ortholog prior，新序列只能在提供 5′UTR/CDS/3′UTR 后进入 base sequence prediction。
 
-本补充中的所有表格当前都以紧凑 Markdown 表形式保存，便于脚本重建、版本比对和后续自动抽取。提交版排版时可整理为三线表：保留顶线、表头线和底线，弱化或删除多余竖线，便于后续统一整理为正式投稿版。
-
-## S15. 复现入口与表格说明
+## S15. 复现入口
 
 主文表 1 和表 2 分别概括方法模块与分析宇宙，不列本地绝对路径。具体结果文件、脚本入口和复现命令见本节及公开的版本化仓库：`https://github.com/wwzdl/mrna-pc1-label`。下表中的路径均为仓库相对路径，便于审稿人和读者在不同计算环境中复现。
 
@@ -376,7 +374,7 @@ bash scripts/reproduce_bmb_key_results.sh figures
 
 | 类别 | 路径或入口 | 用途 |
 |:--|:--|:--|
-| 版本化仓库 | `https://github.com/wwzdl/mrna-pc1-label` | 提供代码、结果表、图件脚本和环境说明；当前两作者稿件审计标签为 `mRNA-PC1-label-v1.4.1` |
+| 版本化仓库 | `https://github.com/wwzdl/mrna-pc1-label` | 提供代码、结果表、图件脚本和环境说明；当前两作者稿件审计标签为 `mRNA-PC1-label-v1.4.2` |
 | 分阶段复现入口 | `scripts/reproduce_bmb_key_results.sh` | 按当前结果路径运行 `labels`、`models` 和 `figures` 三个阶段 |
 | 环境与输入完整性 | `requirements.txt`、`environment.yml`、`requirements-validated.txt`、`scripts/fetch_real_data.sh` | 记录便携与已验证依赖，并以 checksum 校验公开补充输入 |
 | OOF 完整性审计 | `scripts/audit_oof_integrity.py` | 检查规范基因数、gene ID 唯一性、不同 setting/seed 的共同宇宙、fold 覆盖和预测缺失 |
@@ -386,7 +384,7 @@ bash scripts/reproduce_bmb_key_results.sh figures
 | Human-only benchmark | `results/human_compact_oof_models.tsv` | 汇总 base sequence 与 compact feature 的 out-of-fold 结果 |
 | Global prior benchmark | `results/human_global_mouse_prior_benchmark.tsv`、`results/tenfold_global_prior/summary_by_setting.tsv` | 记录 mouse-prior-enhanced 模型及 10-fold 稳健性 |
 | Prior control | `results/human_global_mouse_prior_permutation_control.tsv`、`results/prior_residual_analysis/summary.tsv` | 支撑 shuffled-prior control 与两阶段 residual analysis |
-| 0.10 同源基因信息目标收缩 | `results/ortholog_regularized_label_10fold_main/summary_by_label.tsv`、`results/ortholog_regularized_label_multiseed/summary_by_label.tsv`、`results/ortholog_prior_ablation_lambda0p1_10fold/summary_by_setting.tsv` | 记录 `λ = 0.10` target benchmark、λ sensitivity 与 prior ablation |
+| 0.10 同源基因信息目标收缩 | `results/ortholog_regularized_label_10fold_main/summary_by_label.tsv`、`results/ortholog_regularized_label_multiseed/summary_by_label.tsv`、`results/ortholog_prior_ablation_lambda0p1_10fold/summary_by_setting.tsv` | 记录 $\lambda = 0.10$ target benchmark、λ sensitivity 与 prior ablation |
 | Human-only cross-target evaluation | `results/ortholog_regularized_cross_target/summary_aggregate.tsv`、`results/ortholog_regularized_cross_target/paired_bootstrap_ci.tsv` | 检验 shrinkage-target training 后原 human-label predictability 是否发生变化 |
 | Key-claim uncertainty | `results/key_claim_bootstrap/paired_bootstrap_summary.tsv` | 给出 Gejman、ortholog concordance 与 real-prior gain 的 paired bootstrap CI |
 | 标签距离与 study noise | `results/ortholog_label_distance/distance_summary.tsv`、`results/study_noise_vs_orthoreg_shift/noise_summary.tsv` | 比较 label shift、human-mouse distance 与 study-to-study variability |

@@ -118,13 +118,13 @@ ER  -
 TY  - JOUR
 AU  - Duan, Jubao
 AU  - Shi, Jianxin
-AU  - Ge, Xi
-AU  - Dolken, Lars
-AU  - Moy, Wei
-AU  - He, Dandan
-AU  - Shi, Suhua
+AU  - Ge, Xijin
+AU  - Dölken, Lars
+AU  - Moy, Winton
+AU  - He, Deli
+AU  - Shi, Sandra
 AU  - Sanders, Alan R.
-AU  - Ross, Jessica
+AU  - Ross, Jeff
 AU  - Gejman, Pablo V.
 TI  - Genome-wide survey of interindividual differences of RNA stability in human lymphoblastoid cell lines
 JO  - Scientific Reports
@@ -137,9 +137,9 @@ ER  -
 
 TY  - JOUR
 AU  - Duffy, Erin E.
-AU  - Rutenberg-Schoenberg, Miranda
-AU  - Stark, Caleb D.
-AU  - Kitchen, Rebecca R.
+AU  - Rutenberg-Schoenberg, Michael
+AU  - Stark, Catherine D.
+AU  - Kitchen, Robert R.
 AU  - Gerstein, Mark B.
 AU  - Simon, Matthew D.
 TI  - Tracking distinct RNA populations using efficient and reversible covalent chemistry
@@ -155,11 +155,11 @@ ER  -
 
 TY  - JOUR
 AU  - Dyer, Sarah C.
-AU  - Austine-Orimoloye, Oluwatosin
+AU  - Austine-Orimoloye, Olanrewaju
 AU  - Azov, Andrey G.
 AU  - Barba, Matthieu
 AU  - Barnes, If
-AU  - Barrera-Enriquez, Valeria P.
+AU  - Barrera-Enriquez, Vianey Paola
 AU  - others
 TI  - Ensembl 2025
 JO  - Nucleic Acids Research
@@ -266,7 +266,7 @@ AU  - Herzog, Veronika A.
 AU  - Reichholf, Brian
 AU  - Neumann, Tobias
 AU  - Rescheneder, Philipp
-AU  - Bhat, Parth
+AU  - Bhat, Pooja
 AU  - Burkard, Thomas R.
 AU  - Wlotzka, Wiebke
 AU  - von Haeseler, Arndt
@@ -284,16 +284,16 @@ ER  -
 
 TY  - JOUR
 AU  - Hia, Fabian
-AU  - Yang, Samie R.
+AU  - Yang, Sheng Fan
 AU  - Shichino, Yuichi
-AU  - Yoshinaga, Masatoshi
+AU  - Yoshinaga, Masanori
 AU  - Murakawa, Yasuhiro
 AU  - Vandenbon, Alexis
-AU  - Fukao, Atsushi
-AU  - Fujiwara, Takanori
+AU  - Fukao, Akira
+AU  - Fujiwara, Toshinobu
 AU  - Landthaler, Markus
 AU  - Natsume, Tohru
-AU  - Adachi, Shuhei
+AU  - Adachi, Shungo
 AU  - Iwasaki, Shintaro
 AU  - Takeuchi, Osamu
 TI  - Codon bias confers stability to human mRNAs
@@ -382,9 +382,9 @@ ER  -
 TY  - JOUR
 AU  - Leek, Jeffrey T.
 AU  - Scharpf, Robert B.
-AU  - Bravo, Hector C.
+AU  - Bravo, Héctor Corrada
 AU  - Simcha, David
-AU  - Langmead, Ben
+AU  - Langmead, Benjamin
 AU  - Johnson, W. Evan
 AU  - Geman, Donald
 AU  - Baggerly, Keith
@@ -402,15 +402,15 @@ ER  -
 
 TY  - JOUR
 AU  - Leppek, Kathrin
-AU  - Byeon, Gary W.
+AU  - Byeon, Gun Woo
 AU  - Kladwang, Wipapat
 AU  - Wayment-Steele, Hannah K.
-AU  - Kerr, Christopher H.
-AU  - Xu, Andrew F.
-AU  - Kim, David S.
-AU  - Topkar, Vishal V.
-AU  - Choe, Catherine
-AU  - Rothschild, Daniel
+AU  - Kerr, Craig H.
+AU  - Xu, Adele F.
+AU  - Kim, Do Soon
+AU  - Topkar, Ved V.
+AU  - Choe, Christian
+AU  - Rothschild, Daphna
 AU  - others
 TI  - Combinatorial optimization of mRNA structure, stability, and translation for RNA-based therapeutics
 JO  - Nature Communications
@@ -423,16 +423,16 @@ ER  -
 
 TY  - JOUR
 AU  - Mauger, David M.
-AU  - Cabral, Bruno J.
+AU  - Cabral, B. Joseph
 AU  - Presnyak, Vladimir
-AU  - Su, Steven V.
+AU  - Su, Stephen V.
 AU  - Reid, David W.
-AU  - Goodman, Brian
-AU  - Link, Katherine
-AU  - Khatwani, Nisha
-AU  - Reynders, Jacques
+AU  - Goodman, Brooke
+AU  - Link, Kristian
+AU  - Khatwani, Nikhil
+AU  - Reynders, John
 AU  - Moore, Melissa J.
-AU  - McFadyen, Ian J.
+AU  - McFadyen, Iain J.
 TI  - mRNA structure regulates protein expression through changes in functional half-life
 JO  - Proceedings of the National Academy of Sciences
 PY  - 2019
@@ -476,13 +476,13 @@ ER  -
 
 TY  - JOUR
 AU  - Muhar, Matthias
-AU  - Ebert, Alexander
+AU  - Ebert, Anja
 AU  - Neumann, Tobias
 AU  - Umkehrer, Christian
-AU  - Jude, Julius
-AU  - Wieshofer, Caroline
+AU  - Jude, Julian
+AU  - Wieshofer, Corinna
 AU  - Rescheneder, Philipp
-AU  - Lipp, Johannes J.
+AU  - Lipp, Jesse J.
 AU  - Herzog, Veronika A.
 AU  - Reichholf, Brian
 AU  - others
@@ -518,8 +518,8 @@ ER  -
 TY  - JOUR
 AU  - Park, Christopher Y.
 AU  - Zhou, Jian
-AU  - Wong, Andrew K.
-AU  - Chen, Kevin M.
+AU  - Wong, Aaron K.
+AU  - Chen, Kathleen M.
 AU  - Theesfeld, Chandra L.
 AU  - Darnell, Robert B.
 AU  - others
@@ -558,10 +558,10 @@ ER  -
 TY  - JOUR
 AU  - Presnyak, Vladimir
 AU  - Alhusaini, Najwa
-AU  - Chen, Yi-Hsuan
+AU  - Chen, Ying-Hsin
 AU  - Martin, Sophie
 AU  - Morris, Nathan
-AU  - Kline, Natasha
+AU  - Kline, Nicholas
 AU  - Olson, Sara
 AU  - Weinberg, David
 AU  - Baker, Kristian E.
@@ -631,8 +631,8 @@ TY  - JOUR
 AU  - Sample, Paul J.
 AU  - Wang, Ban
 AU  - Reid, David W.
-AU  - Presnyak, Vladimir
-AU  - McFadyen, Ian J.
+AU  - Presnyak, Vlad
+AU  - McFadyen, Iain J.
 AU  - Morris, David R.
 AU  - Seelig, Georg
 TI  - Human 5' UTR design and variant effect prediction from a massively parallel translation assay
@@ -662,8 +662,8 @@ ER  -
 TY  - JOUR
 AU  - Schofield, Jeremy A.
 AU  - Duffy, Erin E.
-AU  - Kiefer, Laura
-AU  - Sullivan, Melissa C.
+AU  - Kiefer, Lea
+AU  - Sullivan, Meaghan C.
 AU  - Simon, Matthew D.
 TI  - TimeLapse-seq: adding a temporal dimension to RNA sequencing through nucleoside recoding
 JO  - Nature Methods
@@ -677,11 +677,11 @@ ID  - schofield2018timelapse
 ER  -
 
 TY  - JOUR
-AU  - Schwalb, Bjorn
+AU  - Schwalb, Björn
 AU  - Schulz, Daniel
-AU  - Sun, Minchul
+AU  - Sun, Mai
 AU  - Zacher, Benedikt
-AU  - Dumcke, Sebastian
+AU  - Dümcke, Sebastian
 AU  - Martin, Dietmar E.
 AU  - Cramer, Patrick
 AU  - Tresch, Achim
@@ -717,11 +717,11 @@ ER  -
 
 TY  - JOUR
 AU  - Tani, Hidenori
-AU  - Mizutani, Ryo
-AU  - Salam, Khalid A.
-AU  - Tano, Koichi
+AU  - Mizutani, Rena
+AU  - Salam, Kazi Abdus
+AU  - Tano, Keiko
 AU  - Ijiri, Kenichi
-AU  - Wakamatsu, Aki
+AU  - Wakamatsu, Ai
 AU  - Isogai, Takao
 AU  - Suzuki, Yutaka
 AU  - Akimitsu, Nobuyoshi
@@ -772,12 +772,12 @@ ER  -
 
 TY  - JOUR
 AU  - Wang, Xiao
-AU  - Lu, Zike
-AU  - Gomez, Adriana
+AU  - Lu, Zhike
+AU  - Gomez, Adrian
 AU  - Hon, Gary C.
 AU  - Yue, Yanan
-AU  - Han, Dong
-AU  - Fu, Yanjun
+AU  - Han, Dali
+AU  - Fu, Ye
 AU  - Parisien, Marc
 AU  - Dai, Qing
 AU  - Jia, Guifang
@@ -793,14 +793,14 @@ ID  - wang2014m6a
 ER  -
 
 TY  - JOUR
-AU  - Wu, Qi
-AU  - Medina, Samuel G.
-AU  - Kushawah, Gautam
-AU  - DeVore, Matthew L.
-AU  - Castellano, Luis A.
-AU  - Hand, John M.
-AU  - Wright, Madison
-AU  - Bazzini, Ariel A.
+AU  - Wu, Qiushuang
+AU  - Medina, Santiago Gerardo
+AU  - Kushawah, Gopal
+AU  - DeVore, Michelle Lynn
+AU  - Castellano, Luciana A.
+AU  - Hand, Jacqelyn M.
+AU  - Wright, Matthew
+AU  - Bazzini, Ariel Alejandro
 TI  - Translation affects mRNA stability in a codon-dependent manner in human cells
 JO  - eLife
 PY  - 2019

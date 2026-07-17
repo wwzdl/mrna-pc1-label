@@ -1457,3 +1457,12 @@ PYTHONPATH=paper_pca/src python -m mrna_half_life_paper.study_noise_vs_orthoreg_
 - 验证与发布：
   - 相关表格中下划线和零宽换行符计数均为 0；DOCX-only 审计扩展为 160 项检查。
   - 本轮显示与分页修订冻结为 `mRNA-PC1-label-v1.4.1`；正式 SI PDF 与 ZIP 仍留待最终作者确认。
+
+### 2026-07-17：v1.4.2 最终文字、图件与参考文献审计
+
+- 明确 MOESM2/MOESM3、Saluki human PC1 和 Saluki mouse PC1 在重建、监督目标、外部 prior 与控制实验中的不同作用。
+- 区分 full reconstruction 的 13,921-gene `r = 0.948` 与固定 A2 universe 的 13,265-gene `r = 0.9515`。
+- 统一中英文正文、补充材料、cover letter 和内部 highlights 的字体语义：普通术语与 study 名使用正文体，公式使用 OMML 数学字体，等宽字体仅保留代码字段、参数和路径。
+- 扩展 Fig. 5c 纵轴，并同步修订 BibTeX/RIS 作者信息。
+- DOCX-only preflight 最终通过 `160 checks / 0 failures / 0 warnings`；PDF 和 ZIP 继续留待作者最终冻结后生成。
+- 当前审计状态冻结为 `mRNA-PC1-label-v1.4.2`。

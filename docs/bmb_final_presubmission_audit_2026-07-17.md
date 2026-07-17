@@ -20,10 +20,14 @@ The active English manuscript, supplementary information, title page, cover lett
 - Aligned the internal CRediT table with the formal author-contribution statements.
 - Synchronized repository URL, release-candidate version, abstract count, and active reference counts across the manuscript-support files.
 - Replaced machine identifiers in reader-facing supplementary tables with concise display labels and repaired landscape-section pagination so each wide table remains with its caption.
+- Clarified the roles of MOESM2 and MOESM3: MOESM2 is the reconstruction/audit input, Saluki human PC1 is the fixed supervision target, released Saluki mouse PC1 is an external prior, and MOESM3 processed sample columns are secondary controls.
+- Distinguished the 13,921-gene full-reconstruction comparison (`r = 0.948`) from the fixed 13,265-gene paired Gejman-inference universe (`r = 0.9515`).
+- Normalized manuscript typography so study names, dataset names, statistics, and explanatory expressions use body or mathematical fonts; monospace is reserved for code fields, file paths, and exact parameter identifiers.
+- Expanded the Fig. 5c correlation axis to avoid visually exaggerating small between-setting differences, and corrected reference-author metadata in the synchronized BibTeX/RIS libraries.
 
 ## Quantitative and reproducibility checks
 
-- Full preflight: `160 checks`, `0 failures`, `1 warning`.
+- Full preflight: `160 checks`, `0 failures`, `0 warnings`.
 - Unit tests: `3 passed`.
 - OOF integrity: nine global fixed-target files cover 12,916 genes; three cross-target files and 18 shrinkage-target files cover 12,307 genes; residual outputs cover 11,107 genes across folds 1-5.
 - English abstract: 233 words; six keywords.
@@ -38,8 +42,8 @@ The active English manuscript, supplementary information, title page, cover lett
 1. Both authors must confirm author order, contribution wording, shared affiliation, no-funding statement, and approval of the submitted version.
 2. Wenzhuo Wang's ORCID should be added if available; it is optional if no ORCID is held.
 3. A software license should be selected for downstream reuse. This does not block manuscript submission but affects repository reuse terms.
-4. After the manuscript is closed in WPS, remove the temporary Office lock files. Generate and inspect the final supplementary PDF and upload ZIP only after this source state is frozen.
+4. Generate and inspect the final supplementary PDF and upload ZIP only after this source state is frozen.
 
 ## Release state
 
-The intended immutable repository tag for this audited state is `mRNA-PC1-label-v1.4.1`. PDF and ZIP generation remain intentionally deferred until the final author-controlled submission freeze.
+The intended immutable repository tag for this audited state is `mRNA-PC1-label-v1.4.2`. PDF and ZIP generation remain intentionally deferred until the final author-controlled submission freeze.
