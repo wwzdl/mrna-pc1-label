@@ -1466,3 +1466,22 @@ PYTHONPATH=paper_pca/src python -m mrna_half_life_paper.study_noise_vs_orthoreg_
 - 扩展 Fig. 5c 纵轴，并同步修订 BibTeX/RIS 作者信息。
 - DOCX-only preflight 最终通过 `160 checks / 0 failures / 0 warnings`；PDF 和 ZIP 继续留待作者最终冻结后生成。
 - 当前审计状态冻结为 `mRNA-PC1-label-v1.4.2`。
+
+### 2026-07-17：严格 direct-target-vector 消融与统计口径更正
+
+- 重新定义 0.10 target 的 prior ablation，明确区分审计阈值重建 mouse PC1（至少 3 个观测）与目标构建重建 mouse PC1（至少 5 个观测）。
+- 主要 target-prediction 输入继续使用审计阈值重建 mouse PC1 加 Saluki mouse PC1，10-fold × 3 seeds 的 Pearson 为 `0.8551 +/- 0.0007`。
+- 严格成对敏感性分析固定 Saluki mouse PC1 与全部 availability/confidence indicators：加入精确目标构建 mouse PC1 时为 `0.8537 +/- 0.0004`，移除该精确向量时为 `0.8524 +/- 0.0005`，直接向量增量为 `0.0013`。
+- Mask-only control 为 `0.7538 +/- 0.0007`。结果表明，直接读取构成 target 的 10% mouse 向量只解释很小一部分增益，但较高性能仍属于显式使用跨物种协变量的 transfer setting。
+- Residual decomposition 改为 outer-fold 内 5-fold nuisance cross-fitting：prior-only `r=0.7919, R2=0.6271`，combined `r=0.8261, R2=0.6750`，human features 解释 prior 剩余方差的 `12.85%`。
+- 500 次条件性同样本量比较正式表述为 conditional deletion sensitivity：每个 comparator 都保留 Gejman，因此经验尾部比例不是可交换 whole-study null 的选择校正 p 值。
+- 主文局限性新增 bootstrap 依赖边界：gene/ortholog-pair resampling 未显式建模 pathway 或 paralog-family 内相关性。
+
+### 2026-07-17：v1.4.3 严格科学审稿与投稿编辑复核
+
+- 逐段核对标签审计、fixed-target transfer、target shrinkage、outer/inner fold 与 residual decomposition 的实现；未发现 held-out human target 进入训练或 early stopping。
+- 将正文和 README 中含混的 `fold-wise prior shuffling` 改为实现对应的“每个 outer fold 内分别在 fit、inner-validation 和 held-out 分区置换”。
+- 主文与补充材料新增 gene-level split 边界：当前 CV 未按 paralog family 分组，因此不主张 gene-family-held-out 泛化。
+- 核对 12 个核心分析集合和 8 个派生集合；P2（12,916 genes）、S2（12,307 genes）仍是两套主模型宇宙，P3（11,107 genes）仅用于 prior coverage 与 residual decomposition。
+- 英文摘要为 228 words；主文公式（1）-（9）、补充式（S1）-（S2）、主图 1-8、补图 S1-S4、主表 1-4 和补表 S1-S16 编号连续。
+- DOCX-only preflight、单元测试、OOF 完整性、分析宇宙、中英文一致性和最终 Git 状态在本轮冻结前重新执行；目标标签为 `mRNA-PC1-label-v1.4.3`。

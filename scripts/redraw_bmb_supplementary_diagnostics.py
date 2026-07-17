@@ -166,43 +166,43 @@ def draw_mouse_influence() -> None:
 
 def draw_study_influence_sensitivity() -> None:
     data_dir = RESULTS / "study_influence_sensitivity"
-    null = pd.read_csv(data_dir / "size_matched_random_removal.tsv", sep="\t")
-    null_summary = pd.read_csv(data_dir / "size_matched_null_summary.tsv", sep="\t")
+    comparators = pd.read_csv(data_dir / "conditional_same_size_deletions.tsv", sep="\t")
+    comparator_summary = pd.read_csv(data_dir / "conditional_same_size_summary.tsv", sep="\t")
     sensitivity = pd.read_csv(data_dir / "pipeline_sensitivity_summary.tsv", sep="\t")
     weighting = pd.read_csv(data_dir / "study_weighted_summary.tsv", sep="\t")
 
-    observed = null_summary.set_index("metric")["observed_gejman"]
-    p_values = null_summary.set_index("metric")["empirical_p_one_sided"]
+    observed = comparator_summary.set_index("metric")["observed_gejman"]
+    tail_proportions = comparator_summary.set_index("metric")["empirical_tail_proportion"]
     fig, axes = plt.subplots(2, 2, figsize=(9.0, 7.2))
 
     ax = axes[0, 0]
-    values = null["pc1_stability_pearson"].astype(float)
+    values = comparators["pc1_stability_pearson"].astype(float)
     ax.hist(values, bins=24, color="#aab7c7", edgecolor="white", linewidth=0.5)
     observed_stability = float(observed["pc1_stability_pearson"])
     ax.axvline(observed_stability, color=ORANGE, lw=2.0)
     ax.text(
         observed_stability - 0.0005,
         ax.get_ylim()[1] * 0.93,
-        f"Gejman {observed_stability:.3f}\np = {p_values['pc1_stability_pearson']:.3f}",
+        f"Gejman {observed_stability:.3f}\nempirical tail = {tail_proportions['pc1_stability_pearson']:.3f}",
         ha="right",
         va="top",
         color=ORANGE,
         fontsize=8.5,
     )
-    ax.set_title("Size-matched geometry null", color=INK)
+    ax.set_title("Conditional same-size deletions", color=INK)
     ax.set_xlabel("Correlation with full human PC1")
-    ax.set_ylabel("Random removals (n = 500)")
+    ax.set_ylabel("Comparator deletions (n = 500)")
     ax.grid(axis="x", color=GRID, lw=0.65)
     ax.grid(axis="y", visible=False)
 
     ax = axes[0, 1]
     gain_columns = ["delta_saluki_pearson", "delta_ortholog_pearson"]
     gain_labels = ["Saluki agreement", "Ortholog concordance"]
-    long_null = null[gain_columns].rename(columns=dict(zip(gain_columns, gain_labels))).melt(
+    long_comparators = comparators[gain_columns].rename(columns=dict(zip(gain_columns, gain_labels))).melt(
         var_name="Comparison axis", value_name="Delta Pearson"
     )
     sns.violinplot(
-        data=long_null,
+        data=long_comparators,
         x="Comparison axis",
         y="Delta Pearson",
         color="#aab7c7",
@@ -212,7 +212,7 @@ def draw_study_influence_sensitivity() -> None:
         ax=ax,
     )
     sns.boxplot(
-        data=long_null,
+        data=long_comparators,
         x="Comparison axis",
         y="Delta Pearson",
         width=0.20,
@@ -227,7 +227,7 @@ def draw_study_influence_sensitivity() -> None:
         ax.text(
             x,
             value + 0.006,
-            f"Gejman {value:+.3f}\np = {p_values[column]:.3f}",
+            f"Gejman {value:+.3f}\nempirical tail = {tail_proportions[column]:.3f}",
             ha="center",
             va="bottom",
             color=ORANGE,
@@ -322,7 +322,7 @@ def draw_study_influence_sensitivity() -> None:
 
     panel_data = pd.concat(
         [
-            null.assign(panel="a-b", source="size_matched_random_removal"),
+            comparators.assign(panel="a-b", source="conditional_same_size_deletion"),
             sensitivity.assign(panel="c", source="pipeline_sensitivity"),
             weighting.assign(panel="d", source="study_weighting"),
         ],

@@ -71,6 +71,9 @@ run_models() {
   fi
   require_file results/human_sequence_features_regions3mer4mer.tsv.gz
 
+  echo "[reproduce] preliminary XGBoost parameter scan and provenance"
+  python scripts/reproduce_xgb_parameter_scan.py --device "${DEVICE}"
+
   echo "[reproduce] fixed-target global prior benchmark"
   python -m mrna_half_life_paper.global_mouse_prior --skip-note
   python -m mrna_half_life_paper.fold_robustness \
@@ -84,6 +87,7 @@ run_models() {
   python -m mrna_half_life_paper.prior_residual_analysis \
     --random-state 42 \
     --cv-splits 5 \
+    --nuisance-cv-splits 5 \
     --device "${DEVICE}" \
     --results-root results/prior_residual_analysis
 

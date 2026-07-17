@@ -3,18 +3,18 @@ from __future__ import annotations
 import pandas as pd
 
 from mrna_half_life_paper.study_influence_sensitivity import (
-    _empirical_null_summary,
+    _conditional_deletion_summary,
     _fixed_gene_universe,
 )
 
 
-def test_empirical_null_summary_uses_prespecified_tails() -> None:
+def test_conditional_deletion_summary_uses_prespecified_tails() -> None:
     observed = {
         "pc1_stability_pearson": 0.05,
         "delta_saluki_pearson": 1.0,
         "delta_ortholog_pearson": 1.0,
     }
-    null = pd.DataFrame(
+    comparators = pd.DataFrame(
         {
             "pc1_stability_pearson": [0.10, 0.20, 0.30],
             "delta_saluki_pearson": [0.10, 0.20, 0.30],
@@ -22,12 +22,12 @@ def test_empirical_null_summary_uses_prespecified_tails() -> None:
         }
     )
 
-    summary = _empirical_null_summary(observed, null).set_index("metric")
+    summary = _conditional_deletion_summary(observed, comparators).set_index("metric")
 
     assert summary.loc["pc1_stability_pearson", "extreme_direction"] == "lower"
     assert summary.loc["delta_saluki_pearson", "extreme_direction"] == "higher"
     assert summary.loc["delta_ortholog_pearson", "extreme_direction"] == "higher"
-    assert (summary["empirical_p_one_sided"] == 0.25).all()
+    assert (summary["empirical_tail_proportion"] == 0.25).all()
 
 
 def test_fixed_gene_universe_requires_coverage_after_every_study_removal() -> None:

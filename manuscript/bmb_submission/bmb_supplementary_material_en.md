@@ -11,7 +11,7 @@
 
 This Supplementary Information supports the three claims in the main text. First, study-aware label auditing uses Saluki-label-independent PC1 stability to screen influential studies, separates sample-count leverage from directional comparison gains, and then evaluates the direction of change through Saluki agreement and ortholog concordance. Second, with Saluki human PC1 fixed, the human-only baseline and cross-species transfer setting are evaluated separately and supported by permutation, paired bootstrap, residual decomposition, and multi-seed checks. Third, weak ortholog-informed target shrinkage at 0.10 defines a human-dominant mammalian stability target and is bounded by label distance, study-noise scale, cross-target evaluation, and prior ablation. This target is a core label-construction result, but it does not enter the fixed Saluki human PC1 ranking.
 
-Compared with the main text, the purpose of the Supplementary Information is not to repeat the highest score, but to preserve the methodological details required to support the conclusions, including sample-level PCA definitions, complete study-influence paths, size-matched deletion and preprocessing sensitivity, prior-permutation and residual controls, ortholog label distances, training-universe boundaries, 10-fold split-sensitivity checks, and implementation notes (Agarwal and Kelley 2022; Chen and Guestrin 2016; Pedregosa et al. 2011).
+Compared with the main text, the Supplementary Information preserves the methodological details required to support the conclusions, including sample-level PCA definitions, complete study-influence paths, conditional same-size deletion and preprocessing sensitivity, prior-permutation and residual controls, ortholog label distances, training-universe boundaries, 10-fold split-sensitivity checks, and implementation notes (Agarwal and Kelley 2022; Chen and Guestrin 2016; Pedregosa et al. 2011).
 
 ## S2. Data extraction, preprocessing, and ortholog definitions
 
@@ -21,7 +21,7 @@ The precomputed sequence/regulatory feature blocks used by `compact_all` are fro
 
 Ortholog mappings were obtained from the mouse-human homology table in Ensembl Compara release 115 (Dyer et al. 2025). We retained only records with `homology_type = ortholog_one2one` and `homology_species = homo_sapiens`; the interpretation of orthology follows established evolutionary-genomics usage (Gabaldon and Koonin 2013). The high-confidence ortholog subset was not redefined in this work; we directly used the binary Ensembl field `is_high_confidence`. According to the Ensembl orthology QC documentation, this released flag is assigned from identity together with gene-order-conservation or whole-genome-alignment thresholds when those data are available, with a tree-compliance fallback otherwise. We did not reconstruct the upstream QC and used `is_high_confidence == 1` only to define a stricter sensitivity subset.
 
-The main text has already reported the global agreement between our reconstructed labels and the Saluki labels. On the 13,921 genes shared by the full human reconstruction and Saluki human PC1, Pearson is 0.948; the corresponding reconstructed-mouse value is 0.958. The fixed A2 universe used for paired Gejman inference additionally requires a no-Gejman label and therefore contains 13,265 genes, on which the full-label baseline is 0.9515. The exact reconstruction parameters are summarized in Supplementary Table S1, and the modeling-input boundaries are summarized in Supplementary Table S2.
+The main text has already reported the global agreement between our reconstructed labels and the Saluki labels. On the 13,921 genes shared by the full human reconstruction and Saluki human PC1, Pearson is 0.948; the corresponding reconstructed-mouse value is 0.958. The fixed A2 universe used for paired Gejman inference additionally requires a no-Gejman label and therefore contains 13,265 genes, on which the full-label baseline is 0.9515. We call these minimum-three-observation vectors the **audit-threshold** reconstructions. Target construction instead uses the **target-construction human no-Gejman PC1** (minimum 10 observations) and **target-construction reconstructed mouse PC1** (minimum 5 observations). Coverage-threshold sensitivity is small but nonzero: audit- and target-threshold mouse PC1 values overlap on 11,882 genes (Pearson = 0.99907; z-scale RMSE = 0.04312), and the corresponding human no-Gejman values overlap on 12,644 genes (Pearson = 0.99827; z-scale RMSE = 0.05878). The names are therefore kept distinct even though their global geometry is similar. Exact reconstruction parameters are summarized in Supplementary Table S1, and modeling-input boundaries are summarized in Supplementary Table S2.
 
 ### Supplementary Table S1. Reproducibility parameters for label reconstruction and leave-one-study-out analysis
 
@@ -29,8 +29,8 @@ The main text has already reported the global agreement between our reconstructe
 |:--|:--|:--|:--|
 | Input matrix | MOESM2 transformed human/mouse half-life matrix | species-specific gene by sample matrix | No additional log transform; starts from transformed values |
 | Metadata parsing | `study`, `method`, `cell type`, `replicate`, `species` | standardized sample metadata | Sample names were parsed and manually checked for study-level leave-one-out analysis |
-| Coverage filter | Main reconstruction `min_observed_per_gene=3` | retained genes | Used for reproducible full-label auditing and leave-one-study-out analysis |
-| Saluki-like coverage | human `min_observed_per_gene=10`; mouse `min_observed_per_gene=5` | locally reconstructed human/mouse labels under a Saluki-like coverage rule | Used for 0.10 ortholog-informed target shrinkage |
+| Audit-threshold coverage | `min_observed_per_gene=3` | audit-threshold human/mouse PC1 vectors | Used for full-label auditing, leave-one-study-out analysis, and the reconstructed prior in the fixed-target transfer branch |
+| Target-construction coverage | human `min_observed_per_gene=10`; mouse `min_observed_per_gene=5` | target-construction human no-Gejman and reconstructed mouse PC1 vectors | Used for 0.10 ortholog-informed target shrinkage |
 | Sample standardization | sample-wise z-score | standardized matrix | Reduces scale differences across experiments |
 | Missing-value handling | iterative PCA imputation; up to 30 iterations; tolerance `1e-6` | complete matrix | Avoids distorting gene-level covariance by simple mean filling |
 | Distribution alignment | quantile normalization | processed matrix | Reduces the effect of sample-distribution differences on PC1 |
@@ -45,7 +45,7 @@ The main text has already reported the global agreement between our reconstructe
 | Compact human-only model | Saluki-datapack Ensembl `gene_id` + base features + precomputed CWCS / SeqWeaver / DeepRiPe blocks | Only after the regulatory blocks are regenerated | pure human sequence/regulatory benchmark | Should be described as a transparent human-only baseline, not as a sequence-only win claim |
 | Global prior-enhanced model | `compact_all` + two mouse-prior values + availability / high-confidence binary indicators | Requires mappable mouse ortholog priors | cross-species transfer using mouse-side covariates external to the human target | Should not be described as sequence-only or raw-sequence end-to-end prediction |
 | Coverage-aware fallback | prior coverage status + human-only prediction | Useful for tiered deployment | use prior-enhanced when priors exist; otherwise fall back to human-only | Should not extrapolate prior-enhanced conclusions to genes with missing priors |
-| 0.10 ortholog-informed target shrinkage | human no-Gejman PC1 + mapped mouse PC1 + $\lambda$ | Not a standalone predictor for arbitrary new sequences | human-dominant mammalian stability target | Should not be presented as direct human half-life or ranked with the fixed target |
+| 0.10 ortholog-informed target shrinkage | target-construction human no-Gejman PC1 + mapped target-construction mouse PC1 + $\lambda$ | Not a standalone predictor for arbitrary new sequences | human-dominant mammalian stability target | Should not be presented as direct human half-life or ranked with the fixed target |
 
 ![](figures/supplement/FigS01_prediction_boundary_flow.png)
 
@@ -89,7 +89,7 @@ The default output directory is `results/sample_pca_imputation_reproducibility/`
 
 The main text presents the primary sample-weighted human leave-one-study-out result in Fig. 4, so we retain only the full mouse ranking here. Complete human and mouse values are stored in `results/study_influence/human/study_influence.tsv` and `results/study_influence/mouse/study_influence.tsv`, respectively. In the primary human estimator, PC1 stability does not use Saluki PC1 and ranks Gejman first. Saluki-PC1 agreement gain then measures recovery of the published processing choice, and ortholog concordance supplies a cross-species comparison. Sample-count, fixed-universe, and preprocessing controls are reported separately in Section S5. No downstream model score entered this assessment. In mouse, removal of Hanna changes full-label geometry but does not improve agreement with the released Saluki mouse PC1, so it is not interpreted as a mouse analogue of the human case.
 
-This human/mouse asymmetry shows that geometric influence does not automatically justify removal. For human, the primary geometric ranking is sample-count sensitive, but the positive Saluki and ortholog gains are not reproduced by size-matched removal of other samples. The conclusion is therefore a directional study effect superimposed on sample-count leverage, not that the study is invalid for every biological analysis. The mouse compendium lacks the same convergence of evidence and is kept intact.
+This human/mouse asymmetry shows that geometric influence does not automatically justify removal. For human, the primary geometric ranking is sample-count sensitive, but the positive Saluki and ortholog gains are not reproduced by conditional same-size deletion of other samples. The conclusion is a directional study effect superimposed on sample-count leverage. The mouse compendium lacks the same convergence of evidence and is kept intact.
 
 ![](figures/supplement/FigS_mouse_study_influence.png)
 
@@ -97,23 +97,23 @@ This human/mouse asymmetry shows that geometric influence does not automatically
 
 ## S5. Sample-count, gene-universe, and preprocessing sensitivity of human study influence
 
-The primary leave-one-study-out estimator gives every sample equal weight. Because Gejman contributes 15 of 54 human samples, its removal changes the sample count much more than removal of most other studies. We therefore drew 15 samples without replacement from the 39 non-Gejman samples, reran the full reconstruction pipeline, and repeated this procedure 500 times. The observed Gejman stability of 0.955 was not unusually low relative to this null (median 0.944; 95% null interval 0.932-0.956; one-sided empirical p = 0.964). Geometric influence alone is therefore confounded by the number of samples removed.
+The primary leave-one-study-out estimator gives every sample equal weight. Because Gejman contributes 15 of 54 human samples, its removal changes the sample count much more than removal of most other studies. We therefore drew 15 samples without replacement from the 39 non-Gejman samples, reran the full reconstruction pipeline, and repeated this procedure 500 times. Every comparator retained Gejman. The observed Gejman stability of 0.955 was not unusually low relative to this conditional deletion distribution (median 0.944; central 95% comparator range, 0.932-0.956; empirical lower-tail proportion = 0.964). Geometric influence alone is therefore confounded by the number of samples removed.
 
-The two directional comparison gains behaved differently. The observed Saluki-agreement gain was +0.0314, whereas the null median was -0.0926 (95% null interval, -0.1151 to -0.0713). The observed ortholog-concordance gain was +0.0147, whereas the null median was -0.0616 (95% null interval, -0.0800 to -0.0476). No null replicate reached either observed gain, giving one-sided empirical p = 0.002 for each. The result therefore does not support a sample-count-adjusted geometric outlier, but it does support a study-specific direction of improvement that is not obtained by removing the same number of other samples.
+The two directional comparison gains behaved differently. The observed Saluki-agreement gain was +0.0314, whereas the comparator median was -0.0926 (central 95% comparator range, -0.1151 to -0.0713). The observed ortholog-concordance gain was +0.0147, whereas the comparator median was -0.0616 (central 95% comparator range, -0.0800 to -0.0476). No comparator reached either observed gain, giving the minimum attainable empirical upper-tail proportion, 1/501 = 0.002, for each. These values describe deletion sensitivity conditional on examining Gejman. They are not exchangeable whole-study p values, do not account for selecting Gejman, and are not adjusted for examining multiple studies. The result does not support a sample-count-adjusted geometric outlier; deleting the same number of other samples did not produce the same direction of change.
 
 Gene-universe and preprocessing sensitivity gave a complementary result. Gejman ranked first in all 12 combinations of dynamic/fixed coverage, coverage thresholds, PCA-imputation ranks, and iterative-PCA/sample-median imputation, and both comparison gains remained positive. By contrast, when study sample counts were balanced either by $1/\sqrt{n_s}$ PCA weights or by collapsing each study to its mean profile, Gejman ranked third rather than first. These analyses show which part of the claim is robust: the primary ranking is stable across preprocessing choices but sensitive to study weighting, whereas the directions of the Saluki-processing and ortholog-comparison gains are stable.
 
 ![](figures/supplement/FigS_study_influence_sensitivity.png)
 
-**Supplementary Fig. S4** Sample-size and pipeline sensitivity of human study influence. a, Null distribution of PC1 stability from 500 full-pipeline reruns after removing 15 non-Gejman samples; lower values indicate more geometric change, and the observed Gejman value is not extreme in the lower tail. b, Null distributions of Saluki-agreement and ortholog-concordance gains; orange points show the observed Gejman gains, both beyond all 500 null replicates. c, Both comparison gains remain positive across 12 dynamic/fixed gene-universe, coverage, rank, and imputation settings; Gejman ranks first in each primary-style setting. d, Sample-count adjustment changes the geometric rank from first to third under both study-balanced estimators. Panel source data are stored in `manuscript/bmb_submission/figures/data/FigS04_panel_data.tsv`
+**Supplementary Fig. S4** Sample-size and pipeline sensitivity of human study influence. a, Conditional comparator distribution of PC1 stability from 500 full-pipeline reruns after removing 15 non-Gejman samples while retaining Gejman; lower values indicate more geometric change, and the observed Gejman value is not extreme in the lower tail. b, Conditional comparator distributions of Saluki-agreement and ortholog-concordance gains; orange points show the observed Gejman gains, both beyond all 500 comparator deletions. c, Both comparison gains remain positive across 12 dynamic/fixed gene-universe, coverage, rank, and imputation settings; Gejman ranks first in each primary-style setting. d, Study balancing changes the geometric rank from first to third under both estimators. Panel source data are stored in `manuscript/bmb_submission/figures/data/FigS04_panel_data.tsv`
 
 ### Supplementary Table S4. Sample-count and pipeline sensitivity of the Gejman study-influence result
 
-| Analysis | Gejman result | Comparator | Empirical p or rank | Interpretation |
+| Analysis | Gejman result | Conditional comparator | Empirical tail proportion or rank | Interpretation |
 |:--|:--|:--|:--|:--|
-| Primary sample-weighted geometry | stability 0.9550 | size-matched null median 0.9438; 95% interval 0.9319-0.9561 | one-sided p = 0.964 | Geometry is not extreme after matching the number of removed samples |
-| Saluki agreement gain | +0.0314 | null median -0.0926; 95% interval -0.1151 to -0.0713 | one-sided p = 0.002 | Directional gain is not reproduced by random removal |
-| Ortholog concordance gain | +0.0147 | null median -0.0616; 95% interval -0.0800 to -0.0476 | one-sided p = 0.002 | Cross-species gain is not reproduced by random removal |
+| Primary sample-weighted geometry | stability 0.9550 | median 0.9438; central 95% range 0.9319-0.9561 | lower-tail proportion = 0.964 | Geometry is not extreme after matching the number of removed samples |
+| Saluki agreement gain | +0.0314 | median -0.0926; central 95% range -0.1151 to -0.0713 | upper-tail proportion = 1/501 = 0.002 | Conditional deletions do not reproduce the directional gain |
+| Ortholog concordance gain | +0.0147 | median -0.0616; central 95% range -0.0800 to -0.0476 | upper-tail proportion = 1/501 = 0.002 | Conditional deletions do not reproduce the cross-species gain |
 | Fixed gene universe, primary preprocessing | stability 0.9527; Saluki gain +0.0319; ortholog gain +0.0153 | 14,244 fixed-universe genes | rank 1/19 | Dynamic coverage does not create the directional result |
 | Preprocessing sensitivity | both gains positive in all 12 settings | minimum observed samples 3/5/10; PCA rank 3/5/10; iterative PCA or sample median | rank 1/19 in all settings | Primary ranking is stable across preprocessing choices |
 | Equal-study PCA weighting | stability 0.9796 | worst study Dieterich, stability 0.9653 | rank 3/19 | Sample count contributes to primary geometric rank |
@@ -121,15 +121,15 @@ Gene-universe and preprocessing sensitivity gave a complementary result. Gejman 
 
 ## S6. Additional explanation of permutation control
 
-The main text reports the key permutation result: the global model with real double priors achieves Pearson = 0.829, whereas performance falls back to 0.745 after the priors are shuffled. The control isolates what is being permuted. First, permutation is performed independently within each evaluation fold, so held-out gene-prior assignments are never restored from a training fold. Second, permutation occurs only among genes that originally have prior values; the identities of genes with missing priors, the corresponding availability indicators, and the high-confidence 0/1 indicators are kept fixed. Third, the control specifically disrupts the mapping between gene identity and prior value. The real priors improve Pearson by roughly +0.085 and R2 by roughly +0.135 relative to the shuffled priors, identifying gene-specific correspondence rather than extra feature columns as the source of the gain.
+The main text reports the key permutation result: the global model with real double priors achieves Pearson = 0.829, whereas performance falls back to 0.745 after the priors are shuffled. The control isolates what is being permuted. First, within each outer fold, the fit, inner-validation, and held-out partitions are permuted separately, so a held-out gene-prior assignment cannot be restored from a training partition. Second, permutation occurs only among genes that originally have prior values; the identities of genes with missing priors, the corresponding availability indicators, and the high-confidence 0/1 indicators are kept fixed. Third, the control specifically disrupts the mapping between gene identity and prior value. The real priors improve Pearson by roughly +0.085 and R2 by roughly +0.135 relative to the shuffled priors, identifying gene-specific correspondence rather than extra feature columns as the source of the gain.
 
-Across three independent 10-fold OOF evaluations, the real global model with both priors achieves Pearson 0.830 ± 0.001, whereas both the shuffled-prior control and human-only `compact_all` achieve 0.748 ± 0.001; the coverage-aware fallback achieves 0.832 ± 0.001. The ± values are across-seed SDs. After combining the three OOF predictions, paired bootstrap gives a real-versus-shuffled gain of 0.0794 (95% CI, 0.0735-0.0855) and a real-versus-human-only gain of 0.0799 (95% CI, 0.0740-0.0862). Split sensitivity and gene-level uncertainty therefore support the same conclusion.
+Across three independent 10-fold OOF evaluations, the real global model with both priors achieves Pearson 0.830 ± 0.001, whereas both the shuffled-prior control and human-only `compact_all` achieve 0.748 ± 0.001; the coverage-aware fallback achieves 0.832 ± 0.001. The ± values are across-seed SDs. Averaging the three seed-specific OOF predictions per gene forms a seed-averaged OOF ensemble. Conditional on that fitted ensemble and gene resampling, paired bootstrap gives a real-versus-shuffled gain of 0.0794 (95% CI, 0.0735-0.0855) and a real-versus-human-only gain of 0.0799 (95% CI, 0.0740-0.0862). These intervals do not include uncertainty from retraining or drawing new folds.
 
 ## S7. Additional explanation of residual decomposition
 
 The goal of residual decomposition is to separate prior signal from human-feature signal. A direct correlation analysis already shows that `mouse_pc1` correlates with Saluki human PC1 at nearly 0.78, so the prior itself is a strong predictor. To avoid misreading this as evidence that the prior-enhanced model merely copies the prior, we explicitly decompose prediction into a two-stage out-of-fold procedure rather than putting priors and human features into a single black box and interpreting the result afterward.
 
-The implementation is as follows. First, we retain only genes with both `mouse_pc1` and the released Saluki mouse PC1, i.e. the `both_priors_available` subset (N = 11,107), because prior-only decomposition requires both mouse-side prior values for each gene. Second, within each 5-fold outer split, RidgeCV is fitted using the two prior columns from outer-training genes. Its fitted values on those same outer-training genes define the residual target as Saluki human PC1 minus the fitted prior value; a separate RidgeCV prediction is generated for held-out genes. Third, an XGBoost/CUDA model is trained only on outer-training human `compact_all` features and residuals. Fourth, the final held-out prediction is the sum of the held-out prior prediction and held-out compact-residual prediction. No held-out human target enters either training stage, so the decomposition remains OOF.
+The implementation is as follows. First, we retain only genes with both `mouse_pc1` and the released Saluki mouse PC1, i.e. the `both_priors_available` subset (N = 11,107), because prior-only decomposition requires both mouse-side prior values for each gene. Second, within each 5-fold outer split, a 5-fold inner cross-fitting loop fits RidgeCV on four inner folds and predicts the fifth, yielding nuisance-prior predictions for every outer-training gene without using that gene's target in its own nuisance fit. These inner-OOF predictions define the residual target as Saluki human PC1 minus nuisance-prior prediction. A separate RidgeCV fit on all outer-training genes predicts the outer held-out genes. Third, an XGBoost/CUDA model is trained only on outer-training human `compact_all` features and the cross-fitted residuals. Fourth, the final outer-held-out prediction is the sum of the held-out prior prediction and held-out compact-residual prediction. No outer-held-out human target enters either training stage.
 
 The reproducibility command is:
 
@@ -144,7 +144,7 @@ python -m mrna_half_life_paper.prior_residual_analysis
 |:--|--:|--:|--:|--:|--:|--:|--:|--:|
 | Prior only (linear) | 11,107 | 2 | 0 | 0.792 | 0.782 | 0.627 | 0.000 | 0.00% |
 | Human compact only | 11,107 | 0 | 1,802 | 0.739 | 0.731 | 0.544 | -0.084 | NA |
-| Prior plus human residual | 11,107 | 2 | 1,802 | 0.826 | 0.818 | 0.675 | 0.048 | 12.79% |
+| Prior plus human residual | 11,107 | 2 | 1,802 | 0.826 | 0.817 | 0.675 | 0.048 | 12.85% |
 
 The reported residual fraction is computed as
 
@@ -153,21 +153,21 @@ number: S2
 R_{\mathrm{remaining}}^2 = \frac{R_{\mathrm{final}}^2 - R_{\mathrm{prior}}^2}{1 - R_{\mathrm{prior}}^2}
 ```
 
-Supplementary Eq. (S2) shows that, after the prior-only model has explained part of the variance, the human `compact_all` features explain about 12.8% of the remaining variance. The prior-enhanced model is therefore more accurately described as a strong mouse prior plus a human correction than as a setting in which the prior alone is sufficient.
+Supplementary Eq. (S2) shows that, after the prior-only model has explained part of the variance, the human `compact_all` features explain about 12.9% of the remaining variance. The prior-enhanced model is therefore more accurately described as a strong mouse prior plus a human correction than as a setting in which the prior alone is sufficient.
 
 These results also clarify the method boundary. Supervised labels for held-out human genes do not enter the input, and all predictions are generated out of fold. The mouse priors nevertheless constitute external gene-level information correlated with the target; the corresponding result is therefore a cross-species-transfer estimate rather than sequence-only prediction. The complete transfer model is not a simple copy of the priors, because it continues to learn human-specific structure on top of them.
 
 ## S8. Additional interpretation and cross-target evaluation of 0.10 ortholog-informed target shrinkage
 
-This analysis changes the **supervised target**, whereas the global prior benchmark changes **input information**; the two settings must remain separate. The 0.10 ortholog-informed shrinkage target combines 90% human no-Gejman z-scored label with 10% mapped reconstructed-mouse z-scored label, while genes without an ortholog signal retain the human label. It is not a direct experimental half-life value, but a human-dominant mammalian stability score derived from a multi-study compendium.
+This analysis changes the **supervised target**, whereas the global prior benchmark changes **input information**. The 0.10 ortholog-informed shrinkage target combines 90% target-construction human no-Gejman PC1 (minimum 10 observations) with 10% mapped target-construction reconstructed mouse PC1 (minimum 5 observations), after z-scoring each vector; genes without an ortholog signal retain the human label. We interpret the result as a human-dominant mammalian stability score derived from a multi-study compendium.
 
-Label geometry supports human dominance. Across the 12,307 model-eligible genes, the shrinkage target correlates with human no-Gejman PC1 at 0.9982 (95% bootstrap CI, 0.9981-0.9983). In the separately defined 10,768-pair mapped set, human no-Gejman PC1 and locally reconstructed mouse PC1 have Pearson = 0.789, RMSE = 0.663, and MAE = 0.512 before shrinkage. After shrinkage, the target correlates with human no-Gejman PC1 at 0.9979 (RMSE = 0.065; MAE = 0.050) and with mouse PC1 at 0.827. Its displacement is also much smaller than ordinary study-to-study differences (Section S9 and Supplementary Table S13).
+Label geometry supports human dominance. Across the 12,307 model-eligible genes, the shrinkage target correlates with target-construction human no-Gejman PC1 at 0.9982 (95% bootstrap CI, 0.9981-0.9983). In the separately defined 10,768-pair mapped set, target-construction human no-Gejman PC1 and target-construction reconstructed mouse PC1 have Pearson = 0.789, RMSE = 0.663, and MAE = 0.512 before shrinkage. After shrinkage, the target correlates with the human label at 0.9979 (RMSE = 0.065; MAE = 0.050) and with the mouse label at 0.827. Its displacement is also much smaller than ordinary study-to-study differences (Section S9 and Supplementary Table S13).
 
 Sensitivity analysis explains the choice of $\lambda=0.10$. In matched 5-fold evaluations across three random seeds, $\lambda=0.05$, 0.10, and 0.30 gave target-versus-Saluki correlations of 0.988, 0.987, and 0.975; target-versus-mapped-mouse correlations of 0.809, 0.827, and 0.895; and prior-enhanced target-prediction correlations of 0.842, 0.854, and 0.896, respectively. The largest weight therefore produced the highest prediction score but also shifted the target more strongly toward mouse. We use 0.10 as a conservative operating point that limits cross-species contribution, not as the weight that maximizes cross-validation performance. Full results are provided in `results/ortholog_regularized_label_multiseed/summary_by_label.tsv`.
 
-Cross-target evaluation directly tests whether changing the target harms the original human label. Using the same 12,307 genes, 1802 human-only features, 10 folds by 3 seeds, and identical model parameters, training on human no-Gejman PC1 gives r = 0.7476 ± 0.0010 against that target. Training on the shrinkage target and still evaluating against the original human target gives r = 0.7480 ± 0.0010. The paired difference after combining the three OOF predictions is +0.0003 (95% CI, -0.0006 to 0.0012). The interval includes zero, so no reduction was detected; because no equivalence margin was prespecified, the result does not establish formal equivalence.
+Cross-target evaluation directly tests whether changing the target harms the original human label. Using the same 12,307 genes, 1802 human-only features, 10 folds by 3 seeds, and identical model parameters, training on human no-Gejman PC1 gives r = 0.7476 ± 0.0010 against that target. Training on the shrinkage target and still evaluating against the original human target gives r = 0.7480 ± 0.0010. The seed-averaged OOF ensemble gives a paired difference of +0.0003 (95% CI, -0.0006 to 0.0012), conditional on the fitted predictions and gene resampling. The interval includes zero, so no reduction was detected; because no equivalence margin was prespecified, the result does not establish formal equivalence.
 
-With explicit mouse priors, prediction of the shrinkage target reaches 0.855 ± 0.001, whereas the fixed Saluki human PC1 prior-enhanced baseline on the same universe is 0.839 ± 0.001. This difference reflects stronger alignment with conserved ortholog covariates, not improved pure human sequence-only capacity. Removing the locally reconstructed mouse PC1 used to construct the target, while retaining the released Saluki mouse PC1 and indicators, still gives 0.852 ± 0.001; retaining only missingness and high-confidence indicators returns performance to 0.753 ± 0.001. The 0.10 target is therefore a bounded core label-construction result, not a replacement ranking for the fixed human target.
+With explicit mouse priors, prediction of the shrinkage target reaches 0.8551 ± 0.0007 in the primary setting, whereas the fixed Saluki human PC1 prior-enhanced baseline on the same universe is 0.8394 ± 0.0007. The primary shrinkage-target predictor uses the audit-threshold reconstructed mouse PC1 together with released Saluki mouse PC1. To test direct reuse of the mouse vector that contributed 10% of the target, a stricter paired analysis substitutes the exact target-construction reconstructed mouse PC1. The exact dual-prior setting gives 0.8537 ± 0.0004; removing that exact vector while retaining released Saluki mouse PC1 and all availability/confidence indicators gives 0.8524 ± 0.0005. The direct-vector increment is therefore 0.0013, whereas indicators without mouse values give 0.7538 ± 0.0007. Supplementary Table S11 reports all settings. These results distinguish a small direct-target-vector contribution from the larger signal carried by external cross-species covariates.
 
 ## S9. Scale comparison between the $\lambda=0.10$ label shift and study-level noise
 
@@ -193,16 +193,16 @@ The active manuscript uses 12 fixed-definition core sets arranged in three analy
 
 | ID | Track and set | N and unit | Eligibility rule | Main use |
 | --- | --- | ---: | --- | --- |
-| L1 | Human full reconstruction | 16,444 genes | MOESM2 human genes observed in at least 3 of 54 samples | Full-human PC1, sample PCA, and starting label for human LOO auditing |
-| L2 | Mouse full reconstruction | 16,951 genes | MOESM2 mouse genes observed in at least 3 of 27 samples | Mouse PC1, mouse PCA/LOO, and reconstructed mouse-prior source |
-| L3 | Human no-Gejman reconstruction | 15,788 genes | Human genes observed in at least 3 of the 39 non-Gejman samples | No-Gejman PC1 and primary dynamic-coverage Gejman comparison |
+| L1 | Audit-threshold human full reconstruction | 16,444 genes | MOESM2 human genes observed in at least 3 of 54 samples | Full-human PC1, sample PCA, and starting label for human LOO auditing |
+| L2 | Audit-threshold mouse full reconstruction | 16,951 genes | MOESM2 mouse genes observed in at least 3 of 27 samples | Mouse PC1, mouse PCA/LOO, and fixed-target reconstructed mouse-prior source |
+| L3 | Audit-threshold human no-Gejman reconstruction | 15,788 genes | Human genes observed in at least 3 of the 39 non-Gejman samples | No-Gejman PC1 and primary dynamic-coverage Gejman comparison |
 | A1 | Fixed-LOO sensitivity universe | 14,244 genes | Genes passing the 3-sample rule in the full data and after every human study removal | Fixed-universe LOO sensitivity only |
 | A2 | Fixed human-Saluki comparison | 13,265 genes | Intersection of human full PC1, human no-Gejman PC1, and Saluki human PC1 | Fixed-gene Saluki agreement and paired bootstrap |
 | A3 | Human-mouse ortholog concordance | 12,592 ortholog pairs | Ensembl one-to-one pairs with L1, L3, and reconstructed mouse PC1 | Cross-species audit of the Gejman-related label change |
 | P1 | Broad feature-target universe | 13,532 genes | Intersection of the human sequence-feature table and Saluki human PC1 | Regulatory-block ablation and MOESM3-derived-label controls |
 | P2 | Global prediction universe | 12,916 genes | P1 genes also present in both L1 and L3 | Primary fixed-target human-only, transfer, permutation, and repeated-CV benchmark |
 | P3 | Both-priors subset | 11,107 genes | P2 genes with both reconstructed mouse PC1 and released Saluki mouse PC1 | Prior-complete coverage analysis and two-stage residual decomposition |
-| S1 | Shrinkage target-construction universe | 12,644 genes | Human no-Gejman genes retained under the Saluki-like 10-sample coverage rule | Construction of the 0.10 ortholog-informed target |
+| S1 | Target-construction human no-Gejman universe | 12,644 genes | Human no-Gejman genes retained at ≥10 observations; mouse comparator reconstructed at ≥5 | Construction of the 0.10 ortholog-informed target |
 | S2 | Shrinkage prediction universe | 12,307 genes | S1 genes with human compact features and Saluki human PC1 | Human-only/prior target prediction, ablation, and cross-target evaluation |
 | S3 | Shrinkage mapped-pair set | 10,768 ortholog pairs | S1 human genes with an Ensembl one-to-one reconstructed-mouse-PC1 match | Human-mouse label distance, target geometry, and study-noise comparison |
 | D1 | High-confidence ortholog audit | 12,376 ortholog pairs | A3 pairs with Ensembl `is_high_confidence = 1` | Ortholog-confidence sensitivity |
@@ -281,31 +281,34 @@ Supplementary Tables S9-S15 collect the strict checks. S9 reports 10-fold robust
 
 | Target and mouse comparator | λ | Genes | Target-Saluki r | Target-mouse r | Real-prior OOF r | Human-only OOF r | Shuffled-prior OOF r | Real-shuffled Δr |
 |:--|--:|--:|--:|--:|:--|:--|:--|:--|
-| 0.10 shrinkage; reconstructed mouse PC1 | 0.10 | 12,307 | 0.987 | 0.827 | 0.855 ± 0.001 | 0.754 ± 0.001 | 0.753 ± 0.001 | 0.102 ± 0.001 |
+| 0.10 shrinkage; target-construction mouse PC1 | 0.10 | 12,307 | 0.987 | 0.827 | 0.855 ± 0.001 | 0.754 ± 0.001 | 0.753 ± 0.001 | 0.102 ± 0.001 |
 | Saluki human PC1; released Saluki mouse PC1 | 0 | 12,307 | 1.000 | 0.798 | 0.839 ± 0.001 | 0.754 ± 0.001 | 0.754 ± 0.001 | 0.085 ± 0.000 |
 
 ### Supplementary Table S11. 10-fold prior-ablation benchmark for 0.10 ortholog-informed target shrinkage
 
 | Setting | Features | Folds | Seeds | OOF r, target | OOF r, Saluki | Δr vs fixed-target prior baseline |
 |:--|--:|--:|--:|:--|:--|:--|
-| human-only features | 1802 | 10 | 3 | 0.754 ± 0.001 | 0.753 ± 0.001 | -0.086 ± 0.001 |
-| availability/confidence indicators only | 1806 | 10 | 3 | 0.753 ± 0.000 | 0.753 ± 0.001 | -0.086 ± 0.000 |
-| released Saluki mouse PC1 only | 1805 | 10 | 3 | 0.852 ± 0.001 | 0.835 ± 0.001 | 0.013 ± 0.001 |
-| no direct reconstructed mouse PC1 value | 1807 | 10 | 3 | 0.852 ± 0.001 | 0.835 ± 0.001 | 0.013 ± 0.001 |
-| reconstructed mouse PC1 only | 1805 | 10 | 3 | 0.854 ± 0.000 | 0.836 ± 0.000 | 0.015 ± 0.000 |
-| both mouse priors | 1808 | 10 | 3 | 0.855 ± 0.001 | 0.837 ± 0.001 | 0.016 ± 0.001 |
+| Human-only features | 1802 | 10 | 3 | 0.7538 ± 0.0010 | 0.7533 ± 0.0013 | -0.0857 ± 0.0010 |
+| Availability/confidence indicators only | 1806 | 10 | 3 | 0.7538 ± 0.0007 | 0.7533 ± 0.0009 | -0.0857 ± 0.0007 |
+| Released Saluki mouse PC1 only | 1805 | 10 | 3 | 0.8521 ± 0.0005 | 0.8347 ± 0.0006 | 0.0127 ± 0.0005 |
+| Strict no-direct: Saluki value plus all indicators | 1807 | 10 | 3 | 0.8524 ± 0.0005 | 0.8351 ± 0.0005 | 0.0130 ± 0.0005 |
+| Exact target-construction mouse PC1 only | 1805 | 10 | 3 | 0.8525 ± 0.0003 | 0.8341 ± 0.0004 | 0.0130 ± 0.0003 |
+| Exact target-construction plus Saluki mouse PC1 | 1808 | 10 | 3 | 0.8537 ± 0.0004 | 0.8354 ± 0.0004 | 0.0143 ± 0.0004 |
+| Primary audit-threshold plus Saluki mouse PC1 | 1808 | 10 | 3 | 0.8551 ± 0.0007 | 0.8366 ± 0.0006 | 0.0156 ± 0.0007 |
+
+The primary row reproduces the manuscript's original target-prediction input. The strict direct-vector comparison is the sixth row minus the fourth row: adding the exact target-construction mouse PC1 changes target correlation by 0.0013 while released Saluki mouse PC1 and all indicators remain fixed.
 
 ### Supplementary Table S12. Human-mouse ortholog label distance
 
 | Comparison | Ortholog subset | N | Pearson r | Spearman ρ | MSE | RMSE | MAE | Median absolute error | 95th-percentile absolute error |
 |:--|:--|--:|--:|--:|--:|--:|--:|--:|--:|
-| Human no-Gejman PC1 vs reconstructed mouse PC1 | All one-to-one | 10,768 | 0.789 | 0.782 | 0.440 | 0.663 | 0.512 | 0.413 | 1.330 |
-| Shrinkage target vs reconstructed mouse PC1 | All one-to-one | 10,768 | 0.827 | 0.820 | 0.361 | 0.601 | 0.464 | 0.373 | 1.209 |
+| Human no-Gejman PC1 vs target-construction mouse PC1 | All one-to-one | 10,768 | 0.789 | 0.782 | 0.440 | 0.663 | 0.512 | 0.413 | 1.330 |
+| Shrinkage target vs target-construction mouse PC1 | All one-to-one | 10,768 | 0.827 | 0.820 | 0.361 | 0.601 | 0.464 | 0.373 | 1.209 |
 | Shrinkage target vs human no-Gejman PC1 | All one-to-one | 10,768 | 0.998 | 0.998 | 0.004 | 0.065 | 0.050 | 0.041 | 0.129 |
 | Saluki human PC1 vs released Saluki mouse PC1 | All one-to-one | 10,768 | 0.798 | 0.788 | 0.418 | 0.646 | 0.503 | 0.411 | 1.285 |
 | Shrinkage target vs Saluki human PC1 | All one-to-one | 10,768 | 0.990 | 0.992 | 0.020 | 0.142 | 0.094 | 0.063 | 0.291 |
-| Human no-Gejman PC1 vs reconstructed mouse PC1 | High confidence | 10,626 | 0.791 | 0.784 | 0.436 | 0.660 | 0.510 | 0.410 | 1.326 |
-| Shrinkage target vs reconstructed mouse PC1 | High confidence | 10,626 | 0.829 | 0.822 | 0.357 | 0.598 | 0.462 | 0.371 | 1.201 |
+| Human no-Gejman PC1 vs target-construction mouse PC1 | High confidence | 10,626 | 0.791 | 0.784 | 0.436 | 0.660 | 0.510 | 0.410 | 1.326 |
+| Shrinkage target vs target-construction mouse PC1 | High confidence | 10,626 | 0.829 | 0.822 | 0.357 | 0.598 | 0.462 | 0.371 | 1.201 |
 | Shrinkage target vs human no-Gejman PC1 | High confidence | 10,626 | 0.998 | 0.998 | 0.004 | 0.064 | 0.050 | 0.041 | 0.129 |
 | Saluki human PC1 vs released Saluki mouse PC1 | High confidence | 10,626 | 0.800 | 0.789 | 0.414 | 0.644 | 0.500 | 0.409 | 1.275 |
 | Shrinkage target vs Saluki human PC1 | High confidence | 10,626 | 0.990 | 0.992 | 0.020 | 0.142 | 0.094 | 0.063 | 0.290 |
@@ -336,11 +339,13 @@ Both training targets use the same 12,307 genes, 1802 human-only `compact_all` f
 | human no-Gejman PC1 | Saluki human PC1 | 12,307 | 0.7529 ± 0.0014 | 0.5638 ± 0.0021 | 0.6723 ± 0.0016 | 0.5273 ± 0.0017 |
 | 0.10 ortholog-informed shrinkage target | Saluki human PC1 | 12,307 | 0.7533 ± 0.0013 | 0.5650 ± 0.0019 | 0.6714 ± 0.0015 | 0.5261 ± 0.0014 |
 
-Against the original human no-Gejman PC1, averaging the three OOF predictions for each gene gave Pearson = 0.75233 after human-target training and 0.75259 after shrinkage-target training. This averaging summarizes split sensitivity and is not an additional model-blending step. The paired difference was +0.00026, with a 95% CI of -0.00061 to 0.00118 from 2,000 gene bootstraps. Because the interval crosses zero, the analysis provides no evidence that shrinkage-target training either reduces or improves predictability of the original human label at the present resolution; it is not presented as a formal equivalence test with a prespecified margin.
+Against the original human no-Gejman PC1, the seed-averaged OOF ensemble gave Pearson = 0.75233 after human-target training and 0.75259 after shrinkage-target training. The paired difference was +0.00026, with a 95% CI of -0.00061 to 0.00118 from 2,000 gene bootstraps. This interval is conditional on the fitted three-seed ensemble and gene resampling; it does not represent retraining or split uncertainty. Because the interval crosses zero, the analysis provides no evidence that shrinkage-target training either reduces or improves predictability of the original human label at the present resolution; it is not presented as a formal equivalence test with a prespecified margin.
 
 ### Supplementary Table S15. Paired-bootstrap uncertainty for key correlation differences
 
-The cross-target analysis above uses 2,000 bootstraps. This table uses 5,000 gene or one-to-one ortholog-pair bootstraps. Prior predictions are gene-wise means of the three 10-fold OOF vectors.
+The cross-target analysis above uses 2,000 bootstraps. This table uses 5,000 gene or one-to-one ortholog-pair bootstraps. Prior predictions are seed-averaged OOF ensembles formed as gene-wise means of the three 10-fold OOF vectors. Their intervals condition on the fitted predictions and resampled genes or pairs; they do not include retraining uncertainty. Resampling treats genes or ortholog pairs as units and does not model dependence within pathways or paralog families.
+
+All prediction folds in this study are gene-level random splits rather than paralog-family-grouped splits. The reported OOF values therefore estimate generalization to held-out genes under this split rule; gene-family-held-out generalization remains untested.
 
 | claim | N | candidate A Pearson | candidate B Pearson | A - B | 95% CI for difference |
 |:--|--:|--:|--:|--:|:--|
@@ -374,7 +379,7 @@ The `labels` stage downloads MOESM2/MOESM3 and runs label reconstruction, study 
 
 | Category | Path or entry point | Purpose |
 |:--|:--|:--|
-| Public repository | `https://github.com/wwzdl/mrna-pc1-label` | Provides code, result tables, figure scripts, and environment notes; audited two-author manuscript tag: `mRNA-PC1-label-v1.4.2` |
+| Public repository | `https://github.com/wwzdl/mrna-pc1-label` | Provides code, result tables, figure scripts, and environment notes; audited two-author manuscript tag: `mRNA-PC1-label-v1.4.3` |
 | Staged reproduction driver | `scripts/reproduce_bmb_key_results.sh` | Runs the `labels`, `models`, and `figures` stages with the active result paths |
 | Environment and input integrity | `requirements.txt`, `environment.yml`, `requirements-validated.txt`, `scripts/fetch_real_data.sh` | Records portable and validated dependencies and verifies the public supplementary inputs by checksum |
 | OOF integrity audit | `scripts/audit_oof_integrity.py` | Checks canonical gene counts, unique IDs, shared universes across settings/seeds, fold coverage, and complete predictions |
@@ -382,13 +387,14 @@ The `labels` stage downloads MOESM2/MOESM3 and runs label reconstruction, study 
 | Main and supplementary manuscripts | `manuscript/bmb_submission/` | Stores the Chinese/English main text, supplementary material, DOCX drafts, and submission figures |
 | Sample-level PCA imputation reproducibility | `scripts/run_sample_pca_imputation_reproducibility.sh`, `scripts/reproduce_sample_pca_imputation.py` | Reproduces low-rank imputation, coordinates, parameter JSON, and diagnostic figures for raw/processed sample PCA |
 | Human-only benchmark | `results/human_compact_oof_models.tsv` | Summarizes out-of-fold results for base-sequence and compact-feature models |
+| XGBoost parameter provenance | `scripts/reproduce_xgb_parameter_scan.py`, `results/human_xgboost_gpu_saluki_refine.tsv`, `results/human_xgboost_parameter_provenance.json` | Reproduces the preliminary same-compendium five-setting scan and records the frozen selection rule and interpretation limit |
 | Global prior benchmark | `results/human_global_mouse_prior_benchmark.tsv`, `results/tenfold_global_prior/summary_by_setting.tsv` | Records mouse-prior-enhanced models and 10-fold robustness |
 | Prior control | `results/human_global_mouse_prior_permutation_control.tsv`, `results/prior_residual_analysis/summary.tsv` | Supports the shuffled-prior control and the two-stage residual analysis |
 | 0.10 ortholog-informed target shrinkage | `results/ortholog_regularized_label_10fold_main/summary_by_label.tsv`, `results/ortholog_regularized_label_multiseed/summary_by_label.tsv`, `results/ortholog_prior_ablation_lambda0p1_10fold/summary_by_setting.tsv` | Records the $\lambda = 0.10$ target benchmark, λ sensitivity, and prior ablations |
 | Human-only cross-target evaluation | `results/ortholog_regularized_cross_target/summary_aggregate.tsv`, `results/ortholog_regularized_cross_target/paired_bootstrap_ci.tsv` | Tests for a change in original-human-label predictability after shrinkage-target training |
 | Key-claim uncertainty | `results/key_claim_bootstrap/paired_bootstrap_summary.tsv` | Provides paired-bootstrap CIs for Gejman, ortholog concordance, and real-prior gain |
 | Label distance and study noise | `results/ortholog_label_distance/distance_summary.tsv`, `results/study_noise_vs_orthoreg_shift/noise_summary.tsv` | Compares label shift, human-mouse distance, and study-to-study variability |
-| Study-influence sensitivity | `src/mrna_half_life_paper/study_influence_sensitivity.py`, `results/study_influence_sensitivity/` | Reproduces size-matched deletion, fixed-universe, preprocessing, and study-balanced controls |
+| Study-influence sensitivity | `src/mrna_half_life_paper/study_influence_sensitivity.py`, `results/study_influence_sensitivity/` | Reproduces conditional same-size deletion, fixed-universe, preprocessing, and study-balanced controls |
 | Main-text weak-shrinkage validation figure | `scripts/plot_bmb_ortholog_regularized_target.py`, `manuscript/bmb_submission/figures/main/Fig08_ortholog_regularized_target_cn.*` | Generates the label-geometry, study-noise, and cross-target panels in Fig. 8 |
 | Main-text ortholog concordance figure | `scripts/redraw_bmb_ortholog_combined_cn.py`, `manuscript/bmb_submission/figures/main/Fig05_ortholog_summary_cn.*` | Generates the paired scatter, correlation-summary, and gain panels in Fig. 5 directly from the ortholog result tables |
 | Label auditing and ortholog concordance | `results/study_influence/**/*.tsv`, `results/ortholog_analysis/*.tsv` | Stores leave-one-study-out, Saluki-label agreement, and human-mouse consistency results |

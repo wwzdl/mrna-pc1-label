@@ -1,22 +1,12 @@
 section	item	metric	value	display	source_file	note
-A	human_compendium	samples	54	54	whatif_saluki_thresholds/human_moesm2_saluki_threshold/summary.json	Human MOESM2 samples
-A	human_compendium	studies	19	19	whatif_saluki_thresholds/human_moesm2_saluki_threshold/aligned_metadata.tsv	Unique human studies
-A	human_compendium	methods	5	5	whatif_saluki_thresholds/human_moesm2_saluki_threshold/aligned_metadata.tsv	Unique human methods
-A	mouse_compendium	samples	27	27	whatif_saluki_thresholds/mouse_moesm2_saluki_threshold/summary.json	Mouse MOESM2 samples
-A	mouse_compendium	studies	17	17	whatif_saluki_thresholds/mouse_moesm2_saluki_threshold/aligned_metadata.tsv	Unique mouse studies
-A	mouse_compendium	methods	3	3	whatif_saluki_thresholds/mouse_moesm2_saluki_threshold/aligned_metadata.tsv	Unique mouse methods
-A	saluki_labels	common_genes	13532	13,532	moesm3_saluki_label_benchmark/summary.tsv	Genes in Saluki-label benchmark
-A	orthologs	one_to_one_pairs	12592	12,592	ortholog_analysis/ortholog_correlation_summary.tsv	One-to-one ortholog pairs
-A	study_audit	best_removed_study	Gejman	Gejman	study_influence/human/study_influence.tsv	Study with largest agreement gain
-A	study_audit	post_pruning_pearson	0.9829433018786948	0.983	study_influence/human/study_influence.tsv	Pearson vs Saluki human PC1 after removing Gejman
-A	study_audit	delta_pearson	0.0349200422915501	0.035	study_influence/human/study_influence.tsv	Agreement gain after removing Gejman
-B	human_only	pearson	0.7430351508258569	0.743	human_sequence_prediction_common_benchmark.tsv	Compact human-only XGBoost on common genes
-B	human_only	n_genes	12916	12,916	human_sequence_prediction_common_benchmark.tsv	Common-gene universe size
-C1	prior_enhanced	pearson_mean	0.829957788687724	0.830	tenfold_global_prior/summary.tsv	Mean Pearson across three 10-fold seeds
-C1	prior_enhanced	shuffled_mean	0.7483021984290156	0.748	tenfold_global_prior/summary.tsv	Shuffled-prior control mean Pearson
-C1	prior_enhanced	common_genes	12916	12,916	tenfold_global_prior/summary.tsv	Common genes in prior-enhanced benchmark
-C1	prior_enhanced	both_priors_available	11107	11,107	tenfold_global_prior/summary.tsv	Genes with both mouse priors
-C2	mixed_target	pearson_mean	0.8550739755043573	0.855	ortholog_regularized_label_10fold_main/summary_by_label.tsv	Mean prior-enhanced Pearson on lambda=0.10 target
-C2	mixed_target	vs_human_no_gejman	0.9978908080112764	0.998	ortholog_label_distance/distance_summary.tsv	Pearson between mixed target and human no-Gejman PC1
-C2	mixed_target	vs_saluki_human	0.9873841144540412	0.987	ortholog_regularized_label_10fold_main/summary_by_label.tsv	Pearson between mixed target and Saluki human PC1
-C2	mixed_target	n_genes	12307	12,307	ortholog_regularized_label_10fold_main/summary_by_label.tsv	Genes in lambda=0.10 target benchmark
+A	study_audit	saluki_delta_r	0.0314220600163067	Saluki delta r	results/study_influence_sensitivity/conditional_same_size_summary.tsv	Fixed 13,265-gene agreement gain after Gejman removal
+A	study_audit	ortholog_delta_r	0.0146643897520311	ortholog delta r	results/study_influence_sensitivity/conditional_same_size_summary.tsv	One-to-one ortholog-concordance gain after Gejman removal
+A	study_audit	geometry_tail_proportion	0.9640718562874252	geometry tail proportion	results/study_influence_sensitivity/conditional_same_size_summary.tsv	Conditional lower-tail proportion from 500 same-size deletions
+B	human_only	pearson_mean	0.7478300409747766	human-only r	results/tenfold_global_prior/summary_by_setting.tsv	Mean Pearson across three repeated 10-fold runs
+B	fixed_target	genes	12916.0	genes	results/tenfold_global_prior/summary_by_setting.tsv	Global fixed-target prediction universe
+B	prior_enhanced	pearson_mean	0.829957788687724	real r	results/tenfold_global_prior/summary_by_setting.tsv	Mean Pearson across three repeated 10-fold runs
+B	prior_shuffled	pearson_mean	0.7483021984290156	shuffled r	results/tenfold_global_prior/summary_by_setting.tsv	Mean Pearson after fold-aware gene-prior permutation
+C	target_geometry	human_pearson	0.9978908080112764	human r	results/ortholog_label_distance/distance_summary.tsv	Shrinkage target versus target-construction human PC1
+C	target_geometry	shift_rmse	0.0645628669835005	shift RMSE	results/ortholog_label_distance/distance_summary.tsv	Z-scale target displacement on mapped pairs
+C	target_geometry	ortholog_pairs	10768.0	ortholog pairs	results/ortholog_label_distance/distance_summary.tsv	Mapped one-to-one pairs used for geometry checks
+C	target_prediction	genes	12307.0	genes	results/ortholog_regularized_label_10fold_main/summary_by_label.tsv	Shrinkage prediction universe

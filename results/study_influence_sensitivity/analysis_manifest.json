@@ -2,7 +2,7 @@
   "n_replicates": 500,
   "random_state": 20260715,
   "n_jobs": 8,
-  "null_sampling_pool": "39 non-Gejman human samples",
+  "conditional_comparator_sampling_pool": "39 non-Gejman human samples; Gejman retained",
   "samples_removed_per_replicate": 15,
   "primary_min_observed_per_gene": 3,
   "primary_pca_imputation_rank": 5,

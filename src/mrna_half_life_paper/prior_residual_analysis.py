@@ -76,6 +76,7 @@ def run_prior_residual_analysis(
     results_root: Path | None = None,
     random_state: int = 42,
     cv_splits: int = 5,
+    nuisance_cv_splits: int = 5,
     device: str = "cuda",
 ) -> dict[str, Path]:
     feature_path = feature_path if feature_path is not None else RESULTS_DIR / "human_sequence_features_regions3mer4mer.tsv.gz"
@@ -99,9 +100,23 @@ def run_prior_residual_analysis(
     for fold_idx, (train_idx, test_idx) in enumerate(kfold.split(np.arange(len(y))), start=1):
         fold_id[test_idx] = fold_idx
 
+        train_prior_pred = np.full(len(train_idx), np.nan, dtype=np.float32)
+        nuisance_kfold = KFold(
+            n_splits=nuisance_cv_splits,
+            shuffle=True,
+            random_state=random_state + 1000 + fold_idx,
+        )
+        for nuisance_train_rel, nuisance_test_rel in nuisance_kfold.split(train_idx):
+            nuisance_model = RidgeCV(alphas=np.logspace(-3, 3, 15))
+            nuisance_model.fit(x_prior[train_idx[nuisance_train_rel]], y[train_idx[nuisance_train_rel]])
+            train_prior_pred[nuisance_test_rel] = nuisance_model.predict(
+                x_prior[train_idx[nuisance_test_rel]]
+            ).astype(np.float32)
+        if not np.isfinite(train_prior_pred).all():
+            raise RuntimeError(f"Incomplete cross-fitted nuisance predictions in outer fold {fold_idx}.")
+
         prior_model = RidgeCV(alphas=np.logspace(-3, 3, 15))
         prior_model.fit(x_prior[train_idx], y[train_idx])
-        train_prior_pred = prior_model.predict(x_prior[train_idx]).astype(np.float32)
         test_prior_pred = prior_model.predict(x_prior[test_idx]).astype(np.float32)
         prior_pred[test_idx] = test_prior_pred
 
@@ -151,6 +166,7 @@ def run_prior_residual_analysis(
                 "model": "prior_only_linear",
                 "n": int(len(df)),
                 "cv_splits": int(cv_splits),
+                "nuisance_cv_splits": int(nuisance_cv_splits),
                 "random_state": int(random_state),
                 "n_prior_features": int(len(PRIOR_COLS)),
                 "n_human_features": 0,
@@ -164,6 +180,7 @@ def run_prior_residual_analysis(
                 "model": "compact_all_only",
                 "n": int(len(df)),
                 "cv_splits": int(cv_splits),
+                "nuisance_cv_splits": int(nuisance_cv_splits),
                 "random_state": int(random_state),
                 "n_prior_features": 0,
                 "n_human_features": int(len(human_cols)),
@@ -177,6 +194,7 @@ def run_prior_residual_analysis(
                 "model": "prior_plus_compact_residual",
                 "n": int(len(df)),
                 "cv_splits": int(cv_splits),
+                "nuisance_cv_splits": int(nuisance_cv_splits),
                 "random_state": int(random_state),
                 "n_prior_features": int(len(PRIOR_COLS)),
                 "n_human_features": int(len(human_cols)),
@@ -202,10 +220,11 @@ def run_prior_residual_analysis(
     note_path = MANUSCRIPT_DIR.parent / "docs" / "prior_residual_analysis.md"
     result_table_path = results_root / "residual_decomposition_table.md"
 
-    summary.to_csv(summary_path, sep="\t", index=False)
-    oof.to_csv(oof_path, sep="\t", index=False)
+    summary.to_csv(summary_path, sep="\t", index=False, na_rep="NA")
+    oof.to_csv(oof_path, sep="\t", index=False, na_rep="NA")
+    json_records = summary.astype(object).where(pd.notna(summary), None).to_dict(orient="records")
     with open(json_path, "w", encoding="utf-8") as handle:
-        json.dump(summary.to_dict(orient="records"), handle, indent=2)
+        json.dump(json_records, handle, indent=2, allow_nan=False)
 
     _write_note(summary, note_path)
     _write_result_table(summary, result_table_path)
@@ -242,7 +261,7 @@ def _write_note(summary: pd.DataFrame, note_path: Path) -> Path:
         "",
         "1. 仅保留同时具有重建 mouse prior 和 Saluki mouse PC1 的 `both_priors_available` genes。",
         "2. 在每个 outer fold 中，用两列 mouse priors 训练 RidgeCV，并对 held-out fold 得到 `prior_only_prediction`。",
-        "3. 在训练折内计算 `Saluki human PC1 - prior_prediction`，作为 residual target。",
+        "3. 在 outer-training genes 内再做 5-fold cross-fitting，使用 nuisance OOF prior prediction 构造 residual target。",
         "4. 用 human `compact_all` features 训练 XGBoost/CUDA 去预测 residual target。",
         "5. held-out fold 的最终预测为 `prior_only_prediction + compact_residual_prediction`。",
         "",
@@ -308,6 +327,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--results-root", type=Path, default=RESULTS_DIR / "prior_residual_analysis")
     parser.add_argument("--random-state", type=int, default=42)
     parser.add_argument("--cv-splits", type=int, default=5)
+    parser.add_argument("--nuisance-cv-splits", type=int, default=5)
     parser.add_argument("--device", default="cuda")
     return parser.parse_args()
 
@@ -319,6 +339,7 @@ def main() -> None:
         results_root=args.results_root,
         random_state=args.random_state,
         cv_splits=args.cv_splits,
+        nuisance_cv_splits=args.nuisance_cv_splits,
         device=args.device,
     )
     for label, path in outputs.items():

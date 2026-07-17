@@ -23,7 +23,7 @@ The 0.10 ortholog-informed shrinkage target remains a core contribution. It is n
 ### Residual scientific risks already disclosed
 
 - Label auditing uses one public compendium and lacks an independent second half-life resource.
-- The 500-replicate size-matched null and two study-balanced estimators show that `Gejman` is not a sample-count-adjusted geometric outlier. Its positive Saluki-agreement and ortholog-concordance gains remain directional evidence that was not reproduced by the null.
+- The 500 conditional deletions of 15 non-Gejman samples and two study-balanced estimators show that `Gejman` is not a sample-count-adjusted geometric outlier. Its positive Saluki-agreement and ortholog-concordance gains remain directional evidence that was not reproduced by those comparator deletions.
 - `lambda = 0.10` is a conservative empirical choice whose portability requires external validation.
 - The benchmark uses gene-level random OOF splits and does not recreate Saluki's fixed test split; cross-paper score comparisons therefore remain descriptive.
 

@@ -1,0 +1,21 @@
+{
+  "scope": "Preliminary base-sequence XGBoost scan on the P2 common-gene universe.",
+  "target": "saluki_human_pc1",
+  "genes": 12916,
+  "features": 526,
+  "cv_splits": 5,
+  "random_state": 42,
+  "inner_validation": "max(512, 10% of outer-training genes)",
+  "selection_metric": "highest OOF Pearson, with OOF R2 as a deterministic tie-breaker",
+  "selected_parameters": {
+    "max_depth": 6,
+    "learning_rate": 0.02,
+    "min_child_weight": 4,
+    "subsample": 0.9,
+    "colsample_bytree": 0.75,
+    "reg_alpha": 0.0,
+    "reg_lambda": 1.0
+  },
+  "downstream_use": "The selected setting was frozen for compact, prior-enhanced, shuffled-prior, cross-target, and residual analyses.",
+  "inference_boundary": "Selection and OOF evaluation use the same compendium, so absolute performance is descriptive rather than a nested-CV estimate. Matched real-versus-control comparisons use identical frozen parameters."
+}

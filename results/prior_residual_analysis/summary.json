@@ -4,6 +4,7 @@
     "model": "prior_only_linear",
     "n": 11107,
     "cv_splits": 5,
+    "nuisance_cv_splits": 5,
     "random_state": 42,
     "n_prior_features": 2,
     "n_human_features": 0,
@@ -12,13 +13,14 @@
     "r2": 0.6270959377288818,
     "delta_r2_vs_prior": 0.0,
     "remaining_variance_explained": 0.0,
-    "mean_best_iter": NaN
+    "mean_best_iter": null
   },
   {
     "analysis": "prior_residual_analysis",
     "model": "compact_all_only",
     "n": 11107,
     "cv_splits": 5,
+    "nuisance_cv_splits": 5,
     "random_state": 42,
     "n_prior_features": 0,
     "n_human_features": 1802,
@@ -26,7 +28,7 @@
     "spearman": 0.7308186043147564,
     "r2": 0.5435508489608765,
     "delta_r2_vs_prior": -0.08354508876800537,
-    "remaining_variance_explained": NaN,
+    "remaining_variance_explained": null,
     "mean_best_iter": 1482.4
   },
   {
@@ -34,14 +36,15 @@
     "model": "prior_plus_compact_residual",
     "n": 11107,
     "cv_splits": 5,
+    "nuisance_cv_splits": 5,
     "random_state": 42,
     "n_prior_features": 2,
     "n_human_features": 1802,
-    "pearson": 0.826223895292212,
-    "spearman": 0.8175488438566175,
-    "r2": 0.674774169921875,
-    "delta_r2_vs_prior": 0.047678232192993164,
-    "remaining_variance_explained": 0.12785656423964867,
-    "mean_best_iter": 312.6
+    "pearson": 0.8261294858049466,
+    "spearman": 0.8173014829785474,
+    "r2": 0.6750162839889526,
+    "delta_r2_vs_prior": 0.0479203462600708,
+    "remaining_variance_explained": 0.1285058306102081,
+    "mean_best_iter": 256.6
   }
 ]

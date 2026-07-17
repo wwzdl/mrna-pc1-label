@@ -15,13 +15,15 @@ import pandas as pd
 from mrna_half_life_paper.benchmark import label_correlation
 from mrna_half_life_paper.config import FIGURES_DIR, MANUSCRIPT_DIR, RESULTS_DIR
 from mrna_half_life_paper.label_competition import _load_prior_feature_table, _xgb_oof_predictions
+from mrna_half_life_paper.ortholog_analysis import ONE2ONE_ORTHOLOG_PATH, extract_mouse_human_one2one
 from mrna_half_life_paper.ortholog_regularized_label import (
     _display_label_name,
-    _load_saluki_label,
     _load_human_base_label,
     _load_reconstructed_mouse_pc1,
+    _load_saluki_label,
     _mean_sd_text,
     _ortholog_correlation,
+    _zscore,
     make_ortholog_regularized_label,
 )
 from mrna_half_life_paper.saluki_naming import HAS_SALUKI_MOUSE_PRIOR, SALUKI_MOUSE_HIGH_CONFIDENCE, SALUKI_MOUSE_PRIOR
@@ -29,6 +31,9 @@ from mrna_half_life_paper.saluki_naming import HAS_SALUKI_MOUSE_PRIOR, SALUKI_MO
 
 SALUKI_PRIOR_BASELINE = 0.836801
 SALUKI_PURE_BASELINE = 0.749565
+TARGET_MOUSE_PC1 = "target_reconstructed_mouse_pc1"
+HAS_TARGET_MOUSE_PC1 = "has_target_reconstructed_mouse_pc1"
+TARGET_MOUSE_HIGH_CONFIDENCE = "target_reconstructed_mouse_high_confidence"
 
 
 @dataclass(frozen=True)
@@ -46,31 +51,84 @@ def _source_label(source: str) -> pd.Series:
     raise ValueError(f"Unknown source: {source}")
 
 
+def _attach_target_construction_mouse_prior(
+    prior_base: pd.DataFrame,
+    mouse_label: pd.Series,
+) -> pd.DataFrame:
+    """Attach the exact mapped mouse vector used to construct the shrinkage target."""
+    extract_mouse_human_one2one()
+    mapping = pd.read_csv(ONE2ONE_ORTHOLOG_PATH, sep="\t")
+    mapped = mapping.loc[
+        mapping["human_gene_id"].isin(prior_base["gene_id"])
+        & mapping["mouse_gene_id"].isin(mouse_label.index),
+        ["human_gene_id", "mouse_gene_id", "is_high_confidence"],
+    ].copy()
+    if mapped["human_gene_id"].duplicated().any():
+        raise ValueError("Target-construction mouse prior is not one-to-one by human gene.")
+
+    mapped[TARGET_MOUSE_PC1] = mapped["mouse_gene_id"].map(_zscore(mouse_label))
+    mapped = mapped.rename(columns={"human_gene_id": "gene_id"})
+    mapped[HAS_TARGET_MOUSE_PC1] = mapped[TARGET_MOUSE_PC1].notna().astype(np.float32)
+    mapped[TARGET_MOUSE_HIGH_CONFIDENCE] = (
+        mapped["is_high_confidence"].fillna(0).astype(np.float32) * mapped[HAS_TARGET_MOUSE_PC1]
+    )
+    mapped = mapped[
+        [
+            "gene_id",
+            TARGET_MOUSE_PC1,
+            HAS_TARGET_MOUSE_PC1,
+            TARGET_MOUSE_HIGH_CONFIDENCE,
+        ]
+    ]
+
+    out = prior_base.drop(
+        columns=[TARGET_MOUSE_PC1, HAS_TARGET_MOUSE_PC1, TARGET_MOUSE_HIGH_CONFIDENCE],
+        errors="ignore",
+    ).merge(mapped, on="gene_id", how="left")
+    out[HAS_TARGET_MOUSE_PC1] = out[HAS_TARGET_MOUSE_PC1].fillna(0).astype(np.float32)
+    out[TARGET_MOUSE_HIGH_CONFIDENCE] = out[TARGET_MOUSE_HIGH_CONFIDENCE].fillna(0).astype(np.float32)
+    out[TARGET_MOUSE_PC1] = out[TARGET_MOUSE_PC1].fillna(0.0)
+    return out.sort_values("gene_id").reset_index(drop=True)
+
+
 def _feature_settings(base_cols: list[str], source: str) -> list[FeatureSetting]:
     mouse_triple = ["mouse_pc1", "has_mouse_pc1", "mouse_pc1_highconf"]
     saluki_mouse_triple = [SALUKI_MOUSE_PRIOR, HAS_SALUKI_MOUSE_PRIOR, SALUKI_MOUSE_HIGH_CONFIDENCE]
-    all_masks = [
-        "has_mouse_pc1",
-        "mouse_pc1_highconf",
-        HAS_SALUKI_MOUSE_PRIOR,
-        SALUKI_MOUSE_HIGH_CONFIDENCE,
-    ]
     if source == "reconstructed_mouse_pc1":
-        direct_triple = mouse_triple
+        direct_triple = [TARGET_MOUSE_PC1, HAS_TARGET_MOUSE_PC1, TARGET_MOUSE_HIGH_CONFIDENCE]
         alternate_triple = saluki_mouse_triple
+        all_masks = [
+            HAS_TARGET_MOUSE_PC1,
+            TARGET_MOUSE_HIGH_CONFIDENCE,
+            HAS_SALUKI_MOUSE_PRIOR,
+            SALUKI_MOUSE_HIGH_CONFIDENCE,
+        ]
         direct_name = "direct_reconstructed_mouse_pc1"
         alternate_name = "alternate_saluki_mouse_prior"
         no_direct_name = "no_direct_reconstructed_mouse_pc1"
+        paired_both_name = "exact_target_and_saluki_priors"
+        paired_both_description = (
+            "Human features plus the exact target-construction mouse PC1 and Saluki mouse PC1, "
+            "with their indicators."
+        )
     elif source == "saluki_mouse_prior":
         direct_triple = saluki_mouse_triple
         alternate_triple = mouse_triple
+        all_masks = [
+            "has_mouse_pc1",
+            "mouse_pc1_highconf",
+            HAS_SALUKI_MOUSE_PRIOR,
+            SALUKI_MOUSE_HIGH_CONFIDENCE,
+        ]
         direct_name = "direct_saluki_mouse_prior"
         alternate_name = "alternate_reconstructed_mouse_pc1"
         no_direct_name = "no_direct_saluki_mouse_prior"
+        paired_both_name = "both_mouse_priors"
+        paired_both_description = "Human features plus both mouse prior values and their indicators."
     else:
         raise ValueError(f"Unknown source: {source}")
 
-    return [
+    settings = [
         FeatureSetting(
             name="human_only",
             description="Compact human sequence and regulatory features only.",
@@ -93,15 +151,27 @@ def _feature_settings(base_cols: list[str], source: str) -> list[FeatureSetting]
         ),
         FeatureSetting(
             name=direct_name,
-            description="Human features plus the same mouse prior source used in label regularization.",
+            description="Human features plus the exact mapped mouse vector used in label regularization.",
             columns=base_cols + direct_triple,
         ),
         FeatureSetting(
-            name="both_mouse_priors",
-            description="Human features plus both mouse prior values and their indicators.",
-            columns=base_cols + mouse_triple + saluki_mouse_triple,
+            name=paired_both_name,
+            description=paired_both_description,
+            columns=base_cols + direct_triple + alternate_triple,
         ),
     ]
+    if source == "reconstructed_mouse_pc1":
+        settings.append(
+            FeatureSetting(
+                name="primary_audit_and_saluki_priors",
+                description=(
+                    "Primary target-prediction input: human features plus the audit-threshold "
+                    "reconstructed mouse PC1 and Saluki mouse PC1, with their indicators."
+                ),
+                columns=base_cols + mouse_triple + saluki_mouse_triple,
+            )
+        )
+    return settings
 
 
 def _display_setting_name(name: str) -> str:
@@ -114,6 +184,8 @@ def _display_setting_name(name: str) -> str:
         "no_direct_saluki_mouse_prior": "no_direct_saluki_mouse_prior",
         "direct_reconstructed_mouse_pc1": "direct_reconstructed_mouse_pc1",
         "direct_saluki_mouse_prior": "direct_saluki_mouse_prior",
+        "exact_target_and_saluki_priors": "exact_target_and_saluki_priors",
+        "primary_audit_and_saluki_priors": "primary_audit_and_saluki_priors",
         "both_mouse_priors": "both_mouse_priors",
     }.get(name, name)
 
@@ -164,6 +236,8 @@ def _plot_ablation(aggregate: pd.DataFrame, figures_dir: Path) -> list[Path]:
         "no_direct_saluki_mouse_prior": "No direct\nSaluki prior",
         "direct_reconstructed_mouse_pc1": "Direct\nreconstructed PC1",
         "direct_saluki_mouse_prior": "Direct\nSaluki prior",
+        "exact_target_and_saluki_priors": "Exact target\n+ Saluki",
+        "primary_audit_and_saluki_priors": "Primary audit\n+ Saluki",
         "both_mouse_priors": "Both priors",
     }
     colors = {
@@ -175,6 +249,8 @@ def _plot_ablation(aggregate: pd.DataFrame, figures_dir: Path) -> list[Path]:
         "no_direct_saluki_mouse_prior": "#72b7b2",
         "direct_reconstructed_mouse_pc1": "#2f7f6f",
         "direct_saluki_mouse_prior": "#2f7f6f",
+        "exact_target_and_saluki_priors": "#1b5e54",
+        "primary_audit_and_saluki_priors": "#3d7168",
         "both_mouse_priors": "#1b5e54",
     }
     for label_name, label_df in aggregate.groupby("label", sort=False):
@@ -235,27 +311,23 @@ def _write_note(aggregate: pd.DataFrame, note_path: Path, figure_paths: list[Pat
                 f"Pearson(Saluki human PC1)="
                 f"{_mean_sd_text(row, 'pearson_vs_saluki_mean', 'pearson_vs_saluki_sd')}。"
             )
-        if "no_direct_reconstructed_mouse_pc1" in label_df.index and "both_mouse_priors" in label_df.index:
+        if (
+            "no_direct_reconstructed_mouse_pc1" in label_df.index
+            and "exact_target_and_saluki_priors" in label_df.index
+        ):
             no_direct = label_df.loc["no_direct_reconstructed_mouse_pc1"]
-            both = label_df.loc["both_mouse_priors"]
+            both = label_df.loc["exact_target_and_saluki_priors"]
             lines.append(
-                f"- no-direct setting 保留替代 Saluki mouse PC1 后，target Pearson="
+                f"- 严格 no-direct setting 保留 Saluki mouse PC1 和全部 indicators 后，target Pearson="
                 f"{_mean_sd_text(no_direct, 'pearson_vs_target_mean', 'pearson_vs_target_sd')}；"
-                f"完整 both-prior setting 为 "
+                f"加入精确 target-construction mouse PC1 后为 "
                 f"{_mean_sd_text(both, 'pearson_vs_target_mean', 'pearson_vs_target_sd')}。"
             )
             lines.append(
-                f"- no-direct setting 相对 Saluki human PC1 prior baseline 的增益为 "
+                f"- 严格 no-direct setting 相对 Saluki human PC1 prior baseline 的增益为 "
                 f"{_mean_sd_text(no_direct, 'delta_vs_saluki_prior_baseline_mean', 'delta_vs_saluki_prior_baseline_sd')}；"
-                f"both-prior 相对 no-direct 只再增加 "
+                f"精确 target-construction prior 相对 no-direct 再增加 "
                 f"{both['pearson_vs_target_mean'] - no_direct['pearson_vs_target_mean']:.4f}。"
-            )
-        if "no_direct_reconstructed_mouse_pc1" in label_df.index and "direct_reconstructed_mouse_pc1" in label_df.index:
-            no_direct = label_df.loc["no_direct_reconstructed_mouse_pc1"]
-            direct = label_df.loc["direct_reconstructed_mouse_pc1"]
-            lines.append(
-                f"- direct reconstructed mouse PC1 相对 no-direct setting 的增益为 "
-                f"{direct['pearson_vs_target_mean'] - no_direct['pearson_vs_target_mean']:.4f}。"
             )
         lines.append("")
     lines.extend(
@@ -263,7 +335,7 @@ def _write_note(aggregate: pd.DataFrame, note_path: Path, figure_paths: list[Pat
             "## Interpretation",
             "",
             "- 如果 mask-only 接近 human-only，说明 missingness/confidence 指示本身不能解释提升。",
-            "- 如果 no-direct setting 低于 both-prior setting，说明同源 mouse prior 值确实贡献了标签可预测性。",
+            "- 严格 direct-vector 对比固定 Saluki mouse PC1 和全部 indicators，只检验精确 target-construction mouse PC1 的增量。",
             "- 该结果用于限定论文主张：ortholog-informed shrinkage target 的优势属于 cross-species prior-enhanced setting，而不是 pure human-only sequence setting。",
             "",
             "## Figures",
@@ -301,11 +373,18 @@ def run_prior_ablation(
     oof_dir = results_root / "oof_predictions"
     oof_dir.mkdir(parents=True, exist_ok=True)
 
-    prior_base, base_cols, _ = _load_prior_feature_table(feature_path)
-    settings = _feature_settings(base_cols, source)
     human_base = _load_human_base_label()
     mouse_label = _source_label(source)
     human_saluki = _load_saluki_label("human")
+    prior_base, base_cols, _ = _load_prior_feature_table(feature_path)
+    if source == "reconstructed_mouse_pc1":
+        prior_base = _attach_target_construction_mouse_prior(prior_base, mouse_label)
+        direct_availability_column = HAS_TARGET_MOUSE_PC1
+        direct_value_column = TARGET_MOUSE_PC1
+    else:
+        direct_availability_column = HAS_SALUKI_MOUSE_PRIOR
+        direct_value_column = SALUKI_MOUSE_PRIOR
+    settings = _feature_settings(base_cols, source)
 
     rows: list[dict[str, float | int | str]] = []
     for lambda_ in lambdas:
@@ -360,8 +439,10 @@ def run_prior_ablation(
                         "cv_splits": int(cv_splits),
                         "n": int(merged.shape[0]),
                         "n_features": int(len(setting.columns)),
-                        "n_with_mouse_pc1": int(merged["has_mouse_pc1"].sum()),
+                        "n_with_direct_prior": int(merged[direct_availability_column].sum()),
+                        "n_with_audit_threshold_mouse_pc1": int(merged["has_mouse_pc1"].sum()),
                         "n_with_saluki_mouse_prior": int(merged["has_saluki_mouse_prior"].sum()),
+                        "direct_prior_value_column": direct_value_column,
                         "target_vs_saluki_pearson": target_saluki_corr["pearson"],
                         "target_vs_saluki_spearman": target_saluki_corr["spearman"],
                         "ortholog_n": int(ortholog_corr["n"]),
@@ -388,6 +469,31 @@ def run_prior_ablation(
     aggregate.to_csv(aggregate_path, sep="\t", index=False)
     with open(results_root / "summary.json", "w", encoding="utf-8") as handle:
         json.dump(rows, handle, indent=2)
+    metadata = {
+        "target_human_coverage_threshold": 10,
+        "target_mouse_coverage_threshold": 5 if source == "reconstructed_mouse_pc1" else None,
+        "direct_prior_value_column": direct_value_column,
+        "direct_prior_definition": (
+            "Exact one-to-one-ortholog mapping of the z-scored >=5-sample mouse PC1 used in target construction."
+            if source == "reconstructed_mouse_pc1"
+            else "Released Saluki mouse PC1 used in target construction."
+        ),
+        "paired_no_direct_comparison": (
+            "exact_target_and_saluki_priors versus no_direct_reconstructed_mouse_pc1"
+            if source == "reconstructed_mouse_pc1"
+            else "both_mouse_priors versus no_direct_saluki_mouse_prior"
+        ),
+        "primary_target_prediction_setting": (
+            "primary_audit_and_saluki_priors" if source == "reconstructed_mouse_pc1" else None
+        ),
+        "audit_threshold_mouse_pc1_role": (
+            "Retained only in primary_audit_and_saluki_priors to reproduce the original target-prediction input."
+            if source == "reconstructed_mouse_pc1"
+            else None
+        ),
+    }
+    with open(results_root / "analysis_metadata.json", "w", encoding="utf-8") as handle:
+        json.dump(metadata, handle, indent=2)
     figure_paths = (
         _plot_ablation(aggregate, FIGURES_DIR / "ortholog_regularized_label" / "prior_ablation")
         if make_figures

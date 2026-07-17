@@ -1,0 +1,9 @@
+{
+  "target_human_coverage_threshold": 10,
+  "target_mouse_coverage_threshold": 5,
+  "direct_prior_value_column": "target_reconstructed_mouse_pc1",
+  "direct_prior_definition": "Exact one-to-one-ortholog mapping of the z-scored >=5-sample mouse PC1 used in target construction.",
+  "paired_no_direct_comparison": "exact_target_and_saluki_priors versus no_direct_reconstructed_mouse_pc1",
+  "primary_target_prediction_setting": "primary_audit_and_saluki_priors",
+  "audit_threshold_mouse_pc1_role": "Retained only in primary_audit_and_saluki_priors to reproduce the original target-prediction input."
+}

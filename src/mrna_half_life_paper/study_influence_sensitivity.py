@@ -29,7 +29,7 @@ from mrna_half_life_paper.study_influence import _load_species_inputs
 DEFAULT_RANDOM_STATE = 20260715
 DEFAULT_N_REPLICATES = 500
 
-_NULL_STATE: dict[str, object] = {}
+_COMPARATOR_STATE: dict[str, object] = {}
 
 
 def _build_pc1(
@@ -191,26 +191,26 @@ def _leave_one_study_out(
     return pd.DataFrame(rows).sort_values("pc1_stability_pearson"), full_pc1
 
 
-def _initialize_null_worker(state: dict[str, object]) -> None:
-    global _NULL_STATE
-    _NULL_STATE = state
+def _initialize_comparator_worker(state: dict[str, object]) -> None:
+    global _COMPARATOR_STATE
+    _COMPARATOR_STATE = state
 
 
 def _random_removal_worker(task: tuple[int, tuple[str, ...]]) -> dict[str, object]:
     replicate, removed = task
-    matrix = _NULL_STATE["matrix"]
-    full_pc1 = _NULL_STATE["full_pc1"]
-    saluki_human_pc1 = _NULL_STATE["saluki_human_pc1"]
-    mouse_pc1 = _NULL_STATE["mouse_pc1"]
-    mapping = _NULL_STATE["mapping"]
-    min_observed = int(_NULL_STATE["min_observed_per_gene"])
-    n_components = int(_NULL_STATE["n_components"])
+    matrix = _COMPARATOR_STATE["matrix"]
+    full_pc1 = _COMPARATOR_STATE["full_pc1"]
+    saluki_human_pc1 = _COMPARATOR_STATE["saluki_human_pc1"]
+    mouse_pc1 = _COMPARATOR_STATE["mouse_pc1"]
+    mapping = _COMPARATOR_STATE["mapping"]
+    min_observed = int(_COMPARATOR_STATE["min_observed_per_gene"])
+    n_components = int(_COMPARATOR_STATE["n_components"])
     if not isinstance(matrix, pd.DataFrame):
-        raise TypeError("Null worker matrix was not initialized")
+        raise TypeError("Comparator worker matrix was not initialized")
     if not all(isinstance(value, pd.Series) for value in (full_pc1, saluki_human_pc1, mouse_pc1)):
-        raise TypeError("Null worker labels were not initialized")
+        raise TypeError("Comparator worker labels were not initialized")
     if not isinstance(mapping, pd.DataFrame):
-        raise TypeError("Null worker ortholog mapping was not initialized")
+        raise TypeError("Comparator worker ortholog mapping was not initialized")
 
     candidate = _build_pc1(
         matrix.drop(columns=list(removed)),
@@ -231,7 +231,10 @@ def _random_removal_worker(task: tuple[int, tuple[str, ...]]) -> dict[str, objec
     return row
 
 
-def _empirical_null_summary(observed: dict[str, object], null: pd.DataFrame) -> pd.DataFrame:
+def _conditional_deletion_summary(
+    observed: dict[str, object],
+    comparators: pd.DataFrame,
+) -> pd.DataFrame:
     rows: list[dict[str, object]] = []
     definitions = (
         ("pc1_stability_pearson", "lower"),
@@ -239,7 +242,7 @@ def _empirical_null_summary(observed: dict[str, object], null: pd.DataFrame) -> 
         ("delta_ortholog_pearson", "higher"),
     )
     for metric, direction in definitions:
-        values = null[metric].to_numpy(dtype=float)
+        values = comparators[metric].to_numpy(dtype=float)
         value = float(observed[metric])
         if direction == "lower":
             extreme = int(np.count_nonzero(values <= value))
@@ -250,12 +253,12 @@ def _empirical_null_summary(observed: dict[str, object], null: pd.DataFrame) -> 
                 "metric": metric,
                 "extreme_direction": direction,
                 "observed_gejman": value,
-                "null_n": len(values),
-                "null_median": float(np.median(values)),
-                "null_q025": float(np.quantile(values, 0.025)),
-                "null_q975": float(np.quantile(values, 0.975)),
+                "comparator_n": len(values),
+                "comparator_median": float(np.median(values)),
+                "comparator_q025": float(np.quantile(values, 0.025)),
+                "comparator_q975": float(np.quantile(values, 0.975)),
                 "observed_percentile": float(np.mean(values <= value)),
-                "empirical_p_one_sided": float((extreme + 1) / (len(values) + 1)),
+                "empirical_tail_proportion": float((extreme + 1) / (len(values) + 1)),
             }
         )
     return pd.DataFrame(rows)
@@ -384,7 +387,7 @@ def run_study_influence_sensitivity(
         )
         for replicate in range(1, n_replicates + 1)
     ]
-    null_state: dict[str, object] = {
+    comparator_state: dict[str, object] = {
         "matrix": matrix,
         "full_pc1": full_pc1,
         "saluki_human_pc1": saluki_human_pc1,
@@ -396,15 +399,23 @@ def run_study_influence_sensitivity(
     context = mp.get_context("fork")
     with context.Pool(
         processes=max(1, n_jobs),
-        initializer=_initialize_null_worker,
-        initargs=(null_state,),
+        initializer=_initialize_comparator_worker,
+        initargs=(comparator_state,),
     ) as pool:
-        null_rows = list(pool.imap_unordered(_random_removal_worker, tasks, chunksize=1))
-    null = pd.DataFrame(null_rows).sort_values("replicate")
-    null.to_csv(results_root / "size_matched_random_removal.tsv", sep="\t", index=False)
+        comparator_rows = list(pool.imap_unordered(_random_removal_worker, tasks, chunksize=1))
+    comparators = pd.DataFrame(comparator_rows).sort_values("replicate")
+    comparators.to_csv(
+        results_root / "conditional_same_size_deletions.tsv",
+        sep="\t",
+        index=False,
+    )
     observed = primary_dynamic.loc[primary_dynamic["study"] == "Gejman"].iloc[0].to_dict()
-    null_summary = _empirical_null_summary(observed, null)
-    null_summary.to_csv(results_root / "size_matched_null_summary.tsv", sep="\t", index=False)
+    comparator_summary = _conditional_deletion_summary(observed, comparators)
+    comparator_summary.to_csv(
+        results_root / "conditional_same_size_summary.tsv",
+        sep="\t",
+        index=False,
+    )
 
     sensitivity_rows: list[dict[str, object]] = []
     parameter_sets = [
@@ -461,7 +472,7 @@ def run_study_influence_sensitivity(
         "n_replicates": n_replicates,
         "random_state": random_state,
         "n_jobs": n_jobs,
-        "null_sampling_pool": "39 non-Gejman human samples",
+        "conditional_comparator_sampling_pool": "39 non-Gejman human samples; Gejman retained",
         "samples_removed_per_replicate": 15,
         "primary_min_observed_per_gene": 3,
         "primary_pca_imputation_rank": 5,
@@ -480,8 +491,8 @@ def run_study_influence_sensitivity(
     return {
         "primary_dynamic": results_root / "primary_dynamic_loo.tsv",
         "primary_fixed": results_root / "primary_fixed_loo.tsv",
-        "null_replicates": results_root / "size_matched_random_removal.tsv",
-        "null_summary": results_root / "size_matched_null_summary.tsv",
+        "conditional_deletions": results_root / "conditional_same_size_deletions.tsv",
+        "conditional_summary": results_root / "conditional_same_size_summary.tsv",
         "pipeline_sensitivity": results_root / "pipeline_sensitivity_summary.tsv",
         "study_weighted_loo": results_root / "study_weighted_loo.tsv",
         "study_weighted_summary": results_root / "study_weighted_summary.tsv",

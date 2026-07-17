@@ -8,13 +8,16 @@ from pathlib import Path
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
+import pandas as pd
 from matplotlib.patches import FancyArrowPatch, FancyBboxPatch
 
 
 ROOT = Path(__file__).resolve().parents[1]
+RESULTS = ROOT / "results"
 SUBMISSION = ROOT / "manuscript" / "bmb_submission"
 MAIN_OUT = SUBMISSION / "figures" / "main" / "Fig01_workflow"
 SUPP_OUT = SUBMISSION / "figures" / "supplement" / "FigS01_prediction_boundary_flow"
+MAIN_DATA = SUBMISSION / "figures" / "data" / "Fig01_panel_data.tsv"
 
 BLUE = "#356AC3"
 BLUE_LIGHT = "#F3F7FE"
@@ -167,7 +170,13 @@ def _band(
 
 def _save(fig: plt.Figure, stem: Path) -> None:
     stem.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(stem.with_suffix(".svg"), bbox_inches="tight", facecolor=WHITE)
+    svg_path = stem.with_suffix(".svg")
+    fig.savefig(svg_path, bbox_inches="tight", facecolor=WHITE)
+    svg_text = svg_path.read_text(encoding="utf-8")
+    svg_path.write_text(
+        "\n".join(line.rstrip() for line in svg_text.splitlines()) + "\n",
+        encoding="utf-8",
+    )
     if os.environ.get("BMB_SKIP_PDF") != "1":
         fig.savefig(stem.with_suffix(".pdf"), bbox_inches="tight", facecolor=WHITE)
     fig.savefig(stem.with_suffix(".png"), dpi=600, bbox_inches="tight", facecolor=WHITE)
@@ -180,7 +189,170 @@ def _save(fig: plt.Figure, stem: Path) -> None:
     )
 
 
-def draw_main_workflow() -> None:
+def _build_main_panel_data() -> pd.DataFrame:
+    conditional_path = RESULTS / "study_influence_sensitivity" / "conditional_same_size_summary.tsv"
+    conditional = pd.read_csv(conditional_path, sep="\t").set_index("metric")
+    global_path = RESULTS / "tenfold_global_prior" / "summary_by_setting.tsv"
+    global_summary = pd.read_csv(global_path, sep="\t").set_index("prior_mode")
+    distance_path = RESULTS / "ortholog_label_distance" / "distance_summary.tsv"
+    distance = pd.read_csv(distance_path, sep="\t").set_index(["comparison", "subset"])
+    target_path = RESULTS / "ortholog_regularized_label_10fold_main" / "summary_by_label.tsv"
+    target = pd.read_csv(target_path, sep="\t").set_index("label")
+
+    values = [
+        (
+            "A",
+            "study_audit",
+            "saluki_delta_r",
+            conditional.loc["delta_saluki_pearson", "observed_gejman"],
+            "Saluki delta r",
+            conditional_path,
+            "Fixed 13,265-gene agreement gain after Gejman removal",
+        ),
+        (
+            "A",
+            "study_audit",
+            "ortholog_delta_r",
+            conditional.loc["delta_ortholog_pearson", "observed_gejman"],
+            "ortholog delta r",
+            conditional_path,
+            "One-to-one ortholog-concordance gain after Gejman removal",
+        ),
+        (
+            "A",
+            "study_audit",
+            "geometry_tail_proportion",
+            conditional.loc["pc1_stability_pearson", "empirical_tail_proportion"],
+            "geometry tail proportion",
+            conditional_path,
+            "Conditional lower-tail proportion from 500 same-size deletions",
+        ),
+        (
+            "B",
+            "human_only",
+            "pearson_mean",
+            global_summary.loc["none", "pearson_mean"],
+            "human-only r",
+            global_path,
+            "Mean Pearson across three repeated 10-fold runs",
+        ),
+        (
+            "B",
+            "fixed_target",
+            "genes",
+            global_summary.loc["none", "n"],
+            "genes",
+            global_path,
+            "Global fixed-target prediction universe",
+        ),
+        (
+            "B",
+            "prior_enhanced",
+            "pearson_mean",
+            global_summary.loc["real", "pearson_mean"],
+            "real r",
+            global_path,
+            "Mean Pearson across three repeated 10-fold runs",
+        ),
+        (
+            "B",
+            "prior_shuffled",
+            "pearson_mean",
+            global_summary.loc["shuffled", "pearson_mean"],
+            "shuffled r",
+            global_path,
+            "Mean Pearson after fold-aware gene-prior permutation",
+        ),
+        (
+            "C",
+            "target_geometry",
+            "human_pearson",
+            distance.loc[
+                ("orthoreg_lambda0p10_vs_human_no_gejman_pc1", "all_one2one"),
+                "pearson",
+            ],
+            "human r",
+            distance_path,
+            "Shrinkage target versus target-construction human PC1",
+        ),
+        (
+            "C",
+            "target_geometry",
+            "shift_rmse",
+            distance.loc[
+                ("orthoreg_lambda0p10_vs_human_no_gejman_pc1", "all_one2one"),
+                "rmse",
+            ],
+            "shift RMSE",
+            distance_path,
+            "Z-scale target displacement on mapped pairs",
+        ),
+        (
+            "C",
+            "target_geometry",
+            "ortholog_pairs",
+            distance.loc[
+                ("orthoreg_lambda0p10_vs_human_no_gejman_pc1", "all_one2one"),
+                "n",
+            ],
+            "ortholog pairs",
+            distance_path,
+            "Mapped one-to-one pairs used for geometry checks",
+        ),
+        (
+            "C",
+            "target_prediction",
+            "genes",
+            target.loc["orthoreg_reconstructed_mouse_pc1_0.1", "n"],
+            "genes",
+            target_path,
+            "Shrinkage prediction universe",
+        ),
+    ]
+    rows = []
+    for section, item, metric, value, display, source, note in values:
+        rows.append(
+            {
+                "section": section,
+                "item": item,
+                "metric": metric,
+                "value": float(value),
+                "display": display,
+                "source_file": source.relative_to(ROOT).as_posix(),
+                "note": note,
+            }
+        )
+    panel_data = pd.DataFrame(rows)
+    MAIN_DATA.parent.mkdir(parents=True, exist_ok=True)
+    panel_data.to_csv(MAIN_DATA, sep="\t", index=False)
+    return panel_data
+
+
+def _metric(panel_data: pd.DataFrame, section: str, item: str, metric: str) -> float:
+    selected = panel_data.loc[
+        (panel_data["section"] == section)
+        & (panel_data["item"] == item)
+        & (panel_data["metric"] == metric),
+        "value",
+    ]
+    if selected.shape[0] != 1:
+        raise ValueError(f"Expected one Fig. 1 value for {section}/{item}/{metric}, found {selected.shape[0]}")
+    return float(selected.iloc[0])
+
+
+def draw_main_workflow(panel_data: pd.DataFrame) -> None:
+    saluki_delta = _metric(panel_data, "A", "study_audit", "saluki_delta_r")
+    ortholog_delta = _metric(panel_data, "A", "study_audit", "ortholog_delta_r")
+    geometry_tail = _metric(panel_data, "A", "study_audit", "geometry_tail_proportion")
+    human_only_r = _metric(panel_data, "B", "human_only", "pearson_mean")
+    fixed_target_n = round(_metric(panel_data, "B", "fixed_target", "genes"))
+    real_prior_r = _metric(panel_data, "B", "prior_enhanced", "pearson_mean")
+    shuffled_prior_r = _metric(panel_data, "B", "prior_shuffled", "pearson_mean")
+    target_human_r = _metric(panel_data, "C", "target_geometry", "human_pearson")
+    target_shift_rmse = _metric(panel_data, "C", "target_geometry", "shift_rmse")
+    target_pair_n = round(_metric(panel_data, "C", "target_geometry", "ortholog_pairs"))
+    target_prediction_n = round(_metric(panel_data, "C", "target_prediction", "genes"))
+
     fig, ax = plt.subplots(figsize=(7.25, 5.8))
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
@@ -218,7 +390,11 @@ def draw_main_workflow() -> None:
         0.145,
         0.18,
         "Directional evidence",
-        "Saluki delta r: +0.031\northolog delta r: +0.015\ngeometry-null p = 0.964",
+        (
+            f"Saluki delta r: {saluki_delta:+.3f}\n"
+            f"ortholog delta r: {ortholog_delta:+.3f}\n"
+            f"geometry lower-tail: {geometry_tail:.3f}"
+        ),
         edge=ORANGE,
         face=ORANGE_LIGHT,
         title_size=6.4,
@@ -229,20 +405,32 @@ def draw_main_workflow() -> None:
 
     _band(ax, 0.325, 0.275, "b", "Fixed-target prediction: Saluki human PC1", edge=TEAL, face=TEAL_LIGHT)
     _box(ax, 0.065, 0.455, 0.25, 0.075, "Human compact features", "sequence + regulatory", edge=TEAL, title_size=7.2, body_size=6.0)
-    _box(ax, 0.39, 0.455, 0.22, 0.075, "Human-only model", "N = 12,916 genes", edge=TEAL, title_size=7.2, body_size=6.0)
-    _box(ax, 0.70, 0.455, 0.23, 0.075, "Repeated 10-fold", "human-only r = 0.748", edge=TEAL, title_size=7.2, body_size=6.0)
+    _box(ax, 0.39, 0.455, 0.22, 0.075, "Human-only model", f"N = {fixed_target_n:,} genes", edge=TEAL, title_size=7.2, body_size=6.0)
+    _box(ax, 0.70, 0.455, 0.23, 0.075, "Repeated 10-fold", f"human-only r = {human_only_r:.3f}", edge=TEAL, title_size=7.2, body_size=6.0)
     _arrow(ax, (0.315, 0.493), (0.39, 0.493), color=TEAL)
     _arrow(ax, (0.61, 0.493), (0.70, 0.493), color=TEAL)
 
     _box(ax, 0.065, 0.35, 0.25, 0.075, "Human features\n+ mouse priors", "same fixed human target", edge=ORANGE, face=ORANGE_LIGHT, title_size=6.8, body_size=5.8)
     _box(ax, 0.39, 0.35, 0.22, 0.075, "Cross-species transfer", "external ortholog covariates", edge=ORANGE, face=ORANGE_LIGHT, title_size=7.2, body_size=6.0)
-    _box(ax, 0.70, 0.35, 0.23, 0.075, "Repeated 10-fold", "real 0.830; shuffled 0.748", edge=ORANGE, face=ORANGE_LIGHT, title_size=7.2, body_size=6.0)
+    _box(
+        ax,
+        0.70,
+        0.35,
+        0.23,
+        0.075,
+        "Repeated 10-fold",
+        f"real {real_prior_r:.3f}; shuffled {shuffled_prior_r:.3f}",
+        edge=ORANGE,
+        face=ORANGE_LIGHT,
+        title_size=7.2,
+        body_size=6.0,
+    )
     _arrow(ax, (0.315, 0.388), (0.39, 0.388), color=ORANGE)
     _arrow(ax, (0.61, 0.388), (0.70, 0.388), color=ORANGE)
 
     _band(ax, 0.035, 0.255, "c", "Weak ortholog-informed target shrinkage", edge=PURPLE, face=PURPLE_LIGHT)
-    _box(ax, 0.055, 0.140, 0.19, 0.065, "Human no-Gejman PC1", "90% human label", edge=PURPLE, title_size=6.8, body_size=5.7)
-    _box(ax, 0.055, 0.050, 0.19, 0.065, "Reconstructed mouse PC1", "10% mapped label", edge=PURPLE, title_size=6.2, body_size=5.7)
+    _box(ax, 0.055, 0.140, 0.19, 0.065, "Target human PC1", "90% no-Gejman label", edge=PURPLE, title_size=6.8, body_size=5.7)
+    _box(ax, 0.055, 0.050, 0.19, 0.065, "Target mouse PC1", "10% mapped label", edge=PURPLE, title_size=6.2, body_size=5.7)
     _box(ax, 0.335, 0.0575, 0.205, 0.14, "Ortholog-informed\nshrinkage target", "human-dominant mammalian\nstability score", edge=PURPLE, title_size=6.7, body_size=5.7)
     _arrow(ax, (0.245, 0.1725), (0.335, 0.1725), color=PURPLE)
     _arrow(ax, (0.245, 0.0825), (0.335, 0.0825), color=PURPLE)
@@ -253,7 +441,7 @@ def draw_main_workflow() -> None:
         0.17,
         0.12,
         "Geometry check",
-        "N = 10,768 pairs\nhuman r = 0.998\nshift RMSE = 0.065",
+        f"N = {target_pair_n:,} pairs\nhuman r = {target_human_r:.3f}\nshift RMSE = {target_shift_rmse:.3f}",
         edge=PURPLE,
         title_size=7.0,
         body_size=5.9,
@@ -266,7 +454,7 @@ def draw_main_workflow() -> None:
         0.145,
         0.12,
         "Prediction check",
-        "N = 12,307 genes\nhuman-only and\nprior controls",
+        f"N = {target_prediction_n:,} genes\nhuman-only and\nprior controls",
         edge=PURPLE,
         title_size=7.0,
         body_size=5.9,
@@ -375,10 +563,12 @@ def draw_prediction_boundary() -> None:
 
 
 def main() -> None:
-    draw_main_workflow()
+    panel_data = _build_main_panel_data()
+    draw_main_workflow(panel_data)
     draw_prediction_boundary()
-    print(f"Wrote {MAIN_OUT}.[svg|pdf|png|tiff]")
-    print(f"Wrote {SUPP_OUT}.[svg|pdf|png|tiff]")
+    suffixes = "svg|png|tiff" if os.environ.get("BMB_SKIP_PDF") == "1" else "svg|pdf|png|tiff"
+    print(f"Wrote {MAIN_OUT}.[{suffixes}]")
+    print(f"Wrote {SUPP_OUT}.[{suffixes}]")
 
 
 if __name__ == "__main__":

@@ -10,9 +10,10 @@ The active manuscript targets *Bulletin of Mathematical Biology*. English files 
 
 ## Main Results
 
-- A Saluki-label-independent leave-one-study-out screen ranks `Gejman` first in the primary sample-weighted analysis. Its geometric displacement is compatible with a 15-sample random-removal null and its rank falls to third under study balancing, but its positive Saluki-agreement and ortholog-concordance gains are not reproduced by 500 size-matched removals (`p = 0.002` for each).
-- On 12,916 human genes, the repeated 10-fold by 3-seed human-only model reaches Pearson `0.748 +/- 0.001`; cross-species transfer with two mouse ortholog priors reaches `0.830 +/- 0.001`; fold-wise prior permutation returns to `0.748 +/- 0.001`.
+- A Saluki-label-independent leave-one-study-out screen ranks `Gejman` first in the primary sample-weighted analysis. Its geometric displacement is compatible with 500 conditional deletions of 15 non-Gejman samples and its rank falls to third under study balancing, whereas those comparator deletions do not reproduce its positive Saluki-agreement and ortholog-concordance changes.
+- On 12,916 human genes, the repeated 10-fold by 3-seed human-only model reaches Pearson `0.748 +/- 0.001`; cross-species transfer with two mouse ortholog priors reaches `0.830 +/- 0.001`; partition-wise prior permutation within each outer fold returns to `0.748 +/- 0.001`.
 - Across the 12,307 model-eligible genes, the `0.10 ortholog-informed shrinkage target` remains nearly identical to human no-Gejman PC1 (`r = 0.9982`); in a separately defined set of 10,768 mapped one-to-one ortholog pairs, its shift RMSE is `0.065`. Cross-target evaluation detects no reduction in original-human-label predictability but is not a formal equivalence test.
+- In a strict target-vector ablation, exact target-construction mouse PC1 plus released Saluki mouse PC1 reaches `0.8537 +/- 0.0004`; removing the exact vector while retaining the Saluki prior and all indicators gives `0.8524 +/- 0.0005`. Direct reuse of the mouse vector contributing 10% of the target therefore accounts for an increment of `0.0013`.
 
 See `docs/status_report.md` for the current claim boundaries and complete key values.
 
@@ -93,7 +94,7 @@ Run all stages only after the large Saluki datapack files and a CUDA-capable XGB
 bash scripts/reproduce_bmb_key_results.sh all
 ```
 
-The `labels` stage also reproduces the dynamic/fixed-universe leave-one-study-out analyses, the 500-replicate size-matched null, preprocessing sensitivity, and two study-balanced estimators. The `models` stage builds the human sequence feature table from Ensembl release 115 when it is absent, then reproduces the global prior benchmark, 10-fold robustness, missing-prior analysis, two-stage residual decomposition, `lambda = 0.10` target benchmark, lambda sensitivity, prior ablation, cross-target evaluation, and paired-bootstrap summaries. Both stages write to the result paths used by the manuscripts.
+The `labels` stage also reproduces the dynamic/fixed-universe leave-one-study-out analyses, the 500-replicate conditional same-size deletion analysis, preprocessing sensitivity, and two study-balanced estimators. The `models` stage builds the human sequence feature table from Ensembl release 115 when it is absent, then reproduces the preliminary XGBoost parameter scan, global prior benchmark, 10-fold robustness, missing-prior analysis, cross-fitted two-stage residual decomposition, `lambda = 0.10` target benchmark, lambda sensitivity, prior ablation, cross-target evaluation, and paired-bootstrap summaries. Both stages write to the result paths used by the manuscripts.
 
 After model reproduction, `scripts/audit_oof_integrity.py` verifies the expected evaluation-universe size, unique gene coverage, shared gene order across settings/seeds, fold coverage, and absence of missing predictions. `scripts/audit_analysis_universes.py --check` independently verifies the named core sets, derived coverage subsets, and the 10,682-gene S2/S3 overlap.
 
@@ -137,6 +138,6 @@ All active main figures (Fig. 1-8) and supplementary figures (S1-S4) are generat
 
 ## Release
 
-The public source repository is [wwzdl/mrna-pc1-label](https://github.com/wwzdl/mrna-pc1-label). The audited two-author manuscript state is tagged as `mRNA-PC1-label-v1.4.2`; run the release preflight before deriving any later submission package from a newer commit.
+The public source repository is [wwzdl/mrna-pc1-label](https://github.com/wwzdl/mrna-pc1-label). The audited two-author manuscript state is tagged as `mRNA-PC1-label-v1.4.3`; run the release preflight before deriving any later submission package from a newer commit.
 
 中文说明：本 README 采用英文以便审稿人与读者直接复现；中文定稿状态和术语说明见 `docs/status_report.md`。

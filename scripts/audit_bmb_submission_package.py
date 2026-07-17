@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import csv
+import json
 import os
 import re
 import sys
@@ -690,13 +691,17 @@ def check_metadata_and_reference_files() -> list[Check]:
 def check_quantitative_claims() -> list[Check]:
     checks: list[Check] = []
     manuscript = read_text(MAIN_EN)
+    supplement = read_text(SUPP_EN)
+
+    def require_tokens_in(label: str, tokens: list[str], text: str) -> None:
+        missing = [token for token in tokens if token not in text]
+        if missing:
+            checks.append(Check("FAIL", f"quantitative claim mismatch for {label}: missing {missing}"))
+        else:
+            checks.append(Check("PASS", f"quantitative claim matches result table: {label}"))
 
     def require_tokens(label: str, tokens: list[str]) -> None:
-        missing = [token for token in tokens if token not in manuscript]
-        if missing:
-            checks.append(Check("FAIL", f"main-text quantitative claim mismatch for {label}: missing {missing}"))
-        else:
-            checks.append(Check("PASS", f"main-text quantitative claim matches result table: {label}"))
+        require_tokens_in(f"main text, {label}", tokens, manuscript)
 
     bootstrap = read_tsv(ROOT / "results" / "key_claim_bootstrap" / "paired_bootstrap_summary.tsv")
     for claim in (
@@ -760,22 +765,89 @@ def check_quantitative_claims() -> list[Check]:
         ],
     )
 
-    influence_null = read_tsv(
-        ROOT / "results" / "study_influence_sensitivity" / "size_matched_null_summary.tsv"
+    ablation = read_tsv(
+        ROOT
+        / "results"
+        / "ortholog_prior_ablation_lambda0p1_10fold"
+        / "summary_by_setting.tsv"
+    )
+    ablation_settings = (
+        "human_only",
+        "mask_only",
+        "no_direct_reconstructed_mouse_pc1",
+        "exact_target_and_saluki_priors",
+        "primary_audit_and_saluki_priors",
+    )
+    ablation_tokens: list[str] = []
+    for setting in ablation_settings:
+        row = select_row(ablation, setting=setting)
+        ablation_tokens.extend(
+            [
+                f"{float(row['pearson_vs_target_mean']):.4f}",
+                f"{float(row['pearson_vs_target_sd']):.4f}",
+            ]
+        )
+    strict_no_direct = select_row(
+        ablation,
+        setting="no_direct_reconstructed_mouse_pc1",
+    )
+    strict_exact = select_row(
+        ablation,
+        setting="exact_target_and_saluki_priors",
+    )
+    direct_increment = (
+        float(strict_exact["pearson_vs_target_mean"])
+        - float(strict_no_direct["pearson_vs_target_mean"])
+    )
+    ablation_tokens.append(f"{direct_increment:.4f}")
+    require_tokens_in("main text, strict target-vector ablation", ablation_tokens, manuscript)
+    require_tokens_in("supplement, strict target-vector ablation", ablation_tokens, supplement)
+
+    ablation_metadata_path = (
+        ROOT
+        / "results"
+        / "ortholog_prior_ablation_lambda0p1_10fold"
+        / "analysis_metadata.json"
+    )
+    with ablation_metadata_path.open(encoding="utf-8") as handle:
+        ablation_metadata = json.load(handle)
+    expected_ablation_metadata = {
+        "target_human_coverage_threshold": 10,
+        "target_mouse_coverage_threshold": 5,
+        "direct_prior_value_column": "target_reconstructed_mouse_pc1",
+        "primary_target_prediction_setting": "primary_audit_and_saluki_priors",
+    }
+    metadata_mismatches = {
+        key: (ablation_metadata.get(key), expected)
+        for key, expected in expected_ablation_metadata.items()
+        if ablation_metadata.get(key) != expected
+    }
+    if metadata_mismatches:
+        checks.append(
+            Check(
+                "FAIL",
+                f"strict target-vector ablation metadata mismatch: {metadata_mismatches}",
+            )
+        )
+    else:
+        checks.append(Check("PASS", "strict target-vector ablation metadata is explicit and current"))
+
+    influence_comparators = read_tsv(
+        ROOT / "results" / "study_influence_sensitivity" / "conditional_same_size_summary.tsv"
     )
     for metric in (
         "pc1_stability_pearson",
         "delta_saluki_pearson",
         "delta_ortholog_pearson",
     ):
-        row = select_row(influence_null, metric=metric)
+        row = select_row(influence_comparators, metric=metric)
         display_precision = 3 if metric == "pc1_stability_pearson" else 4
         require_tokens(
-            f"size-matched study-influence null: {metric}",
+            f"conditional same-size study-influence comparison: {metric}",
             [
                 f"{float(row['observed_gejman']):.{display_precision}f}",
-                f"{float(row['null_median']):.{display_precision}f}",
-                f"{float(row['empirical_p_one_sided']):.3f}",
+                f"{float(row['comparator_median']):.{display_precision}f}",
+                f"{float(row['empirical_tail_proportion']):.3f}",
             ],
         )
 
@@ -811,6 +883,106 @@ def check_quantitative_claims() -> list[Check]:
                     f"{estimator} Gejman rank is {row['gejman_rank']}, expected 3",
                 )
             )
+
+    provenance_path = ROOT / "results" / "human_xgboost_parameter_provenance.json"
+    with provenance_path.open(encoding="utf-8") as handle:
+        provenance = json.load(handle)
+    expected_parameters = {
+        "max_depth": 6,
+        "learning_rate": 0.02,
+        "min_child_weight": 4,
+        "subsample": 0.9,
+        "colsample_bytree": 0.75,
+        "reg_alpha": 0.0,
+        "reg_lambda": 1.0,
+    }
+    if (
+        provenance.get("genes") == 12916
+        and provenance.get("features") == 526
+        and provenance.get("selected_parameters") == expected_parameters
+        and "same compendium" in provenance.get("inference_boundary", "")
+    ):
+        checks.append(Check("PASS", "exploratory XGBoost parameter selection has machine-readable provenance"))
+    else:
+        checks.append(Check("FAIL", "XGBoost parameter-selection provenance is incomplete or inconsistent"))
+
+    fig1_rows = read_tsv(
+        SUB / "figures" / "data" / "Fig01_panel_data.tsv"
+    )
+    fig1_values = {
+        (row["section"], row["item"], row["metric"]): float(row["value"])
+        for row in fig1_rows
+    }
+    global_summary = read_tsv(
+        ROOT / "results" / "tenfold_global_prior" / "summary_by_setting.tsv"
+    )
+    distance_rows = read_tsv(
+        ROOT / "results" / "ortholog_label_distance" / "distance_summary.tsv"
+    )
+    target_rows = read_tsv(
+        ROOT
+        / "results"
+        / "ortholog_regularized_label_10fold_main"
+        / "summary_by_label.tsv"
+    )
+    conditional_rows = {
+        row["metric"]: row
+        for row in influence_comparators
+    }
+    global_rows = {
+        row["prior_mode"]: row
+        for row in global_summary
+    }
+    distance_row = select_row(
+        distance_rows,
+        comparison="orthoreg_lambda0p10_vs_human_no_gejman_pc1",
+        subset="all_one2one",
+    )
+    target_row = select_row(
+        target_rows,
+        label="orthoreg_reconstructed_mouse_pc1_0.1",
+    )
+    expected_fig1 = {
+        ("A", "study_audit", "saluki_delta_r"): float(
+            conditional_rows["delta_saluki_pearson"]["observed_gejman"]
+        ),
+        ("A", "study_audit", "ortholog_delta_r"): float(
+            conditional_rows["delta_ortholog_pearson"]["observed_gejman"]
+        ),
+        ("A", "study_audit", "geometry_tail_proportion"): float(
+            conditional_rows["pc1_stability_pearson"]["empirical_tail_proportion"]
+        ),
+        ("B", "human_only", "pearson_mean"): float(global_rows["none"]["pearson_mean"]),
+        ("B", "fixed_target", "genes"): float(global_rows["none"]["n"]),
+        ("B", "prior_enhanced", "pearson_mean"): float(global_rows["real"]["pearson_mean"]),
+        ("B", "prior_shuffled", "pearson_mean"): float(global_rows["shuffled"]["pearson_mean"]),
+        ("C", "target_geometry", "human_pearson"): float(distance_row["pearson"]),
+        ("C", "target_geometry", "shift_rmse"): float(distance_row["rmse"]),
+        ("C", "target_geometry", "ortholog_pairs"): float(distance_row["n"]),
+        ("C", "target_prediction", "genes"): float(target_row["n"]),
+    }
+    fig1_mismatches = {
+        key: (fig1_values.get(key), expected)
+        for key, expected in expected_fig1.items()
+        if key not in fig1_values or abs(fig1_values[key] - expected) > 1e-12
+    }
+    if set(fig1_values) != set(expected_fig1):
+        fig1_mismatches["row_keys"] = (sorted(fig1_values), sorted(expected_fig1))
+    missing_fig1_sources = [
+        row["source_file"]
+        for row in fig1_rows
+        if not (ROOT / row["source_file"]).exists()
+    ]
+    if fig1_mismatches or missing_fig1_sources:
+        checks.append(
+            Check(
+                "FAIL",
+                "Fig. 1 panel-data provenance mismatch: "
+                f"values={fig1_mismatches}, missing_sources={missing_fig1_sources}",
+            )
+        )
+    else:
+        checks.append(Check("PASS", "Fig. 1 panel data match their declared result-table sources"))
     return checks
 
 
