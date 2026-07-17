@@ -26,16 +26,17 @@ The active English manuscript, supplementary information, title page, cover lett
 - Expanded the Fig. 5c correlation axis to avoid visually exaggerating small between-setting differences, and corrected reference-author metadata in the synchronized BibTeX/RIS libraries.
 - Replaced the remaining ambiguous “fold-wise shuffling” wording with the implemented partition-wise permutation within each outer fold.
 - Added the gene-level split boundary: paralog families were not grouped across folds, so gene-family-held-out generalization is not established.
+- Synchronized the fixed DOCX table grid with the equation-cell widths so WPS allocates the intended 5.89-inch center cell; added vertical padding, row-split protection, a unit test, and submission-package checks for this layout.
 
 ## Quantitative and reproducibility checks
 
-- Full preflight: `165 checks`, `0 failures`, `0 warnings`.
+- Full preflight: `169 checks`, `0 failures`, `0 warnings`.
 - Unit tests: `4 passed`.
 - OOF integrity: nine global fixed-target files cover 12,916 genes; three cross-target files and 18 shrinkage-target files cover 12,307 genes; residual outputs cover 11,107 genes across folds 1-5.
 - English abstract: 228 words; six keywords.
 - Main figures: Fig. 1-8; supplementary figures: S1-S4. All referenced PNG files report 600 dpi, and matching lossless 600-dpi TIFF files are present.
 - All 12 referenced figures were inspected at readable scale after the final redraw; no clipped labels, overlapping text, missing panel labels, or ambiguous numeric annotations remain. Fig. 1 now labels the conditional result explicitly as the geometry lower-tail proportion.
-- Main equations: (1)-(9); supplementary equations: (S1)-(S2). All are rendered as editable OMML in DOCX.
+- Main equations: (1)-(9); supplementary equations: (S1)-(S2). All are rendered as editable OMML in DOCX and pass the synchronized full-width WPS-layout audit.
 - Main tables: 1-4; supplementary tables: S1-S16.
 - Active references: 46 in the main manuscript, 11 in the supplement, 47 unique records in the BibTeX/RIS union. All 45 DOI records resolve through Crossref; the XGBoost full title was checked against the ACM record because Crossref returns an abbreviated title. The two no-DOI records were checked against the official NeurIPS and JMLR pages.
 - Quantitative claims for label audit, ortholog concordance, prior permutation, cross-target evaluation, shrinkage geometry, residual decomposition, and study-influence sensitivity match the versioned result tables.
@@ -51,4 +52,4 @@ The active English manuscript, supplementary information, title page, cover lett
 
 ## Release state
 
-The intended immutable repository tag for this audited state is `mRNA-PC1-label-v1.4.3`. PDF and ZIP generation remain intentionally deferred until the final author-controlled submission freeze.
+The intended immutable repository tag for this audited state is `mRNA-PC1-label-v1.4.4`. PDF and ZIP generation remain intentionally deferred until the final author-controlled submission freeze.

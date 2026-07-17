@@ -95,14 +95,14 @@ MOESM2/MOESM3 由脚本直接下载；`compact_all` 所需预计算 Saluki featu
 
 ## 当前预检状态
 
-- BMB DOCX-only 自动审计：`0 failure / 0 warning / 165 checks`
+- BMB DOCX-only 自动审计：`0 failure / 0 warning / 169 checks`
 - English abstract：`228 words`（目标 `150-250 words`）
 - keywords：`6`
 - 英文主文含 46 条参考文献，补充材料含 11 条；唯一并集为 47 条，其中 45 条带 DOI
 - 45 条 DOI 均已通过 Crossref 解析；44 条通过题名/年份/卷自动比对，XGBoost 因 Crossref 仅返回缩写题名而按 ACM 正式记录人工核对。LightGBM 与 scikit-learn 两条无 DOI 记录已用 NeurIPS/JMLR 官方页面核对
 - BibTeX/RIS 均仅保留上述 47 条实际使用记录，可由脚本同步导出
 - 中英文 DOCX 均已从当前 Markdown 重建；英文主文含连续行号和页码字段，英文补充含页码字段
-- 中英文正文各含 9 个右侧编号的 Word 原生可编辑 OMML 公式，双语补充材料各含补充式（S1）-（S2）；行内数学同样以 OMML 输出，PDF 路径使用同源矢量 SVG 公式
+- 中英文正文各含 9 个右侧编号的 Word 原生可编辑 OMML 公式，双语补充材料各含补充式（S1）-（S2）；编号公式已同步底层表格网格与单元格宽度，使用 5.89 英寸中心公式区并通过 WPS 防裁切审计；行内数学同样以 OMML 输出，PDF 路径使用同源矢量 SVG 公式
 - 12 张 PNG 已完成逐图验证，图号、panel label、图注、分辨率、边界和可读性未见阻断问题；Fig. 1 的条件性统计已明确标为 geometry lower-tail proportion，Fig. 3 图例已重排并放大，Fig. 6-8 不再使用会夸大差异的截断柱状表达；最终 SI PDF 的逐页检查留到版本冻结后执行
 - GitHub 独立仓库当前发布候选包含 `299` 个文件、`26.17 MiB`，最大单文件 `2.29 MB`；大矩阵、逐基因 OOF arrays、feature packages、DOCX、PDF 与 TIFF 投稿包继续忽略。当前 270 个 release 文本文件及约 21.95 MB Git patch history 的高置信凭据扫描均为 0 命中
 - 关键 OOF 完整性审计通过：9 个 global、3 个 cross-target、18 个 target-shrinkage 结果文件均覆盖规范基因宇宙、gene ID 唯一且预测无缺失；residual 11,107 genes 覆盖 folds 1-5
@@ -120,7 +120,7 @@ MOESM2/MOESM3 由脚本直接下载；`compact_all` 所需预计算 Saluki featu
 3. 选择软件许可证；当前已提供 `CITATION.cff`，但尚未替作者决定法律许可条款。
 4. 生成最终英文 Online Resource 1 PDF，逐页检查后再组装上传目录和最终 ZIP。
 
-GitHub 仓库 [wwzdl/mrna-pc1-label](https://github.com/wwzdl/mrna-pc1-label) 已公开，Data/Code Availability 已改为当前时态；本轮严格科学与投稿编辑审计版本标记为 `mRNA-PC1-label-v1.4.3`。
+GitHub 仓库 [wwzdl/mrna-pc1-label](https://github.com/wwzdl/mrna-pc1-label) 已公开，Data/Code Availability 已改为当前时态；本轮严格科学与投稿编辑审计版本标记为 `mRNA-PC1-label-v1.4.4`。
 
 ## 科学局限
 

@@ -227,6 +227,63 @@ def markdown_equation_numbers(path: Path) -> list[str]:
     )
 
 
+def equation_layout_issues(path: Path) -> list[str]:
+    """Return numbered equations whose Word table geometry can clip in WPS."""
+    with zipfile.ZipFile(path) as archive:
+        root = ET.fromstring(archive.read("word/document.xml"))
+
+    w = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+    m = "http://schemas.openxmlformats.org/officeDocument/2006/math"
+    issues: list[str] = []
+    for table in root.iter(f"{{{w}}}tbl"):
+        if table.find(f".//{{{m}}}oMath") is None:
+            continue
+        row = table.find(f"{{{w}}}tr")
+        if row is None:
+            continue
+        cells = row.findall(f"{{{w}}}tc")
+        if len(cells) != 3:
+            continue
+        number = "".join(node.text or "" for node in cells[-1].iter(f"{{{w}}}t"))
+        if not re.fullmatch(r"\((?:S)?\d+\)", number):
+            continue
+
+        grid = table.find(f"{{{w}}}tblGrid")
+        grid_widths = (
+            [
+                int(node.get(f"{{{w}}}w", "0"))
+                for node in grid.findall(f"{{{w}}}gridCol")
+            ]
+            if grid is not None
+            else []
+        )
+        cell_widths = []
+        for cell in cells:
+            width = cell.find(f"./{{{w}}}tcPr/{{{w}}}tcW")
+            cell_widths.append(int(width.get(f"{{{w}}}w", "0")) if width is not None else 0)
+
+        table_width_node = table.find(f"./{{{w}}}tblPr/{{{w}}}tblW")
+        table_width = (
+            int(table_width_node.get(f"{{{w}}}w", "0"))
+            if table_width_node is not None
+            else 0
+        )
+        fixed = table.find(f"./{{{w}}}tblPr/{{{w}}}tblLayout")
+        cant_split = row.find(f"./{{{w}}}trPr/{{{w}}}cantSplit")
+
+        if (
+            len(grid_widths) != 3
+            or grid_widths != cell_widths
+            or grid_widths[1] < 8000
+            or table_width != sum(grid_widths)
+            or fixed is None
+            or fixed.get(f"{{{w}}}type") != "fixed"
+            or cant_split is None
+        ):
+            issues.append(number)
+    return issues
+
+
 def image_refs(markdown_path: Path) -> list[Path]:
     refs = re.findall(r"!\[[^\]]*\]\(([^)]+)\)", read_text(markdown_path))
     return [(markdown_path.parent / ref).resolve() for ref in refs]
@@ -531,6 +588,22 @@ def check_docx() -> list[Check]:
                     "FAIL",
                     f"editable-equation audit failed for {docx_path.name}: "
                     f"math_objects={math_count}, missing_labels={missing_labels}",
+                )
+            )
+
+        layout_issues = equation_layout_issues(docx_path)
+        if layout_issues:
+            checks.append(
+                Check(
+                    "FAIL",
+                    f"WPS-safe equation layout failed in {docx_path.name}: {layout_issues}",
+                )
+            )
+        else:
+            checks.append(
+                Check(
+                    "PASS",
+                    f"numbered equations have synchronized full-width WPS-safe layout in {docx_path.name}",
                 )
             )
     return checks

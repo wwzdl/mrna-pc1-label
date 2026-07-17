@@ -420,10 +420,32 @@ def add_equation(doc: Document, latex: str, number: str) -> None:
     table.alignment = WD_TABLE_ALIGNMENT.CENTER
     table.autofit = False
     widths = (0.48, 5.89, 0.48)
+    total_width = sum(widths)
+
+    tbl_pr = table._tbl.tblPr
+    tbl_layout = tbl_pr.first_child_found_in("w:tblLayout")
+    if tbl_layout is None:
+        tbl_layout = OxmlElement("w:tblLayout")
+        tbl_pr.append(tbl_layout)
+    tbl_layout.set(qn("w:type"), "fixed")
+    tbl_width = tbl_pr.first_child_found_in("w:tblW")
+    if tbl_width is None:
+        tbl_width = OxmlElement("w:tblW")
+        tbl_pr.append(tbl_width)
+    tbl_width.set(qn("w:type"), "dxa")
+    tbl_width.set(qn("w:w"), str(round(total_width * TWIPS_PER_INCH)))
+
+    # WPS can prioritize tblGrid over cell widths. Keep both definitions in
+    # sync so the editable formula receives the intended full-width center cell.
+    for grid_col, width in zip(table._tbl.tblGrid.gridCol_lst, widths):
+        grid_col.set(qn("w:w"), str(round(width * TWIPS_PER_INCH)))
+
+    prevent_row_split(table.rows[0])
     for cell, width in zip(table.rows[0].cells, widths):
         cell.width = Inches(width)
+        cell.vertical_alignment = WD_CELL_VERTICAL_ALIGNMENT.CENTER
         clear_cell_borders(cell)
-        set_cell_margins(cell, top=20, start=0, bottom=20, end=0)
+        set_cell_margins(cell, top=45, start=0, bottom=45, end=0)
         tc_width = cell._tc.get_or_add_tcPr().first_child_found_in("w:tcW")
         if tc_width is None:
             tc_width = OxmlElement("w:tcW")

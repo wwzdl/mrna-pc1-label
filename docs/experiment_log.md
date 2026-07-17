@@ -1485,3 +1485,10 @@ PYTHONPATH=paper_pca/src python -m mrna_half_life_paper.study_noise_vs_orthoreg_
 - 核对 12 个核心分析集合和 8 个派生集合；P2（12,916 genes）、S2（12,307 genes）仍是两套主模型宇宙，P3（11,107 genes）仅用于 prior coverage 与 residual decomposition。
 - 英文摘要为 228 words；主文公式（1）-（9）、补充式（S1）-（S2）、主图 1-8、补图 S1-S4、主表 1-4 和补表 S1-S16 编号连续。
 - DOCX-only preflight、单元测试、OOF 完整性、分析宇宙、中英文一致性和最终 Git 状态在本轮冻结前重新执行；目标标签为 `mRNA-PC1-label-v1.4.3`。
+
+### 2026-07-17：v1.4.4 WPS 公式显示修复
+
+- 定位到编号公式使用的三列表格存在底层 `tblGrid` 仍为等宽、而单元格宽度另行指定的不一致；WPS 可能优先采用旧网格，使较长 OMML 公式在窄中心列中被裁切。
+- 公式表格现统一设置固定总宽、`0.48 / 5.89 / 0.48` 英寸网格与相同单元格宽度，并增加垂直留白、垂直居中和防跨页拆行属性。
+- 单元测试与投稿审计新增公式表格总宽、中心列宽、网格同步、固定布局和 `cantSplit` 检查；中英文正文各 9 个及双语补充材料各 2 个编号公式全部通过。
+- DOCX-only 完整预检通过 `169 checks / 0 failures / 0 warnings`，4 个单元测试全部通过；当前冻结标签更新为 `mRNA-PC1-label-v1.4.4`。
