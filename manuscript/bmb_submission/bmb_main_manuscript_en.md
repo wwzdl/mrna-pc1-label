@@ -1,8 +1,8 @@
 # Study-aware label auditing, cross-species transfer, and ortholog-informed target shrinkage for mammalian mRNA half-life prediction
 
 **Article type:** Original research article  
-**Authors:** Wenzhuo Wang<sup>1</sup>, Ying Shao*<sup>1</sup>  
-**Affiliation:** <sup>1</sup> School of Science, Dalian Maritime University, Dalian 116026, China  
+**Authors:** Wenzhuo Wang, Ying Shao<br>
+**Affiliation:** School of Science, Dalian Maritime University, Dalian 116026, China<br>
 **Corresponding author:** Ying Shao; Email: yshao@dlmu.edu.cn<br>
 **ORCID:** Ying Shao: https://orcid.org/0000-0002-4056-5757<br>
 **Funding:** No specific funding was received for this work.  
@@ -134,7 +134,7 @@ number: 3
 
 We used the lower tail for PC1 stability and the upper tail for both agreement gains. This analysis quantifies deletion sensitivity conditional on the study selected for inspection; it is not an exchangeable whole-study null and does not adjust for selecting Gejman or examining multiple studies. It separates the amount of geometric change caused by removing many samples from the direction of that change on the Saluki-processing and ortholog-comparison axes.
 
-Three sensitivity analyses addressed pipeline dependence. First, the primary dynamic coverage analysis was repeated on a fixed gene universe that satisfied the coverage threshold in the full matrix and every leave-one-study-out matrix. Second, we varied the minimum observed samples per gene (3, 5, or 10), PCA-imputation rank (3, 5, or 10), and replaced iterative PCA imputation with sample-wise median imputation. Third, we reduced sample-count imbalance by either multiplying samples from study $s$ by $1/\sqrt{n_s}$ before PCA, which equalizes each study's total squared PCA weight, or collapsing each study to its mean processed profile before PC1 extraction. Complete definitions and results are provided in Supplementary Section S5.
+Three sensitivity analyses addressed pipeline dependence. First, the primary dynamic coverage analysis was repeated on a fixed gene universe that satisfied the coverage threshold in the full matrix and every leave-one-study-out matrix. Second, we varied the minimum observed samples per gene (3, 5, or 10), PCA-imputation rank (3, 5, or 10), and replaced iterative PCA imputation with sample-wise median imputation. Third, we reduced sample-count imbalance by either multiplying samples from study $s$ by $n_s^{-1/2}$ before PCA, which equalizes each study's total squared PCA weight, or collapsing each study to its mean processed profile before PC1 extraction. Complete definitions and results are provided in Supplementary Section S5.
 
 ### 3.5 Ortholog concordance as a cross-species label check
 
@@ -189,7 +189,7 @@ We fixed $\lambda=0.10$ for the primary analysis to limit the mouse contribution
 
 ### 3.7 Sequence/regulatory feature construction and evaluation of the human-only baseline
 
-The human-only route uses two feature layers while keeping the target unchanged. The first layer is a 526-dimensional base sequence feature set derived from Ensembl release 115 representative transcripts, covering 5' untranslated region (5'UTR), coding sequence (CDS), and 3'UTR lengths, GC content, codon frequencies, region-level 3-mers, and 3'UTR 4-mers. The second layer is the 1802-dimensional `compact_all` feature set, formed by augmenting base sequence features with precomputed CWCS, SeqWeaver, and DeepRiPe regulatory blocks from the Saluki datapack (Agarwal et al. 2015; Park et al. 2021; Ghanbari and Ohler 2020).
+The human-only route uses two feature layers while keeping the target unchanged. The first layer is a 526-dimensional base sequence feature set derived from Ensembl release 115 representative transcripts, covering 5' untranslated region (5'UTR), coding sequence (CDS), and 3'UTR lengths, GC content, codon frequencies, region-level 3-mers, and 3'UTR 4-mers. We defined a 1,802-dimensional compact sequence/regulatory feature set, denoted `compact_all`, by combining these 526 sequence features with 319 CWCS, 780 SeqWeaver, and 177 DeepRiPe features precomputed in the Saluki datapack (Agarwal et al. 2015; Park et al. 2021; Ghanbari and Ohler 2020). Thus, `compact_all` is the name of the feature combination used in this study, not the name of a model reported by Saluki.
 
 All human-only benchmarks use Saluki human PC1 as the primary supervision target and are evaluated by gene-level out-of-fold prediction. A preliminary five-setting base-sequence scan on the same P2 compendium selected the configuration with the highest OOF Pearson correlation, with $R^2$ used only as a tie-breaker. The selected parameters were then frozen for the compact, transfer, and matched control analyses: `tree_method=hist`, `device=cuda`, `max_depth=6`, `learning_rate=0.02`, `min_child_weight=4`, `subsample=0.9`, `colsample_bytree=0.75`, and `reg_lambda=1.0`. Because this exploratory selection was not nested within an external evaluation set, absolute OOF scores are descriptive benchmark estimates; real-prior and shuffled-prior comparisons remain matched because they use the same frozen parameters and folds. The human-only benchmark allowed up to 5,000 trees with 120-round early stopping, whereas the global prior benchmark allowed up to 3,000 trees with 100-round early stopping. Within every outer fold, `max(512, 10% of outer-training genes)` was reserved from the outer training set as an inner validation subset. The outer held-out fold was never used for early stopping and was evaluated only after model fitting. The main text reports 5-fold OOF results, and a 10-fold by 3-random-seed evaluation is used as a split-sensitivity robustness check. The scan script, complete result table, and machine-readable selection record are listed in Supplementary Section S15.
 
@@ -330,7 +330,7 @@ The half-life matrices analyzed here are from the public supplementary material 
 
 ### Code Availability
 
-Code, figure-generation scripts, and result-reproduction workflows are publicly available in [wwzdl/mrna-pc1-label](https://github.com/wwzdl/mrna-pc1-label); the audited two-author manuscript state is identified by the release tag `mRNA-PC1-label-v1.4.4`.
+Code, figure-generation scripts, and result-reproduction workflows are publicly available in [wwzdl/mrna-pc1-label](https://github.com/wwzdl/mrna-pc1-label); the audited two-author manuscript state is identified by the release tag `mRNA-PC1-label-v1.4.5`.
 
 ### Competing Interests
 

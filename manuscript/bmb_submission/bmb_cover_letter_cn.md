@@ -6,7 +6,7 @@
 
 本文关注哺乳动物 mRNA 半衰期预测中的一个基础 benchmark 问题。常用监督标签是由异质 multi-study measurements 构建的共识分数。我们审计 study 组成如何影响这些标签，评估加入外部 mouse ortholog covariates 后的固定目标预测，并考察弱同源基因信息目标收缩。
 
-Leave-one-study-out PC1 stability 在普通 sample-weighted 分析中将 Gejman 识别为最大影响来源。条件性同样本量比较从非 Gejman 样本中删除 15 个样本并始终保留 Gejman，结果表明样本数解释了较大部分几何位移；这些比较性删除未复制对 Saluki 已发布处理选择的恢复或 human-mouse ortholog concordance 的正向变化。在固定 Saluki human PC1 时，外部 mouse ortholog priors 将重复 10-fold Pearson 从 0.748 提高到 0.830；在每个 outer fold 内按 partition 打乱 gene-prior mapping 后增益消失。$\lambda=0.10$ 同源基因目标收缩仍与 human no-Gejman PC1 几乎一致，cross-target evaluation 未检测到原 human 标签可预测性下降，但不构成正式等效性检验。严格消融表明，模型直接重复读取构成 target 的精确 10% mouse 向量仅贡献 0.0013 的相关增量。该目标分析与固定目标比较分开报告。
+Leave-one-study-out PC1 stability 在普通 sample-weighted 分析中将 Gejman 识别为最大影响来源。条件性同样本量比较从非 Gejman 样本中删除 15 个样本并始终保留 Gejman，结果表明样本数解释了较大部分几何位移；这些比较性删除未复制对 Saluki 已发布处理选择的恢复或 human-mouse ortholog concordance 的正向变化。在固定 Saluki human PC1 时，外部 mouse ortholog priors 将重复 10-fold Pearson 从 0.748 提高到 0.830；在每个 outer fold 内按 partition 打乱 gene-prior mapping 后增益消失。$\lambda=0.10$ 同源基因目标收缩仍与 human no-Gejman PC1 几乎一致，cross-target evaluation 未检测到原 human 标签可预测性下降，但不构成正式等效性检验。在一项配对消融中，加入构建 target 时使用的精确 mouse 向量只使 target-prediction correlation 增加 0.0013。该目标分析与固定目标比较分开报告。
 
 本文建立了审计 study influence、评估 cross-species priors 和量化 target shrinkage 所引入变化的定量方法。其重点是透明的统计验证和可复现的生物学预测，与 *Bulletin of Mathematical Biology* 的定位契合。
 

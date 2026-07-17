@@ -95,7 +95,7 @@ MOESM2/MOESM3 由脚本直接下载；`compact_all` 所需预计算 Saluki featu
 
 ## 当前预检状态
 
-- BMB DOCX-only 自动审计：`0 failure / 0 warning / 169 checks`
+- BMB DOCX-only 自动审计：`0 failure / 0 warning / 177 checks`
 - English abstract：`228 words`（目标 `150-250 words`）
 - keywords：`6`
 - 英文主文含 46 条参考文献，补充材料含 11 条；唯一并集为 47 条，其中 45 条带 DOI
@@ -116,11 +116,12 @@ MOESM2/MOESM3 由脚本直接下载；`compact_all` 所需预计算 Saluki featu
 ## 仍需作者确认
 
 1. 确认 Wenzhuo Wang 的 ORCID（如无 ORCID，可不填）；Ying Shao 的通讯邮箱 `yshao@dlmu.edu.cn` 与 ORCID `0000-0002-4056-5757` 已确认。
-2. 两位作者确认 Author Contributions、作者顺序、no-funding statement 与正式英文单位名。
-3. 选择软件许可证；当前已提供 `CITATION.cff`，但尚未替作者决定法律许可条款。
-4. 生成最终英文 Online Resource 1 PDF，逐页检查后再组装上传目录和最终 ZIP。
+2. 两位作者书面确认 Author Contributions、作者顺序、贡献者归属与正式英文单位名，并确认公开 Git 身份 `zhangdinglin` 与投稿作者之间的关系可解释。
+3. 确认 no-funding statement 准确覆盖数据处理、计算资源、方法开发和写作全过程；若任何阶段实际受项目支持，应恢复相应资助信息。
+4. 选择软件许可证；当前已提供 `CITATION.cff`，但尚未替作者决定法律许可条款。
+5. 生成最终英文 Online Resource 1 PDF，逐页检查后再组装上传目录和最终 ZIP。
 
-GitHub 仓库 [wwzdl/mrna-pc1-label](https://github.com/wwzdl/mrna-pc1-label) 已公开，Data/Code Availability 已改为当前时态；本轮严格科学与投稿编辑审计版本标记为 `mRNA-PC1-label-v1.4.4`。
+GitHub 仓库 [wwzdl/mrna-pc1-label](https://github.com/wwzdl/mrna-pc1-label) 已公开，Data/Code Availability 已改为当前时态；本轮严格科学与投稿编辑审计版本标记为 `mRNA-PC1-label-v1.4.5`。
 
 ## 科学局限
 

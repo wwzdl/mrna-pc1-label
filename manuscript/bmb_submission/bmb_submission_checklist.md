@@ -23,13 +23,14 @@
 - [x] 英文主稿 DOCX 已加入连续行号
 - [x] 英文主稿与英文补充 DOCX 已加入页码
 - [x] 中英文正文公式（1）-（9）及补充式（S1）-（S2）均为 Word 原生可编辑 OMML，编号连续且右对齐；底层表格网格、单元格宽度和防拆行属性已通过 WPS 防裁切审计
-- [ ] 作者贡献声明最终确认
+- [ ] 两位作者最终确认作者顺序和 CRediT 贡献；确认所有达到作者资格者均已纳入，未列名贡献者的处理符合其实际贡献与期刊政策
 
 ## Title page / author metadata
 
 - [x] 作者顺序、单位和通讯作者身份已写入
 - [x] Ying Shao 通讯作者邮箱已核对：`yshao@dlmu.edu.cn`
 - [x] no-funding statement 已写入，旧基金编号已删除
+- [ ] 两位作者确认 `No specific funding was received for this work` 准确覆盖数据处理、计算资源、方法开发和写作全过程；若任何阶段实际受项目支持，应恢复相应资助信息
 - [x] competing interests 已写入
 - [ ] Wenzhuo Wang ORCID 最终核对
 - [x] Ying Shao ORCID 已核对：`0000-0002-4056-5757`
@@ -72,12 +73,12 @@
 - [x] 英文 title page 已生成
 - [x] 英文 cover letter 已生成
 - [x] 英文 `Statements and Declarations` 已生成
-- [x] 投稿包自动审计脚本已加入 preflight，当前 DOCX-only 审计为 `0 failure / 0 warning / 169 checks`
+- [x] 投稿包自动审计脚本已加入 preflight，当前 DOCX-only 审计为 `0 failure / 0 warning / 177 checks`
 - [x] 关键 OOF 完整性审计通过：9 个 global、3 个 cross-target、18 个 target-shrinkage 结果文件均覆盖规范基因宇宙且无缺失预测；residual 11,107 genes 完整
 - [x] requirements note 已整理
 - [x] README 已整理
 - [ ] 英文 Online Resource 1 PDF 冻结后重建 `upload_candidate/`
 - [ ] 最终英文上传候选 ZIP 仅在全部作者信息、PDF 和 GitHub 版本冻结后生成一次，并执行 `unzip -t` 与 SHA-256 校验
-- [x] GitHub 仓库 `wwzdl/mrna-pc1-label` 已公开，Data/Code Availability 已改为当前时态；本轮严格科学与投稿编辑审计版本标记为 `mRNA-PC1-label-v1.4.4`
+- [x] GitHub 仓库 `wwzdl/mrna-pc1-label` 已公开，Data/Code Availability 已改为当前时态；本轮严格科学与投稿编辑审计版本标记为 `mRNA-PC1-label-v1.4.5`
 - [ ] 选择并加入适合软件公开发布的许可证
-- [ ] 上传系统前由两位作者确认作者顺序、Author Contributions、no-funding statement 和英文单位名
+- [ ] 上传系统前由两位作者书面确认作者顺序、Author Contributions、贡献者归属、no-funding statement 和英文单位名，并确认公开仓库提交身份可解释

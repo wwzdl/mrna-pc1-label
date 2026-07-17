@@ -101,7 +101,7 @@ bash scripts/run_sample_pca_imputation_reproducibility.sh --species both
 
 两条方向性比较指标呈现不同结果。移除 Gejman 后，Saluki agreement 增益为 +0.0314，而条件性比较分布中位数为 -0.0926（中央 95% 范围 -0.1151 至 -0.0713）；ortholog concordance 增益为 +0.0147，而比较分布中位数为 -0.0616（中央 95% 范围 -0.0800 至 -0.0476）。500 次比较性删除均未达到这两个观测增益，对应可达到的最小经验高尾比例均为 1/501=0.002。这些数值以已经选择 Gejman 作为检查对象为条件，不是可交换的 whole-study p 值，也没有校正 study 选择或多 study 检查。因此，证据不支持“样本量校正后的几何异常”；它表明删除相同数量的其他样本没有产生同方向变化。
 
-基因宇宙和预处理敏感性提供了互补证据。在 dynamic/fixed coverage、coverage threshold、PCA 插补 rank 以及 iterative-PCA/sample-median 插补的 12 种设置中，Gejman 均排第一，且两条比较增益均为正。相反，当以 $1/\sqrt{n_s}$ 对 study 样本进行 PCA 加权，或先将每个 study 压缩为一个均值 profile 时，Gejman 的几何影响排序均由第一降为第三。这些结果明确了可稳健支持的结论：主分析排序对常见预处理选择稳定，但对 study 权重敏感；Saluki 处理参照与 ortholog 比较增益的方向保持稳定。
+基因宇宙和预处理敏感性提供了互补证据。在 dynamic/fixed coverage、coverage threshold、PCA 插补 rank 以及 iterative-PCA/sample-median 插补的 12 种设置中，Gejman 均排第一，且两条比较增益均为正。相反，当以 $n_s^{-1/2}$ 对 study 样本进行 PCA 加权，或先将每个 study 压缩为一个均值 profile 时，Gejman 的几何影响排序均由第一降为第三。这些结果明确了可稳健支持的结论：主分析排序对常见预处理选择稳定，但对 study 权重敏感；Saluki 处理参照与 ortholog 比较增益的方向保持稳定。
 
 ![](figures/supplement/FigS_study_influence_sensitivity.png)
 
@@ -379,7 +379,7 @@ bash scripts/reproduce_bmb_key_results.sh figures
 
 | 类别 | 路径或入口 | 用途 |
 |:--|:--|:--|
-| 版本化仓库 | `https://github.com/wwzdl/mrna-pc1-label` | 提供代码、结果表、图件脚本和环境说明；当前两作者稿件审计标签为 `mRNA-PC1-label-v1.4.4` |
+| 版本化仓库 | `https://github.com/wwzdl/mrna-pc1-label` | 提供代码、结果表、图件脚本和环境说明；当前两作者稿件审计标签为 `mRNA-PC1-label-v1.4.5` |
 | 分阶段复现入口 | `scripts/reproduce_bmb_key_results.sh` | 按当前结果路径运行 `labels`、`models` 和 `figures` 三个阶段 |
 | 环境与输入完整性 | `requirements.txt`、`environment.yml`、`requirements-validated.txt`、`scripts/fetch_real_data.sh` | 记录便携与已验证依赖，并以 checksum 校验公开补充输入 |
 | OOF 完整性审计 | `scripts/audit_oof_integrity.py` | 检查规范基因数、gene ID 唯一性、不同 setting/seed 的共同宇宙、fold 覆盖和预测缺失 |

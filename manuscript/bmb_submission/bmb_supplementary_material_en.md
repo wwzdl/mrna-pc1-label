@@ -101,7 +101,7 @@ The primary leave-one-study-out estimator gives every sample equal weight. Becau
 
 The two directional comparison gains behaved differently. The observed Saluki-agreement gain was +0.0314, whereas the comparator median was -0.0926 (central 95% comparator range, -0.1151 to -0.0713). The observed ortholog-concordance gain was +0.0147, whereas the comparator median was -0.0616 (central 95% comparator range, -0.0800 to -0.0476). No comparator reached either observed gain, giving the minimum attainable empirical upper-tail proportion, 1/501 = 0.002, for each. These values describe deletion sensitivity conditional on examining Gejman. They are not exchangeable whole-study p values, do not account for selecting Gejman, and are not adjusted for examining multiple studies. The result does not support a sample-count-adjusted geometric outlier; deleting the same number of other samples did not produce the same direction of change.
 
-Gene-universe and preprocessing sensitivity gave a complementary result. Gejman ranked first in all 12 combinations of dynamic/fixed coverage, coverage thresholds, PCA-imputation ranks, and iterative-PCA/sample-median imputation, and both comparison gains remained positive. By contrast, when study sample counts were balanced either by $1/\sqrt{n_s}$ PCA weights or by collapsing each study to its mean profile, Gejman ranked third rather than first. These analyses show which part of the claim is robust: the primary ranking is stable across preprocessing choices but sensitive to study weighting, whereas the directions of the Saluki-processing and ortholog-comparison gains are stable.
+Gene-universe and preprocessing sensitivity gave a complementary result. Gejman ranked first in all 12 combinations of dynamic/fixed coverage, coverage thresholds, PCA-imputation ranks, and iterative-PCA/sample-median imputation, and both comparison gains remained positive. By contrast, when study sample counts were balanced either by $n_s^{-1/2}$ PCA weights or by collapsing each study to its mean profile, Gejman ranked third rather than first. These analyses show which part of the claim is robust: the primary ranking is stable across preprocessing choices but sensitive to study weighting, whereas the directions of the Saluki-processing and ortholog-comparison gains are stable.
 
 ![](figures/supplement/FigS_study_influence_sensitivity.png)
 
@@ -379,7 +379,7 @@ The `labels` stage downloads MOESM2/MOESM3 and runs label reconstruction, study 
 
 | Category | Path or entry point | Purpose |
 |:--|:--|:--|
-| Public repository | `https://github.com/wwzdl/mrna-pc1-label` | Provides code, result tables, figure scripts, and environment notes; audited two-author manuscript tag: `mRNA-PC1-label-v1.4.4` |
+| Public repository | `https://github.com/wwzdl/mrna-pc1-label` | Provides code, result tables, figure scripts, and environment notes; audited two-author manuscript tag: `mRNA-PC1-label-v1.4.5` |
 | Staged reproduction driver | `scripts/reproduce_bmb_key_results.sh` | Runs the `labels`, `models`, and `figures` stages with the active result paths |
 | Environment and input integrity | `requirements.txt`, `environment.yml`, `requirements-validated.txt`, `scripts/fetch_real_data.sh` | Records portable and validated dependencies and verifies the public supplementary inputs by checksum |
 | OOF integrity audit | `scripts/audit_oof_integrity.py` | Checks canonical gene counts, unique IDs, shared universes across settings/seeds, fold coverage, and complete predictions |

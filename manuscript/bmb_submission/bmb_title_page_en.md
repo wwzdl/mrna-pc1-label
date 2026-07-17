@@ -9,9 +9,9 @@
 
 ## Authors and Affiliation
 
-Wenzhuo Wang<sup>1</sup>, Ying Shao*<sup>1</sup>
+Wenzhuo Wang, Ying Shao
 
-<sup>1</sup> School of Science, Dalian Maritime University, Dalian 116026, China
+School of Science, Dalian Maritime University, Dalian 116026, China
 
 ## Corresponding Author
 

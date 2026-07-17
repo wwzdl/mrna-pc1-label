@@ -15,6 +15,8 @@ from pathlib import Path
 
 from PIL import Image
 
+from equation_markup import omml_element
+
 
 ROOT = Path(__file__).resolve().parents[1]
 SUB = ROOT / "manuscript" / "bmb_submission"
@@ -170,6 +172,12 @@ def docx_xml(path: Path, member: str) -> str:
             return ""
 
 
+def docx_visible_text(path: Path) -> str:
+    namespace = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+    root = ET.fromstring(docx_xml(path, "word/document.xml"))
+    return "".join(node.text or "" for node in root.iter(f"{{{namespace}}}t"))
+
+
 def docx_has_line_numbers(path: Path) -> bool:
     if not path.exists():
         return False
@@ -219,12 +227,47 @@ def wide_table_caption_issues(path: Path) -> list[int]:
     return issues
 
 
-def markdown_equation_numbers(path: Path) -> list[str]:
-    return re.findall(
-        r"```equation\s*\nnumber:\s*([^\s]+)\s*\n.+?```",
+def markdown_equations(path: Path) -> list[tuple[str, str]]:
+    matches = re.findall(
+        r"```equation\s*\nnumber:\s*([^\s]+)\s*\n(.+?)```",
         read_text(path),
         flags=re.S,
     )
+    return [
+        (number, " ".join(line.strip() for line in latex.splitlines() if line.strip()))
+        for number, latex in matches
+    ]
+
+
+def markdown_equation_numbers(path: Path) -> list[str]:
+    return [number for number, _latex in markdown_equations(path)]
+
+
+def numbered_equation_texts(path: Path) -> dict[str, str]:
+    w = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+    m = "http://schemas.openxmlformats.org/officeDocument/2006/math"
+    root = ET.fromstring(docx_xml(path, "word/document.xml"))
+    equations: dict[str, str] = {}
+    for table in root.iter(f"{{{w}}}tbl"):
+        formula = table.find(f".//{{{m}}}oMath")
+        row = table.find(f"{{{w}}}tr")
+        if formula is None or row is None:
+            continue
+        cells = row.findall(f"{{{w}}}tc")
+        if len(cells) != 3:
+            continue
+        label = "".join(node.text or "" for node in cells[-1].iter(f"{{{w}}}t"))
+        match = re.fullmatch(r"\(((?:S)?\d+)\)", label)
+        if match:
+            equations[match.group(1)] = "".join(
+                node.text or "" for node in formula.iter(f"{{{m}}}t")
+            )
+    return equations
+
+
+def expected_equation_text(latex: str) -> str:
+    m = "http://schemas.openxmlformats.org/officeDocument/2006/math"
+    return "".join(node.text or "" for node in omml_element(latex).iter(f"{{{m}}}t"))
 
 
 def equation_layout_issues(path: Path) -> list[str]:
@@ -550,6 +593,22 @@ def check_docx() -> list[Check]:
     else:
         checks.append(Check("PASS", "wide supplementary tables follow their captions without a section-break gap"))
 
+    main_visible_text = docx_visible_text(MAIN_DOCX)
+    title_visible_text = docx_visible_text(SUB / "bmb_title_page_en.docx")
+    if "Keywords:*" in main_visible_text:
+        checks.append(Check("FAIL", "main DOCX contains a stray asterisk after the Keywords label"))
+    else:
+        checks.append(Check("PASS", "main DOCX Keywords label has no stray author-marker asterisk"))
+    if (
+        "Authors: Wenzhuo Wang, Ying Shao" in main_visible_text
+        and "Wenzhuo Wang, Ying Shao" in title_visible_text
+        and "Ying Shao*" not in main_visible_text
+        and "Ying Shao*" not in title_visible_text
+    ):
+        checks.append(Check("PASS", "single-affiliation author formatting is consistent in main DOCX and title page"))
+    else:
+        checks.append(Check("FAIL", "author markers are inconsistent between main DOCX and title page"))
+
     equation_specs = {
         MAIN_EN: (MAIN_DOCX, [str(index) for index in range(1, 10)]),
         MAIN_CN: (SUB / "bmb_main_manuscript_cn.docx", [str(index) for index in range(1, 10)]),
@@ -588,6 +647,31 @@ def check_docx() -> list[Check]:
                     "FAIL",
                     f"editable-equation audit failed for {docx_path.name}: "
                     f"math_objects={math_count}, missing_labels={missing_labels}",
+                )
+            )
+
+        expected_texts = {
+            number: expected_equation_text(latex)
+            for number, latex in markdown_equations(markdown_path)
+        }
+        actual_texts = numbered_equation_texts(docx_path)
+        content_mismatches = [
+            number
+            for number, expected_text in expected_texts.items()
+            if actual_texts.get(number) != expected_text
+        ]
+        if content_mismatches:
+            checks.append(
+                Check(
+                    "FAIL",
+                    f"numbered-equation content mismatch in {docx_path.name}: {content_mismatches}",
+                )
+            )
+        else:
+            checks.append(
+                Check(
+                    "PASS",
+                    f"all numbered equations retain their complete source content in {docx_path.name}",
                 )
             )
 
@@ -775,6 +859,44 @@ def check_quantitative_claims() -> list[Check]:
 
     def require_tokens(label: str, tokens: list[str]) -> None:
         require_tokens_in(f"main text, {label}", tokens, manuscript)
+
+    feature_rows = read_tsv(ROOT / "results" / "human_compact_regulatory_benchmark.tsv")
+    feature_dimensions = {
+        row["setting"]: int(row["n_features"])
+        for row in feature_rows
+    }
+    expected_feature_dimensions = {
+        "compact_base": 526,
+        "compact_cwcs": 845,
+        "compact_seqweaver": 1306,
+        "compact_deepripe": 703,
+        "compact_all": 1802,
+    }
+    if feature_dimensions == expected_feature_dimensions:
+        checks.append(Check("PASS", "compact feature-block dimensions match the benchmark table"))
+    else:
+        checks.append(
+            Check(
+                "FAIL",
+                f"compact feature-block dimensions mismatch: {feature_dimensions}",
+            )
+        )
+    block_dimensions = {
+        "CWCS": feature_dimensions["compact_cwcs"] - feature_dimensions["compact_base"],
+        "SeqWeaver": feature_dimensions["compact_seqweaver"] - feature_dimensions["compact_base"],
+        "DeepRiPe": feature_dimensions["compact_deepripe"] - feature_dimensions["compact_base"],
+    }
+    require_tokens(
+        "compact_all feature definition",
+        [
+            "1,802-dimensional",
+            "526 sequence features",
+            f"{block_dimensions['CWCS']} CWCS",
+            f"{block_dimensions['SeqWeaver']} SeqWeaver",
+            f"{block_dimensions['DeepRiPe']} DeepRiPe",
+            "not the name of a model reported by Saluki",
+        ],
+    )
 
     bootstrap = read_tsv(ROOT / "results" / "key_claim_bootstrap" / "paired_bootstrap_summary.tsv")
     for claim in (

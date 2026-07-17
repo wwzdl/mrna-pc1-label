@@ -27,10 +27,14 @@ The active English manuscript, supplementary information, title page, cover lett
 - Replaced the remaining ambiguous “fold-wise shuffling” wording with the implemented partition-wise permutation within each outer fold.
 - Added the gene-level split boundary: paralog families were not grouped across folds, so gene-family-held-out generalization is not established.
 - Synchronized the fixed DOCX table grid with the equation-cell widths so WPS allocates the intended 5.89-inch center cell; added vertical padding, row-split protection, a unit test, and submission-package checks for this layout.
+- Removed the Markdown author-marker artifact that rendered as `Keywords:*`, simplified the single-affiliation author display, and synchronized the main manuscript and title page.
+- Defined `compact_all` explicitly as 526 sequence, 319 CWCS, 780 SeqWeaver, and 177 DeepRiPe features (1,802 total), and stated that this is the present study's feature-set name rather than a Saluki model name.
+- Replaced the study-weight radical with the mathematically equivalent $n_s^{-1/2}$ form to reduce WPS rendering risk, and added source-to-OMML content matching for every numbered equation in all four DOCX files.
+- Rephrased the exact-vector cover-letter result as a matched observed increment rather than a causal attribution.
 
 ## Quantitative and reproducibility checks
 
-- Full preflight: `169 checks`, `0 failures`, `0 warnings`.
+- Full preflight: `177 checks`, `0 failures`, `0 warnings`.
 - Unit tests: `4 passed`.
 - OOF integrity: nine global fixed-target files cover 12,916 genes; three cross-target files and 18 shrinkage-target files cover 12,307 genes; residual outputs cover 11,107 genes across folds 1-5.
 - English abstract: 228 words; six keywords.
@@ -45,11 +49,13 @@ The active English manuscript, supplementary information, title page, cover lett
 
 ## Remaining author-controlled gates
 
-1. Both authors must confirm author order, contribution wording, shared affiliation, no-funding statement, and approval of the submitted version.
+1. Both authors must confirm author order, contribution wording, shared affiliation, and approval of the submitted version. They should also document that all qualifying contributors have been considered under the journal's authorship policy.
 2. Wenzhuo Wang's ORCID should be added if available; it is optional if no ORCID is held.
-3. A software license should be selected for downstream reuse. This does not block manuscript submission but affects repository reuse terms.
-4. Generate and inspect the final supplementary PDF and upload ZIP only after this source state is frozen.
+3. Both authors must confirm that the no-funding statement accurately covers data processing, computing, method development, and manuscript preparation; any actual project support should be disclosed.
+4. The public Git identity `zhangdinglin` should be explainable in relation to the listed authors; history should not be rewritten merely for cosmetic consistency.
+5. A software license should be selected for downstream reuse. This does not block manuscript submission but affects repository reuse terms.
+6. Generate and inspect the final supplementary PDF and upload ZIP only after this source state is frozen.
 
 ## Release state
 
-The intended immutable repository tag for this audited state is `mRNA-PC1-label-v1.4.4`. PDF and ZIP generation remain intentionally deferred until the final author-controlled submission freeze.
+The intended immutable repository tag for this audited state is `mRNA-PC1-label-v1.4.5`. PDF and ZIP generation remain intentionally deferred until the final author-controlled submission freeze.

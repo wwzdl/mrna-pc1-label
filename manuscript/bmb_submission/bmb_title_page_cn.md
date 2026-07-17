@@ -10,9 +10,9 @@
 
 ## 2. 作者与单位
 
-Wenzhuo Wang<sup>1</sup>，Ying Shao*<sup>1</sup>
+Wenzhuo Wang，Ying Shao
 
-<sup>1</sup> 大连海事大学理学院，辽宁大连 116026
+大连海事大学理学院，辽宁大连 116026
 
 ## 3. 通讯作者
 

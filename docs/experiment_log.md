@@ -1492,3 +1492,12 @@ PYTHONPATH=paper_pca/src python -m mrna_half_life_paper.study_noise_vs_orthoreg_
 - 公式表格现统一设置固定总宽、`0.48 / 5.89 / 0.48` 英寸网格与相同单元格宽度，并增加垂直留白、垂直居中和防跨页拆行属性。
 - 单元测试与投稿审计新增公式表格总宽、中心列宽、网格同步、固定布局和 `cantSplit` 检查；中英文正文各 9 个及双语补充材料各 2 个编号公式全部通过。
 - DOCX-only 完整预检通过 `169 checks / 0 failures / 0 warnings`，4 个单元测试全部通过；当前冻结标签更新为 `mRNA-PC1-label-v1.4.4`。
+
+### 2026-07-17：v1.4.5 审稿意见核验与投稿元数据收口
+
+- 对外部审稿意见逐项回查当前 Markdown、DOCX、真实特征维度和公式 XML；旧版 Equation (2)、(4)、(7) 截断问题在 v1.4.4 已解决，Equation (3) 保留更准确的经验尾比例记号 $\widehat{\pi}_{tail}$。
+- 删除孤立 Markdown 通讯作者星号造成的 `Keywords:*` 渲染伪影；单一单位稿件改为无编号作者与单位写法，并同步中英文主稿和 title page。
+- 明确 `compact_all` 为本文定义的 1,802 维组合特征集：526 个序列特征、319 个 CWCS、780 个 SeqWeaver 和 177 个 DeepRiPe 特征，而非 Saluki 原文模型名称。
+- 将 study-balanced 权重从等价的根式改写为 $n_s^{-1/2}$，降低 WPS 显示风险；投稿审计新增 Markdown 公式源与 DOCX OMML 完整内容逐式匹配。
+- Cover letter 将 exact-vector 结果改写为 matched ablation 的观测增量，避免因果归因过强；作者资格、no-funding 与公开 Git 身份保留为作者控制的最终确认项。
+- DOCX-only 完整预检通过 `177 checks / 0 failures / 0 warnings`，4 个单元测试全部通过；本轮冻结标签更新为 `mRNA-PC1-label-v1.4.5`。
