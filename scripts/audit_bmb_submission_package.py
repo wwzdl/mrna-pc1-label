@@ -8,6 +8,7 @@ import os
 import re
 import sys
 import zipfile
+import xml.etree.ElementTree as ET
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -183,6 +184,38 @@ def docx_has_page_field(path: Path) -> bool:
             if "PAGE" in zf.read(name).decode("utf-8", errors="ignore"):
                 return True
     return False
+
+
+def wide_table_caption_issues(path: Path) -> list[int]:
+    """Return 1-based wide-table indices whose caption is not the previous body item."""
+    if not path.exists():
+        return []
+    namespace = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+    root = ET.fromstring(docx_xml(path, "word/document.xml"))
+    body = root.find(f"{{{namespace}}}body")
+    if body is None:
+        return []
+    children = list(body)
+    issues: list[int] = []
+    wide_index = 0
+    for index, child in enumerate(children):
+        if child.tag != f"{{{namespace}}}tbl":
+            continue
+        grid = child.find(f"{{{namespace}}}tblGrid")
+        column_count = len(grid) if grid is not None else 0
+        if column_count < 9:
+            continue
+        wide_index += 1
+        if index == 0:
+            issues.append(wide_index)
+            continue
+        previous_text = "".join(
+            node.text or ""
+            for node in children[index - 1].iter(f"{{{namespace}}}t")
+        ).strip()
+        if not re.match(r"^(?:Supplementary Table S\d+|Table \d+)\.", previous_text):
+            issues.append(wide_index)
+    return issues
 
 
 def markdown_equation_numbers(path: Path) -> list[str]:
@@ -391,6 +424,33 @@ def check_supplement() -> list[Check]:
             )
         )
 
+    reader_facing_table_lines = "\n".join(
+        line for line in text.splitlines() if line.lstrip().startswith("|")
+    )
+    machine_table_tokens = [
+        "compact_all_plus_",
+        "moesm3_no_gejman_",
+        "moesm3_all_samples_",
+        "Saluki_human_PC1",
+        "prior_only_linear",
+        "prior_plus_compact_residual",
+        "pearson_mean_sd",
+        "target_vs_Saluki_pearson",
+        "all_one2one",
+    ]
+    remaining_machine_tokens = [
+        token for token in machine_table_tokens if token in reader_facing_table_lines
+    ]
+    if remaining_machine_tokens:
+        checks.append(
+            Check(
+                "FAIL",
+                f"reader-facing SI tables retain machine identifiers: {remaining_machine_tokens}",
+            )
+        )
+    else:
+        checks.append(Check("PASS", "reader-facing SI tables use readable display labels"))
+
     ref_keys = [reference_family_year(line) for line in references]
     parsed_refs = [(key, line) for key, line in zip(ref_keys, references) if key is not None]
     cited = citation_family_years(body)
@@ -420,6 +480,17 @@ def check_docx() -> list[Check]:
             checks.append(Check("PASS", f"{path.name} has PAGE footer field"))
         else:
             checks.append(Check("FAIL", f"{path.name} lacks PAGE footer field"))
+
+    caption_issues = wide_table_caption_issues(SUPP_DOCX)
+    if caption_issues:
+        checks.append(
+            Check(
+                "FAIL",
+                f"wide supplementary tables are separated from their captions: {caption_issues}",
+            )
+        )
+    else:
+        checks.append(Check("PASS", "wide supplementary tables follow their captions without a section-break gap"))
 
     equation_specs = {
         MAIN_EN: (MAIN_DOCX, [str(index) for index in range(1, 10)]),

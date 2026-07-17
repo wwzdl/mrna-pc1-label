@@ -1443,3 +1443,17 @@ PYTHONPATH=paper_pca/src python -m mrna_half_life_paper.study_noise_vs_orthoreg_
 - 验证与发布：
   - 机器账本共 20 行；中英文一致性、3 个单元测试和 DOCX-only preflight 均通过。
   - 本轮集合账本修订计划冻结为 `mRNA-PC1-label-v1.4`；正式 SI PDF 与 ZIP 继续留到最终作者确认后生成。
+
+### Supplementary-table readability and pagination repair
+
+- 时间：
+  - `2026-07-17 CST`
+- 表格显示：
+  - 将补充表 S5、S7-S13 中的机器字段名和 snake_case setting 值替换为读者友好的短标签；原始字段和值仍保留在对应 `results/*.tsv` 中。
+  - 在数字中加入千位分隔符，并缩短宽表表头；补充表 S10 从 12 列压缩为 9 列，将共同的 10-fold × 3-seed 设计移入表题。
+- DOCX 分页：
+  - 修复横向表格生成逻辑，使表题与表格位于同一横向 section，避免表题单独占页及大面积空白。
+  - 投稿审计新增“读者表格不得残留机器标识”和“宽表标题与表格不得被 section break 分隔”两项检查。
+- 验证与发布：
+  - 相关表格中下划线和零宽换行符计数均为 0；DOCX-only 审计扩展为 160 项检查。
+  - 本轮显示与分页修订冻结为 `mRNA-PC1-label-v1.4.1`；正式 SI PDF 与 ZIP 仍留待最终作者确认。

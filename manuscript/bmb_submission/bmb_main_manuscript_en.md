@@ -330,7 +330,7 @@ The half-life matrices analyzed here are from the public supplementary material 
 
 ### Code Availability
 
-Code, figure-generation scripts, and result-reproduction workflows are publicly available in [wwzdl/mrna-pc1-label](https://github.com/wwzdl/mrna-pc1-label); the audited two-author manuscript state is identified by the release tag `mRNA-PC1-label-v1.4`.
+Code, figure-generation scripts, and result-reproduction workflows are publicly available in [wwzdl/mrna-pc1-label](https://github.com/wwzdl/mrna-pc1-label); the audited two-author manuscript state is identified by the release tag `mRNA-PC1-label-v1.4.1`.
 
 ### Competing Interests
 

@@ -140,11 +140,11 @@ python -m mrna_half_life_paper.prior_residual_analysis
 
 ### 补充表 S5. Prior residual analysis 的两阶段 OOF 分解
 
-| model | genes | prior_features | human_features | pearson | spearman | r2 | delta_r2_vs_prior | remaining_variance_explained |
+| 模型 | 基因数 | Prior 特征数 | Human 特征数 | Pearson r | Spearman ρ | R² | 相对 prior 的 ΔR² | 剩余方差解释比例 |
 |:--|--:|--:|--:|--:|--:|--:|--:|--:|
-| prior_only_linear | 11107 | 2 | 0 | 0.792 | 0.782 | 0.627 | 0.000 | 0.00% |
-| compact_all_only | 11107 | 0 | 1802 | 0.739 | 0.731 | 0.544 | -0.084 | NA |
-| prior_plus_compact_residual | 11107 | 2 | 1802 | 0.826 | 0.818 | 0.675 | 0.048 | 12.79% |
+| 仅 prior（线性） | 11,107 | 2 | 0 | 0.792 | 0.782 | 0.627 | 0.000 | 0.00% |
+| 仅 human compact | 11,107 | 0 | 1,802 | 0.739 | 0.731 | 0.544 | -0.084 | NA |
+| Prior 加 human residual | 11,107 | 2 | 1,802 | 0.826 | 0.818 | 0.675 | 0.048 | 12.79% |
 
 剩余方差解释比例定义为
 
@@ -224,22 +224,24 @@ Fixed-target coverage groups 将 P2 完整划分为：11,107 个 genes 同时有
 
 ### 补充表 S7. `MOESM3` 派生监督标签的下游 benchmark
 
-| 特征集 | 目标标签 | 基因数 | 标签与 Saluki human PC1 的 Pearson | 对训练标签的 Pearson | 对 Saluki human PC1 的 Pearson | 对 Saluki human PC1 的 R2 |
+| 特征集 | 目标标签 | 基因数 | 标签与 Saluki human PC1 的 Pearson | 对训练标签的 Pearson | 对 Saluki human PC1 的 Pearson | 对 Saluki human PC1 的 R² |
 |:--|:--|--:|--:|--:|--:|--:|
-| compact_all | moesm3_no_gejman_rerun_pipeline_pc1 | 13532 | 1.000 | 0.730 | 0.730 | 0.533 |
-| compact_all | Saluki_human_PC1 | 13532 | 1.000 | 0.729 | 0.729 | 0.530 |
-| compact_all | moesm3_no_gejman_as_is_pc1 | 13532 | 1.000 | 0.729 | 0.729 | 0.530 |
-| compact_all | moesm3_no_gejman_zscore_only_pc1 | 13532 | 1.000 | 0.729 | 0.729 | 0.530 |
-| compact_all | moesm3_all_samples_zscore_only_pc1 | 13532 | 0.963 | 0.707 | 0.722 | 0.520 |
-| compact_all | moesm3_all_samples_rerun_pipeline_pc1 | 13532 | 0.963 | 0.707 | 0.721 | 0.519 |
-| compact_all | moesm3_all_samples_as_is_pc1 | 13532 | 0.963 | 0.707 | 0.721 | 0.520 |
-| base_sequence | moesm3_no_gejman_zscore_only_pc1 | 13532 | 1.000 | 0.720 | 0.720 | 0.518 |
-| base_sequence | Saluki_human_PC1 | 13532 | 1.000 | 0.720 | 0.720 | 0.517 |
-| base_sequence | moesm3_no_gejman_as_is_pc1 | 13532 | 1.000 | 0.720 | 0.720 | 0.517 |
-| base_sequence | moesm3_no_gejman_rerun_pipeline_pc1 | 13532 | 1.000 | 0.718 | 0.718 | 0.516 |
-| base_sequence | moesm3_all_samples_rerun_pipeline_pc1 | 13532 | 0.963 | 0.698 | 0.713 | 0.507 |
-| base_sequence | moesm3_all_samples_zscore_only_pc1 | 13532 | 0.963 | 0.697 | 0.713 | 0.506 |
-| base_sequence | moesm3_all_samples_as_is_pc1 | 13532 | 0.963 | 0.696 | 0.712 | 0.507 |
+| Human compact | MOESM3 no-Gejman：完整流程重跑 | 13,532 | 1.000 | 0.730 | 0.730 | 0.533 |
+| Human compact | Saluki human PC1 | 13,532 | 1.000 | 0.729 | 0.729 | 0.530 |
+| Human compact | MOESM3 no-Gejman：原处理值 PC1 | 13,532 | 1.000 | 0.729 | 0.729 | 0.530 |
+| Human compact | MOESM3 no-Gejman：仅 z-score | 13,532 | 1.000 | 0.729 | 0.729 | 0.530 |
+| Human compact | MOESM3 全样本：仅 z-score | 13,532 | 0.963 | 0.707 | 0.722 | 0.520 |
+| Human compact | MOESM3 全样本：完整流程重跑 | 13,532 | 0.963 | 0.707 | 0.721 | 0.519 |
+| Human compact | MOESM3 全样本：原处理值 PC1 | 13,532 | 0.963 | 0.707 | 0.721 | 0.520 |
+| Base sequence | MOESM3 no-Gejman：仅 z-score | 13,532 | 1.000 | 0.720 | 0.720 | 0.518 |
+| Base sequence | Saluki human PC1 | 13,532 | 1.000 | 0.720 | 0.720 | 0.517 |
+| Base sequence | MOESM3 no-Gejman：原处理值 PC1 | 13,532 | 1.000 | 0.720 | 0.720 | 0.517 |
+| Base sequence | MOESM3 no-Gejman：完整流程重跑 | 13,532 | 1.000 | 0.718 | 0.718 | 0.516 |
+| Base sequence | MOESM3 全样本：完整流程重跑 | 13,532 | 0.963 | 0.698 | 0.713 | 0.507 |
+| Base sequence | MOESM3 全样本：仅 z-score | 13,532 | 0.963 | 0.697 | 0.713 | 0.506 |
+| Base sequence | MOESM3 全样本：原处理值 PC1 | 13,532 | 0.963 | 0.696 | 0.712 | 0.507 |
+
+表内采用便于阅读的显示名称；精确 setting 标识和完整精度数值保留在 `results/moesm3_saluki_label_benchmark/summary.tsv`。
 
 ## S12. MOESM3 派生监督标签在 mouse prior 设定下的针对性控制
 
@@ -249,16 +251,18 @@ Fixed-target coverage groups 将 P2 完整划分为：11,107 个 genes 同时有
 
 ### 补充表 S8. `MOESM3` 派生监督标签在 prior 设定下的针对性 benchmark
 
-| 目标标签 | 设定 | 基因数 | 有 `mouse_pc1` 的基因数 | 有 `saluki_mouse_prior` 的基因数 | 标签与 Saluki human PC1 的 Pearson | 对训练标签的 Pearson | 对 Saluki human PC1 的 Pearson | 对 Saluki human PC1 的 R2 |
+| 监督标签 | 特征设定 | 基因数 | 有重建 prior | 有 Saluki prior | 标签-Saluki r | OOF r（训练目标） | OOF r（Saluki 目标） | OOF R²（Saluki 目标） |
 |:--|:--|--:|--:|--:|--:|--:|--:|--:|
-| Saluki_human_PC1 | compact_all_plus_both_mouse_priors_global | 13532 | 11569 | 11423 | 1.000 | 0.816 | 0.816 | 0.666 |
-| moesm3_no_gejman_rerun_pipeline_pc1 | compact_all_plus_both_mouse_priors_global | 13532 | 11569 | 11423 | 1.000 | 0.816 | 0.816 | 0.665 |
-| moesm3_no_gejman_rerun_pipeline_pc1 | compact_all_plus_mouse_pc1_global | 13532 | 11569 | 11423 | 1.000 | 0.814 | 0.814 | 0.662 |
-| Saluki_human_PC1 | compact_all_plus_mouse_pc1_global | 13532 | 11569 | 11423 | 1.000 | 0.814 | 0.814 | 0.662 |
-| Saluki_human_PC1 | compact_all_plus_saluki_mouse_prior_global | 13532 | 11569 | 11423 | 1.000 | 0.812 | 0.812 | 0.659 |
-| moesm3_no_gejman_rerun_pipeline_pc1 | compact_all_plus_saluki_mouse_prior_global | 13532 | 11569 | 11423 | 1.000 | 0.812 | 0.811 | 0.658 |
-| moesm3_no_gejman_rerun_pipeline_pc1 | compact_all_global | 13532 | 11569 | 11423 | 1.000 | 0.730 | 0.730 | 0.533 |
-| Saluki_human_PC1 | compact_all_global | 13532 | 11569 | 11423 | 1.000 | 0.729 | 0.729 | 0.530 |
+| Saluki human PC1 | Human compact 加两个 mouse priors | 13,532 | 11,569 | 11,423 | 1.000 | 0.816 | 0.816 | 0.666 |
+| MOESM3 no-Gejman：完整流程重跑 | Human compact 加两个 mouse priors | 13,532 | 11,569 | 11,423 | 1.000 | 0.816 | 0.816 | 0.665 |
+| MOESM3 no-Gejman：完整流程重跑 | Human compact 加重建 mouse prior | 13,532 | 11,569 | 11,423 | 1.000 | 0.814 | 0.814 | 0.662 |
+| Saluki human PC1 | Human compact 加重建 mouse prior | 13,532 | 11,569 | 11,423 | 1.000 | 0.814 | 0.814 | 0.662 |
+| Saluki human PC1 | Human compact 加 Saluki mouse prior | 13,532 | 11,569 | 11,423 | 1.000 | 0.812 | 0.812 | 0.659 |
+| MOESM3 no-Gejman：完整流程重跑 | Human compact 加 Saluki mouse prior | 13,532 | 11,569 | 11,423 | 1.000 | 0.812 | 0.811 | 0.658 |
+| MOESM3 no-Gejman：完整流程重跑 | 仅 human compact | 13,532 | 11,569 | 11,423 | 1.000 | 0.730 | 0.730 | 0.533 |
+| Saluki human PC1 | 仅 human compact | 13,532 | 11,569 | 11,423 | 1.000 | 0.729 | 0.729 | 0.530 |
+
+表内采用便于阅读的显示名称；精确 setting 标识和完整精度数值保留在 `results/moesm3_saluki_label_prior_benchmark_smoketest/summary.tsv`。
 
 ## S13. 10-fold 稳健性、弱同源正则化与不确定性补充表
 
@@ -266,23 +270,23 @@ Fixed-target coverage groups 将 P2 完整划分为：11,107 个 genes 同时有
 
 ### 补充表 S9. Global prior 的 10-fold 稳健性
 
-| setting | prior_mode | cv_folds | random_states | genes | pearson_mean_sd | spearman_mean_sd | r2_mean_sd |
+| 设定 | Prior 模式 | 折数 | Seeds | 基因数 | Pearson r（均值 ± SD） | Spearman ρ（均值 ± SD） | R²（均值 ± SD） |
 |:--|:--|--:|--:|--:|:--|:--|:--|
-| compact_all_plus_both_mouse_priors_global | real | 10 | 3 | 12916 | 0.830 ± 0.001 | 0.824 ± 0.001 | 0.689 ± 0.001 |
-| compact_all_plus_both_mouse_priors_shuffled_global | shuffled | 10 | 3 | 12916 | 0.748 ± 0.001 | 0.741 ± 0.001 | 0.558 ± 0.001 |
-| compact_all_global | none | 10 | 3 | 12916 | 0.748 ± 0.001 | 0.740 ± 0.001 | 0.558 ± 0.002 |
-| coverage-aware fallback | availability-based model selection | 10 | 3 | 12916 | 0.832 ± 0.001 | 0.826 ± 0.001 | 0.690 ± 0.001 |
+| Human compact 加两个 mouse priors | 真实 priors | 10 | 3 | 12,916 | 0.830 ± 0.001 | 0.824 ± 0.001 | 0.689 ± 0.001 |
+| Human compact 加两个 mouse priors | 打乱 priors | 10 | 3 | 12,916 | 0.748 ± 0.001 | 0.741 ± 0.001 | 0.558 ± 0.001 |
+| 仅 human compact | 无 prior | 10 | 3 | 12,916 | 0.748 ± 0.001 | 0.740 ± 0.001 | 0.558 ± 0.002 |
+| Coverage-aware fallback | 按 prior 可用性选择模型 | 10 | 3 | 12,916 | 0.832 ± 0.001 | 0.826 ± 0.001 | 0.690 ± 0.001 |
 
-### 补充表 S10. 0.10 同源基因信息目标收缩的 10-fold target benchmark
+### 补充表 S10. 三个随机种子下的 10-fold target benchmark
 
-| label | source | λ | cv_folds | random_states | genes | target_vs_Saluki_pearson | ortholog_pearson | real_prior_pearson_target_mean_sd | pure_human_pearson_target_mean_sd | shuffled_prior_pearson_target_mean_sd | real_minus_shuffled |
-|:--|:--|--:|--:|--:|--:|--:|--:|:--|:--|:--|:--|
-| 0.10 同源基因信息收缩目标 | reconstructed mouse PC1 | 0.1 | 10 | 3 | 12307 | 0.987 | 0.827 | 0.855 ± 0.001 | 0.754 ± 0.001 | 0.753 ± 0.001 | 0.102 ± 0.001 |
-| Saluki_human_PC1 | Saluki_human_PC1 | 0 | 10 | 3 | 12307 | 1.000 | 0.798 | 0.839 ± 0.001 | 0.754 ± 0.001 | 0.754 ± 0.001 | 0.085 ± 0.000 |
+| 目标与 mouse comparator | λ | 基因数 | 目标-Saluki r | 目标-mouse r | 真实 prior OOF r | Human-only OOF r | 打乱 prior OOF r | 真实-打乱 Δr |
+|:--|--:|--:|--:|--:|:--|:--|:--|:--|
+| 0.10 收缩目标；重建 mouse PC1 | 0.10 | 12,307 | 0.987 | 0.827 | 0.855 ± 0.001 | 0.754 ± 0.001 | 0.753 ± 0.001 | 0.102 ± 0.001 |
+| Saluki human PC1；Saluki mouse PC1 | 0 | 12,307 | 1.000 | 0.798 | 0.839 ± 0.001 | 0.754 ± 0.001 | 0.754 ± 0.001 | 0.085 ± 0.000 |
 
 ### 补充表 S11. 0.10 同源基因信息目标收缩的 10-fold prior-ablation benchmark
 
-| setting | features | cv_folds | random_states | pearson_target_mean_sd | pearson_vs_Saluki_mean_sd | delta_vs_10fold_Saluki_prior_baseline |
+| 设定 | 特征数 | 折数 | Seeds | OOF r（训练目标） | OOF r（Saluki） | 相对 fixed-target prior 基线的 Δr |
 |:--|--:|--:|--:|:--|:--|:--|
 | human-only features | 1802 | 10 | 3 | 0.754 ± 0.001 | 0.753 ± 0.001 | -0.086 ± 0.001 |
 | availability/confidence indicators only | 1806 | 10 | 3 | 0.753 ± 0.000 | 0.753 ± 0.001 | -0.086 ± 0.000 |
@@ -293,22 +297,22 @@ Fixed-target coverage groups 将 P2 完整划分为：11,107 个 genes 同时有
 
 ### 补充表 S12. Human-mouse ortholog label distance
 
-| comparison | subset | n | pearson | spearman | mse | rmse | mae | median_abs_error | p95_abs_error |
+| 比较 | Ortholog 子集 | N | Pearson r | Spearman ρ | MSE | RMSE | MAE | 绝对误差中位数 | 绝对误差第 95 百分位数 |
 |:--|:--|--:|--:|--:|--:|--:|--:|--:|--:|
-| human no-Gejman PC1 vs reconstructed mouse PC1 | all_one2one | 10768 | 0.789 | 0.782 | 0.440 | 0.663 | 0.512 | 0.413 | 1.330 |
-| shrinkage target vs reconstructed mouse PC1 | all_one2one | 10768 | 0.827 | 0.820 | 0.361 | 0.601 | 0.464 | 0.373 | 1.209 |
-| shrinkage target vs human no-Gejman PC1 | all_one2one | 10768 | 0.998 | 0.998 | 0.004 | 0.065 | 0.050 | 0.041 | 0.129 |
-| Saluki human PC1 vs Saluki mouse PC1 | all_one2one | 10768 | 0.798 | 0.788 | 0.418 | 0.646 | 0.503 | 0.411 | 1.285 |
-| shrinkage target vs Saluki human PC1 | all_one2one | 10768 | 0.990 | 0.992 | 0.020 | 0.142 | 0.094 | 0.063 | 0.291 |
-| human no-Gejman PC1 vs reconstructed mouse PC1 | high_confidence | 10626 | 0.791 | 0.784 | 0.436 | 0.660 | 0.510 | 0.410 | 1.326 |
-| shrinkage target vs reconstructed mouse PC1 | high_confidence | 10626 | 0.829 | 0.822 | 0.357 | 0.598 | 0.462 | 0.371 | 1.201 |
-| shrinkage target vs human no-Gejman PC1 | high_confidence | 10626 | 0.998 | 0.998 | 0.004 | 0.064 | 0.050 | 0.041 | 0.129 |
-| Saluki human PC1 vs Saluki mouse PC1 | high_confidence | 10626 | 0.800 | 0.789 | 0.414 | 0.644 | 0.500 | 0.409 | 1.275 |
-| shrinkage target vs Saluki human PC1 | high_confidence | 10626 | 0.990 | 0.992 | 0.020 | 0.142 | 0.094 | 0.063 | 0.290 |
+| Human no-Gejman PC1 vs reconstructed mouse PC1 | 全部 one-to-one | 10,768 | 0.789 | 0.782 | 0.440 | 0.663 | 0.512 | 0.413 | 1.330 |
+| Shrinkage target vs reconstructed mouse PC1 | 全部 one-to-one | 10,768 | 0.827 | 0.820 | 0.361 | 0.601 | 0.464 | 0.373 | 1.209 |
+| Shrinkage target vs human no-Gejman PC1 | 全部 one-to-one | 10,768 | 0.998 | 0.998 | 0.004 | 0.065 | 0.050 | 0.041 | 0.129 |
+| Saluki human PC1 vs Saluki mouse PC1 | 全部 one-to-one | 10,768 | 0.798 | 0.788 | 0.418 | 0.646 | 0.503 | 0.411 | 1.285 |
+| Shrinkage target vs Saluki human PC1 | 全部 one-to-one | 10,768 | 0.990 | 0.992 | 0.020 | 0.142 | 0.094 | 0.063 | 0.291 |
+| Human no-Gejman PC1 vs reconstructed mouse PC1 | 高置信 | 10,626 | 0.791 | 0.784 | 0.436 | 0.660 | 0.510 | 0.410 | 1.326 |
+| Shrinkage target vs reconstructed mouse PC1 | 高置信 | 10,626 | 0.829 | 0.822 | 0.357 | 0.598 | 0.462 | 0.371 | 1.201 |
+| Shrinkage target vs human no-Gejman PC1 | 高置信 | 10,626 | 0.998 | 0.998 | 0.004 | 0.064 | 0.050 | 0.041 | 0.129 |
+| Saluki human PC1 vs Saluki mouse PC1 | 高置信 | 10,626 | 0.800 | 0.789 | 0.414 | 0.644 | 0.500 | 0.409 | 1.275 |
+| Shrinkage target vs Saluki human PC1 | 高置信 | 10,626 | 0.990 | 0.992 | 0.020 | 0.142 | 0.094 | 0.063 | 0.290 |
 
 ### 补充表 S13. Study-level noise versus $\lambda=0.10$ label shift
 
-| comparison | cohort | n_comparisons | median Pearson | median residual Pearson | median RMSE | median MAE |
+| 比较 | Cohort | 比较数 | Pearson r 中位数 | Residual r 中位数 | RMSE 中位数 | MAE 中位数 |
 |:--|:--|--:|--:|--:|--:|--:|
 | `λ = 0.10` target vs human no-Gejman PC1 | all one-to-one ortholog genes | 1 | 0.9979 | NA | 0.0646 | 0.0501 |
 | study mean label pairs | no-Gejman studies | 153 | 0.5303 | NA | 0.9540 | 0.7203 |
@@ -323,7 +327,7 @@ Fixed-target coverage groups 将 P2 完整划分为：11,107 个 genes 同时有
 
 两类模型使用相同的 12,307 个 genes、1802 维 human-only `compact_all` 特征、10 folds、3 random seeds 和相同超参数。`mean ± SD` 中的 SD 表示 across-seed split sensitivity。
 
-| training target | evaluation target | genes | Pearson mean ± SD | R2 mean ± SD | RMSE mean ± SD | MAE mean ± SD |
+| 训练目标 | 评估目标 | 基因数 | Pearson r（均值 ± SD） | R²（均值 ± SD） | RMSE（均值 ± SD） | MAE（均值 ± SD） |
 |:--|:--|--:|:--|:--|:--|:--|
 | human no-Gejman PC1 | human no-Gejman PC1 | 12307 | 0.7476 ± 0.0010 | 0.5572 ± 0.0015 | 0.6687 ± 0.0012 | 0.5260 ± 0.0013 |
 | 0.10 同源基因信息收缩目标 | human no-Gejman PC1 | 12307 | 0.7480 ± 0.0010 | 0.5582 ± 0.0014 | 0.6680 ± 0.0011 | 0.5248 ± 0.0009 |
@@ -372,7 +376,7 @@ bash scripts/reproduce_bmb_key_results.sh figures
 
 | 类别 | 路径或入口 | 用途 |
 |:--|:--|:--|
-| 版本化仓库 | `https://github.com/wwzdl/mrna-pc1-label` | 提供代码、结果表、图件脚本和环境说明；当前两作者稿件审计标签为 `mRNA-PC1-label-v1.4` |
+| 版本化仓库 | `https://github.com/wwzdl/mrna-pc1-label` | 提供代码、结果表、图件脚本和环境说明；当前两作者稿件审计标签为 `mRNA-PC1-label-v1.4.1` |
 | 分阶段复现入口 | `scripts/reproduce_bmb_key_results.sh` | 按当前结果路径运行 `labels`、`models` 和 `figures` 三个阶段 |
 | 环境与输入完整性 | `requirements.txt`、`environment.yml`、`requirements-validated.txt`、`scripts/fetch_real_data.sh` | 记录便携与已验证依赖，并以 checksum 校验公开补充输入 |
 | OOF 完整性审计 | `scripts/audit_oof_integrity.py` | 检查规范基因数、gene ID 唯一性、不同 setting/seed 的共同宇宙、fold 覆盖和预测缺失 |

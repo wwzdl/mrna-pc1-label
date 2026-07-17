@@ -140,11 +140,11 @@ python -m mrna_half_life_paper.prior_residual_analysis
 
 ### Supplementary Table S5. Two-stage OOF decomposition in prior residual analysis
 
-| model | genes | prior_features | human_features | pearson | spearman | r2 | delta_r2_vs_prior | remaining_variance_explained |
+| Model | Genes | Prior features | Human features | Pearson r | Spearman ρ | R² | ΔR² vs prior | Remaining variance explained |
 |:--|--:|--:|--:|--:|--:|--:|--:|--:|
-| prior_only_linear | 11107 | 2 | 0 | 0.792 | 0.782 | 0.627 | 0.000 | 0.00% |
-| compact_all_only | 11107 | 0 | 1802 | 0.739 | 0.731 | 0.544 | -0.084 | NA |
-| prior_plus_compact_residual | 11107 | 2 | 1802 | 0.826 | 0.818 | 0.675 | 0.048 | 12.79% |
+| Prior only (linear) | 11,107 | 2 | 0 | 0.792 | 0.782 | 0.627 | 0.000 | 0.00% |
+| Human compact only | 11,107 | 0 | 1,802 | 0.739 | 0.731 | 0.544 | -0.084 | NA |
+| Prior plus human residual | 11,107 | 2 | 1,802 | 0.826 | 0.818 | 0.675 | 0.048 | 12.79% |
 
 The reported residual fraction is computed as
 
@@ -224,22 +224,24 @@ The point of this result is not to create a new main label, but to explain why t
 
 ### Supplementary Table S7. Downstream benchmark for `MOESM3`-derived supervision labels
 
-| feature_set | target_label | genes | label_vs_Saluki_human_PC1_pearson | pearson_to_training_label | pearson_to_Saluki_human_PC1 | r2_to_Saluki_human_PC1 |
+| Feature set | Supervision label | Genes | Label-Saluki r | OOF r, training target | OOF r, Saluki target | OOF R², Saluki target |
 |:--|:--|--:|--:|--:|--:|--:|
-| compact_all | moesm3_no_gejman_rerun_pipeline_pc1 | 13532 | 1.000 | 0.730 | 0.730 | 0.533 |
-| compact_all | Saluki_human_PC1 | 13532 | 1.000 | 0.729 | 0.729 | 0.530 |
-| compact_all | moesm3_no_gejman_as_is_pc1 | 13532 | 1.000 | 0.729 | 0.729 | 0.530 |
-| compact_all | moesm3_no_gejman_zscore_only_pc1 | 13532 | 1.000 | 0.729 | 0.729 | 0.530 |
-| compact_all | moesm3_all_samples_zscore_only_pc1 | 13532 | 0.963 | 0.707 | 0.722 | 0.520 |
-| compact_all | moesm3_all_samples_rerun_pipeline_pc1 | 13532 | 0.963 | 0.707 | 0.721 | 0.519 |
-| compact_all | moesm3_all_samples_as_is_pc1 | 13532 | 0.963 | 0.707 | 0.721 | 0.520 |
-| base_sequence | moesm3_no_gejman_zscore_only_pc1 | 13532 | 1.000 | 0.720 | 0.720 | 0.518 |
-| base_sequence | Saluki_human_PC1 | 13532 | 1.000 | 0.720 | 0.720 | 0.517 |
-| base_sequence | moesm3_no_gejman_as_is_pc1 | 13532 | 1.000 | 0.720 | 0.720 | 0.517 |
-| base_sequence | moesm3_no_gejman_rerun_pipeline_pc1 | 13532 | 1.000 | 0.718 | 0.718 | 0.516 |
-| base_sequence | moesm3_all_samples_rerun_pipeline_pc1 | 13532 | 0.963 | 0.698 | 0.713 | 0.507 |
-| base_sequence | moesm3_all_samples_zscore_only_pc1 | 13532 | 0.963 | 0.697 | 0.713 | 0.506 |
-| base_sequence | moesm3_all_samples_as_is_pc1 | 13532 | 0.963 | 0.696 | 0.712 | 0.507 |
+| Compact human | MOESM3 no-Gejman: pipeline rerun | 13,532 | 1.000 | 0.730 | 0.730 | 0.533 |
+| Compact human | Saluki human PC1 | 13,532 | 1.000 | 0.729 | 0.729 | 0.530 |
+| Compact human | MOESM3 no-Gejman: as-is PC1 | 13,532 | 1.000 | 0.729 | 0.729 | 0.530 |
+| Compact human | MOESM3 no-Gejman: z-score only | 13,532 | 1.000 | 0.729 | 0.729 | 0.530 |
+| Compact human | MOESM3 all samples: z-score only | 13,532 | 0.963 | 0.707 | 0.722 | 0.520 |
+| Compact human | MOESM3 all samples: pipeline rerun | 13,532 | 0.963 | 0.707 | 0.721 | 0.519 |
+| Compact human | MOESM3 all samples: as-is PC1 | 13,532 | 0.963 | 0.707 | 0.721 | 0.520 |
+| Base sequence | MOESM3 no-Gejman: z-score only | 13,532 | 1.000 | 0.720 | 0.720 | 0.518 |
+| Base sequence | Saluki human PC1 | 13,532 | 1.000 | 0.720 | 0.720 | 0.517 |
+| Base sequence | MOESM3 no-Gejman: as-is PC1 | 13,532 | 1.000 | 0.720 | 0.720 | 0.517 |
+| Base sequence | MOESM3 no-Gejman: pipeline rerun | 13,532 | 1.000 | 0.718 | 0.718 | 0.516 |
+| Base sequence | MOESM3 all samples: pipeline rerun | 13,532 | 0.963 | 0.698 | 0.713 | 0.507 |
+| Base sequence | MOESM3 all samples: z-score only | 13,532 | 0.963 | 0.697 | 0.713 | 0.506 |
+| Base sequence | MOESM3 all samples: as-is PC1 | 13,532 | 0.963 | 0.696 | 0.712 | 0.507 |
+
+Reader-facing labels are used in the table. Exact setting identifiers and full-precision values are retained in `results/moesm3_saluki_label_benchmark/summary.tsv`.
 
 ## S12. Focused control of MOESM3-derived labels under mouse-prior settings
 
@@ -249,16 +251,18 @@ Taken together, these two control experiments support a more stable submission-r
 
 ### Supplementary Table S8. Focused benchmark of `MOESM3`-derived supervision labels under prior settings
 
-| target_label | setting | genes | genes_with_`mouse_pc1` | genes_with_`saluki_mouse_prior` | label_vs_Saluki_human_PC1_pearson | pearson_to_training_label | pearson_to_Saluki_human_PC1 | r2_to_Saluki_human_PC1 |
+| Supervision label | Feature setting | Genes | Reconstructed-prior genes | Saluki-prior genes | Label-Saluki r | OOF r, training target | OOF r, Saluki target | OOF R², Saluki target |
 |:--|:--|--:|--:|--:|--:|--:|--:|--:|
-| Saluki_human_PC1 | compact_all_plus_both_mouse_priors_global | 13532 | 11569 | 11423 | 1.000 | 0.816 | 0.816 | 0.666 |
-| moesm3_no_gejman_rerun_pipeline_pc1 | compact_all_plus_both_mouse_priors_global | 13532 | 11569 | 11423 | 1.000 | 0.816 | 0.816 | 0.665 |
-| moesm3_no_gejman_rerun_pipeline_pc1 | compact_all_plus_mouse_pc1_global | 13532 | 11569 | 11423 | 1.000 | 0.814 | 0.814 | 0.662 |
-| Saluki_human_PC1 | compact_all_plus_mouse_pc1_global | 13532 | 11569 | 11423 | 1.000 | 0.814 | 0.814 | 0.662 |
-| Saluki_human_PC1 | compact_all_plus_saluki_mouse_prior_global | 13532 | 11569 | 11423 | 1.000 | 0.812 | 0.812 | 0.659 |
-| moesm3_no_gejman_rerun_pipeline_pc1 | compact_all_plus_saluki_mouse_prior_global | 13532 | 11569 | 11423 | 1.000 | 0.812 | 0.811 | 0.658 |
-| moesm3_no_gejman_rerun_pipeline_pc1 | compact_all_global | 13532 | 11569 | 11423 | 1.000 | 0.730 | 0.730 | 0.533 |
-| Saluki_human_PC1 | compact_all_global | 13532 | 11569 | 11423 | 1.000 | 0.729 | 0.729 | 0.530 |
+| Saluki human PC1 | Compact human plus both mouse priors | 13,532 | 11,569 | 11,423 | 1.000 | 0.816 | 0.816 | 0.666 |
+| MOESM3 no-Gejman: pipeline rerun | Compact human plus both mouse priors | 13,532 | 11,569 | 11,423 | 1.000 | 0.816 | 0.816 | 0.665 |
+| MOESM3 no-Gejman: pipeline rerun | Compact human plus reconstructed mouse prior | 13,532 | 11,569 | 11,423 | 1.000 | 0.814 | 0.814 | 0.662 |
+| Saluki human PC1 | Compact human plus reconstructed mouse prior | 13,532 | 11,569 | 11,423 | 1.000 | 0.814 | 0.814 | 0.662 |
+| Saluki human PC1 | Compact human plus Saluki mouse prior | 13,532 | 11,569 | 11,423 | 1.000 | 0.812 | 0.812 | 0.659 |
+| MOESM3 no-Gejman: pipeline rerun | Compact human plus Saluki mouse prior | 13,532 | 11,569 | 11,423 | 1.000 | 0.812 | 0.811 | 0.658 |
+| MOESM3 no-Gejman: pipeline rerun | Compact human only | 13,532 | 11,569 | 11,423 | 1.000 | 0.730 | 0.730 | 0.533 |
+| Saluki human PC1 | Compact human only | 13,532 | 11,569 | 11,423 | 1.000 | 0.729 | 0.729 | 0.530 |
+
+Reader-facing labels are used in the table. Exact setting identifiers and full-precision values are retained in `results/moesm3_saluki_label_prior_benchmark_smoketest/summary.tsv`.
 
 ## S13. Supplementary tables for 10-fold robustness, weak ortholog-informed target shrinkage, and uncertainty
 
@@ -266,23 +270,23 @@ Supplementary Tables S9-S15 collect the strict checks. S9 reports 10-fold robust
 
 ### Supplementary Table S9. 10-fold robustness of the global prior benchmark
 
-| setting | prior_mode | cv_folds | random_states | genes | pearson_mean_sd | spearman_mean_sd | r2_mean_sd |
+| Setting | Prior mode | Folds | Seeds | Genes | Pearson r, mean ± SD | Spearman ρ, mean ± SD | R², mean ± SD |
 |:--|:--|--:|--:|--:|:--|:--|:--|
-| compact_all_plus_both_mouse_priors_global | real | 10 | 3 | 12916 | 0.830 ± 0.001 | 0.824 ± 0.001 | 0.689 ± 0.001 |
-| compact_all_plus_both_mouse_priors_shuffled_global | shuffled | 10 | 3 | 12916 | 0.748 ± 0.001 | 0.741 ± 0.001 | 0.558 ± 0.001 |
-| compact_all_global | none | 10 | 3 | 12916 | 0.748 ± 0.001 | 0.740 ± 0.001 | 0.558 ± 0.002 |
-| coverage-aware fallback | availability-based model selection | 10 | 3 | 12916 | 0.832 ± 0.001 | 0.826 ± 0.001 | 0.690 ± 0.001 |
+| Compact human plus both mouse priors | Real priors | 10 | 3 | 12,916 | 0.830 ± 0.001 | 0.824 ± 0.001 | 0.689 ± 0.001 |
+| Compact human plus both mouse priors | Shuffled priors | 10 | 3 | 12,916 | 0.748 ± 0.001 | 0.741 ± 0.001 | 0.558 ± 0.001 |
+| Compact human only | None | 10 | 3 | 12,916 | 0.748 ± 0.001 | 0.740 ± 0.001 | 0.558 ± 0.002 |
+| Coverage-aware fallback | Availability-based selection | 10 | 3 | 12,916 | 0.832 ± 0.001 | 0.826 ± 0.001 | 0.690 ± 0.001 |
 
-### Supplementary Table S10. 10-fold target benchmark for 0.10 ortholog-informed target shrinkage
+### Supplementary Table S10. 10-fold target benchmark across three random seeds
 
-| label | source | λ | cv_folds | random_states | genes | target_vs_Saluki_pearson | ortholog_pearson | real_prior_pearson_target_mean_sd | pure_human_pearson_target_mean_sd | shuffled_prior_pearson_target_mean_sd | real_minus_shuffled |
-|:--|:--|--:|--:|--:|--:|--:|--:|:--|:--|:--|:--|
-| 0.10 ortholog-informed shrinkage target | reconstructed mouse PC1 | 0.1 | 10 | 3 | 12307 | 0.987 | 0.827 | 0.855 ± 0.001 | 0.754 ± 0.001 | 0.753 ± 0.001 | 0.102 ± 0.001 |
-| Saluki_human_PC1 | Saluki_human_PC1 | 0 | 10 | 3 | 12307 | 1.000 | 0.798 | 0.839 ± 0.001 | 0.754 ± 0.001 | 0.754 ± 0.001 | 0.085 ± 0.000 |
+| Target and mouse comparator | λ | Genes | Target-Saluki r | Target-mouse r | Real-prior OOF r | Human-only OOF r | Shuffled-prior OOF r | Real-shuffled Δr |
+|:--|--:|--:|--:|--:|:--|:--|:--|:--|
+| 0.10 shrinkage; reconstructed mouse PC1 | 0.10 | 12,307 | 0.987 | 0.827 | 0.855 ± 0.001 | 0.754 ± 0.001 | 0.753 ± 0.001 | 0.102 ± 0.001 |
+| Saluki human PC1; released Saluki mouse PC1 | 0 | 12,307 | 1.000 | 0.798 | 0.839 ± 0.001 | 0.754 ± 0.001 | 0.754 ± 0.001 | 0.085 ± 0.000 |
 
 ### Supplementary Table S11. 10-fold prior-ablation benchmark for 0.10 ortholog-informed target shrinkage
 
-| setting | features | cv_folds | random_states | pearson_target_mean_sd | pearson_vs_Saluki_mean_sd | delta_vs_10fold_Saluki_prior_baseline |
+| Setting | Features | Folds | Seeds | OOF r, target | OOF r, Saluki | Δr vs fixed-target prior baseline |
 |:--|--:|--:|--:|:--|:--|:--|
 | human-only features | 1802 | 10 | 3 | 0.754 ± 0.001 | 0.753 ± 0.001 | -0.086 ± 0.001 |
 | availability/confidence indicators only | 1806 | 10 | 3 | 0.753 ± 0.000 | 0.753 ± 0.001 | -0.086 ± 0.000 |
@@ -293,22 +297,22 @@ Supplementary Tables S9-S15 collect the strict checks. S9 reports 10-fold robust
 
 ### Supplementary Table S12. Human-mouse ortholog label distance
 
-| comparison | subset | n | pearson | spearman | mse | rmse | mae | median_abs_error | p95_abs_error |
+| Comparison | Ortholog subset | N | Pearson r | Spearman ρ | MSE | RMSE | MAE | Median absolute error | 95th-percentile absolute error |
 |:--|:--|--:|--:|--:|--:|--:|--:|--:|--:|
-| human no-Gejman PC1 vs reconstructed mouse PC1 | all_one2one | 10768 | 0.789 | 0.782 | 0.440 | 0.663 | 0.512 | 0.413 | 1.330 |
-| shrinkage target vs reconstructed mouse PC1 | all_one2one | 10768 | 0.827 | 0.820 | 0.361 | 0.601 | 0.464 | 0.373 | 1.209 |
-| shrinkage target vs human no-Gejman PC1 | all_one2one | 10768 | 0.998 | 0.998 | 0.004 | 0.065 | 0.050 | 0.041 | 0.129 |
-| Saluki human PC1 vs released Saluki mouse PC1 | all_one2one | 10768 | 0.798 | 0.788 | 0.418 | 0.646 | 0.503 | 0.411 | 1.285 |
-| shrinkage target vs Saluki human PC1 | all_one2one | 10768 | 0.990 | 0.992 | 0.020 | 0.142 | 0.094 | 0.063 | 0.291 |
-| human no-Gejman PC1 vs reconstructed mouse PC1 | high_confidence | 10626 | 0.791 | 0.784 | 0.436 | 0.660 | 0.510 | 0.410 | 1.326 |
-| shrinkage target vs reconstructed mouse PC1 | high_confidence | 10626 | 0.829 | 0.822 | 0.357 | 0.598 | 0.462 | 0.371 | 1.201 |
-| shrinkage target vs human no-Gejman PC1 | high_confidence | 10626 | 0.998 | 0.998 | 0.004 | 0.064 | 0.050 | 0.041 | 0.129 |
-| Saluki human PC1 vs released Saluki mouse PC1 | high_confidence | 10626 | 0.800 | 0.789 | 0.414 | 0.644 | 0.500 | 0.409 | 1.275 |
-| shrinkage target vs Saluki human PC1 | high_confidence | 10626 | 0.990 | 0.992 | 0.020 | 0.142 | 0.094 | 0.063 | 0.290 |
+| Human no-Gejman PC1 vs reconstructed mouse PC1 | All one-to-one | 10,768 | 0.789 | 0.782 | 0.440 | 0.663 | 0.512 | 0.413 | 1.330 |
+| Shrinkage target vs reconstructed mouse PC1 | All one-to-one | 10,768 | 0.827 | 0.820 | 0.361 | 0.601 | 0.464 | 0.373 | 1.209 |
+| Shrinkage target vs human no-Gejman PC1 | All one-to-one | 10,768 | 0.998 | 0.998 | 0.004 | 0.065 | 0.050 | 0.041 | 0.129 |
+| Saluki human PC1 vs released Saluki mouse PC1 | All one-to-one | 10,768 | 0.798 | 0.788 | 0.418 | 0.646 | 0.503 | 0.411 | 1.285 |
+| Shrinkage target vs Saluki human PC1 | All one-to-one | 10,768 | 0.990 | 0.992 | 0.020 | 0.142 | 0.094 | 0.063 | 0.291 |
+| Human no-Gejman PC1 vs reconstructed mouse PC1 | High confidence | 10,626 | 0.791 | 0.784 | 0.436 | 0.660 | 0.510 | 0.410 | 1.326 |
+| Shrinkage target vs reconstructed mouse PC1 | High confidence | 10,626 | 0.829 | 0.822 | 0.357 | 0.598 | 0.462 | 0.371 | 1.201 |
+| Shrinkage target vs human no-Gejman PC1 | High confidence | 10,626 | 0.998 | 0.998 | 0.004 | 0.064 | 0.050 | 0.041 | 0.129 |
+| Saluki human PC1 vs released Saluki mouse PC1 | High confidence | 10,626 | 0.800 | 0.789 | 0.414 | 0.644 | 0.500 | 0.409 | 1.275 |
+| Shrinkage target vs Saluki human PC1 | High confidence | 10,626 | 0.990 | 0.992 | 0.020 | 0.142 | 0.094 | 0.063 | 0.290 |
 
 ### Supplementary Table S13. Study-level noise versus $\lambda=0.10$ label shift
 
-| comparison | cohort | n_comparisons | median Pearson | median residual Pearson | median RMSE | median MAE |
+| Comparison | Cohort | Comparisons | Median Pearson r | Median residual r | Median RMSE | Median MAE |
 |:--|:--|--:|--:|--:|--:|--:|
 | `λ = 0.10` target vs human no-Gejman PC1 | all one-to-one ortholog genes | 1 | 0.9979 | NA | 0.0646 | 0.0501 |
 | study mean label pairs | no-Gejman studies | 153 | 0.5303 | NA | 0.9540 | 0.7203 |
@@ -323,7 +327,7 @@ Supplementary Tables S9-S15 collect the strict checks. S9 reports 10-fold robust
 
 Both training targets use the same 12,307 genes, 1802 human-only `compact_all` features, 10 folds, 3 random seeds, and identical hyperparameters. SD denotes across-seed split sensitivity.
 
-| training target | evaluation target | genes | Pearson mean ± SD | R2 mean ± SD | RMSE mean ± SD | MAE mean ± SD |
+| Training target | Evaluation target | Genes | Pearson r, mean ± SD | R², mean ± SD | RMSE, mean ± SD | MAE, mean ± SD |
 |:--|:--|--:|:--|:--|:--|:--|
 | human no-Gejman PC1 | human no-Gejman PC1 | 12307 | 0.7476 ± 0.0010 | 0.5572 ± 0.0015 | 0.6687 ± 0.0012 | 0.5260 ± 0.0013 |
 | 0.10 ortholog-informed shrinkage target | human no-Gejman PC1 | 12307 | 0.7480 ± 0.0010 | 0.5582 ± 0.0014 | 0.6680 ± 0.0011 | 0.5248 ± 0.0009 |
@@ -372,7 +376,7 @@ The `labels` stage downloads MOESM2/MOESM3 and runs label reconstruction, study 
 
 | Category | Path or entry point | Purpose |
 |:--|:--|:--|
-| Public repository | `https://github.com/wwzdl/mrna-pc1-label` | Provides code, result tables, figure scripts, and environment notes; audited two-author manuscript tag: `mRNA-PC1-label-v1.4` |
+| Public repository | `https://github.com/wwzdl/mrna-pc1-label` | Provides code, result tables, figure scripts, and environment notes; audited two-author manuscript tag: `mRNA-PC1-label-v1.4.1` |
 | Staged reproduction driver | `scripts/reproduce_bmb_key_results.sh` | Runs the `labels`, `models`, and `figures` stages with the active result paths |
 | Environment and input integrity | `requirements.txt`, `environment.yml`, `requirements-validated.txt`, `scripts/fetch_real_data.sh` | Records portable and validated dependencies and verifies the public supplementary inputs by checksum |
 | OOF integrity audit | `scripts/audit_oof_integrity.py` | Checks canonical gene counts, unique IDs, shared universes across settings/seeds, fold coverage, and complete predictions |

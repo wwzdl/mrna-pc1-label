@@ -465,7 +465,14 @@ def add_image(doc: Document, src: str, base_dir: Path) -> None:
     p.add_run(f"[Figure file] {src}")
 
 
-def handle_table(doc: Document, tag: Tag) -> None:
+def table_column_count(tag: Tag) -> int:
+    return max(
+        (len(row.find_all(["th", "td"])) for row in tag.find_all("tr")),
+        default=0,
+    )
+
+
+def handle_table(doc: Document, tag: Tag, landscape_section_ready: bool = False) -> None:
     rows = tag.find_all("tr")
     if not rows:
         return
@@ -477,7 +484,7 @@ def handle_table(doc: Document, tag: Tag) -> None:
         max_cols = max(max_cols, len(values))
         parsed.append(values)
     use_landscape = max_cols >= 9
-    if use_landscape:
+    if use_landscape and not landscape_section_ready:
         add_table_section(doc, landscape=True)
     table = doc.add_table(rows=len(parsed), cols=max_cols)
     for r_idx, values in enumerate(parsed):
@@ -533,13 +540,31 @@ def render_markdown(markdown_text: str, output_path: Path, asset_base_dir: Path)
     base_dir = asset_base_dir
 
     root_nodes = soup.body.contents if soup.body else soup.contents
-    for node in root_nodes:
+    prepared_landscape_table: Tag | None = None
+    for node_index, node in enumerate(root_nodes):
         if isinstance(node, NavigableString):
             if str(node).strip():
                 doc.add_paragraph(str(node).strip())
             continue
         if not isinstance(node, Tag):
             continue
+
+        if node.name in {"h1", "h2", "h3", "h4", "h5"}:
+            next_tag = next(
+                (
+                    candidate
+                    for candidate in root_nodes[node_index + 1 :]
+                    if isinstance(candidate, Tag)
+                ),
+                None,
+            )
+            if (
+                next_tag is not None
+                and next_tag.name == "table"
+                and table_column_count(next_tag) >= 9
+            ):
+                add_table_section(doc, landscape=True)
+                prepared_landscape_table = next_tag
 
         if node.name == "h1":
             paragraph_from_tag(doc, node, style="Title", align=WD_ALIGN_PARAGRAPH.CENTER)
@@ -573,7 +598,13 @@ def render_markdown(markdown_text: str, output_path: Path, asset_base_dir: Path)
         elif node.name == "ol":
             handle_list(doc, node, ordered=True)
         elif node.name == "table":
-            handle_table(doc, node)
+            handle_table(
+                doc,
+                node,
+                landscape_section_ready=node is prepared_landscape_table,
+            )
+            if node is prepared_landscape_table:
+                prepared_landscape_table = None
         elif node.name == "blockquote":
             paragraph_from_tag(doc, node, style="Intense Quote")
         elif node.name == "hr":

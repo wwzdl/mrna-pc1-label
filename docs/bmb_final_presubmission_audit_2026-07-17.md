@@ -19,10 +19,11 @@ The active English manuscript, supplementary information, title page, cover lett
 - Updated feature-method citations for CWCS, SeqWeaver, and DeepRiPe, and updated Ensembl release 115 to the Ensembl 2025 reference.
 - Aligned the internal CRediT table with the formal author-contribution statements.
 - Synchronized repository URL, release-candidate version, abstract count, and active reference counts across the manuscript-support files.
+- Replaced machine identifiers in reader-facing supplementary tables with concise display labels and repaired landscape-section pagination so each wide table remains with its caption.
 
 ## Quantitative and reproducibility checks
 
-- Full preflight: `158 checks`, `0 failures`, `1 warning`.
+- Full preflight: `160 checks`, `0 failures`, `1 warning`.
 - Unit tests: `3 passed`.
 - OOF integrity: nine global fixed-target files cover 12,916 genes; three cross-target files and 18 shrinkage-target files cover 12,307 genes; residual outputs cover 11,107 genes across folds 1-5.
 - English abstract: 233 words; six keywords.
@@ -41,4 +42,4 @@ The active English manuscript, supplementary information, title page, cover lett
 
 ## Release state
 
-The intended immutable repository tag for this audited state is `mRNA-PC1-label-v1.4`. PDF and ZIP generation remain intentionally deferred until the final author-controlled submission freeze.
+The intended immutable repository tag for this audited state is `mRNA-PC1-label-v1.4.1`. PDF and ZIP generation remain intentionally deferred until the final author-controlled submission freeze.
